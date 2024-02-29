@@ -1,13 +1,16 @@
-import './App.css';
+import { Routes, Route } from 'react-router-dom';
 import Login from './Screen/Login/Login';
+import Register from './Screen/Register/Register';
 
 function App() {
   return (
-   
-      <>
-        <Login></Login>
-        <div className="bg-svg" style={{position: 'fixed', top: '0', left: 0, width: '100%'}}>
-          <svg
+    <div>
+      <Routes>
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+      </Routes>
+      <div className="bg-svg" style={{ position: 'fixed', top: '0', left: 0, width: '100%' }}>
+      <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 1440 810"
             preserveAspectRatio="xMinYMin slice"
@@ -43,9 +46,9 @@ function App() {
             ></path>
             
           </svg>
-        </div>
-      </>
-    );
+      </div>
+    </div>
+  );
 }
 
 export default App;
