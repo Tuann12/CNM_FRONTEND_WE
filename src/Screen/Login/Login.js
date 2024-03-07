@@ -24,6 +24,8 @@ const Login = () => {
   return (
     <section className={styles.container}>
       <div className={styles.login}>
+      <h1 className={styles.title}>Zalo</h1>
+
         <div className={styles.login_title}>
           Đăng nhập tài khoản Zalo <br /> để kết nối với ứng dụng Zalo Chat
         </div>
@@ -82,7 +84,8 @@ const Login = () => {
                     <FontAwesomeIcon icon={faLock} />
                   </span>
                 </div>
-                <button className={styles.btn_login}>Đăng nhập</button>
+                <button className={styles.btn_login}>Đăng nhập với mật khẩu</button>
+                <span className={styles.login_by_phone}>Đăng nhập bằng thiết bị di động</span>
                 <Link to="/forgotpass" className={styles.forgot_password}>
                   Quên mật khẩu?
                 </Link>
