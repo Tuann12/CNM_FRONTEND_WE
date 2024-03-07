@@ -98,11 +98,13 @@
 
 .container .login .login_main .login_main_content .login_main_content_text span {
   max-width: 330px;
-  margin: auto;
-  padding-top: 1rem;
-  color: #888;
+  color: #8a7d7d;
   font-size: 0.813em;
   text-align: center;
+  font-weight: bold;
+  display:flex;
+  margin-top: 20px;
+  justify-content: center;
 }
 
 .container .login .login_main .login_main_content form {
@@ -130,7 +132,7 @@
   width: 100%;
   padding: 8px 10px 6px 25px;
   font-size: 0.938rem;
-  border: none;
+  border: 1px solid #eee;
   outline: none;
 }
 
@@ -252,3 +254,10 @@
     padding: 0;
   }
 }
+
+.qr_content {
+  text-align: center;
+  justify-content: center;
+  
+}
+

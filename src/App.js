@@ -5,10 +5,10 @@ import Register from './Screen/Register/Register';
 function App() {
   return (
     <div>
-      <Routes>
-        <Route path='/login' element={<Login />} />
+     <Routes>
+        <Route index element={<Login />} />
         <Route path='/register' element={<Register />} />
-      </Routes>
+      </Routes> 
       <div className="bg-svg" style={{ position: 'fixed', top: '0', left: 0, width: '100%' }}>
       <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -49,8 +49,12 @@ const Login = () => {
               <div className={styles.login_main_content_img}>
                 <img src="https://i.imgur.com/dPr3SMX.png" alt="QR Code" />
               </div>
+              <div className={styles.qr_content}>
+                <span style={{color:"blue" }}>Chỉ dùng để đăng nhập</span><br></br>
+                <span>Zalo trên máy tính</span>
+              </div>
               <div className={styles.login_main_content_text}>
-                <span>Quét mã QR bằng Zalo để đăng nhập</span>
+              <span>Sử dụng ứng dụng Zalo để quét mã QR</span>
               </div>
             </div>
           ) : (

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faMobileAlt, faUser } from "@fortawesome/free-solid-svg-icons";
 import styles from "./Register.module.scss";
@@ -28,9 +27,9 @@ const Register = () => {
     resolver: yupResolver(schema),
   });
 
-  const [pass, setPass] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [repeatPass, setRepeatPass] = useState("");
+  // const [pass, setPass] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
+  // const [repeatPass, setRepeatPass] = useState("");
 
   //   const user = useSelector((state) => state.user);
   //   const { error } = user;
@@ -88,7 +87,7 @@ const Register = () => {
               placeholder="Mật khẩu"
               required
               {...register("password")}
-              onChange={(e) => setPass(e.target.value)}
+              // onChange={(e) => setPass(e.target.value)}
             ></input>
             <div className={styles.error}>{errors.password?.message}</div>
             {errors.password ? (
@@ -105,22 +104,22 @@ const Register = () => {
               type="password"
               placeholder="Nhập lại mật khẩu"
               required
-              onChange={(e) => setRepeatPass(e.target.value)}
+              // onChange={(e) => setRepeatPass(e.target.value)}
             ></input>
             <span>
               <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
             </span>
-            {errorMessage ? (
+            {/* {errorMessage ? (
               <div className={styles.error}>{errorMessage}</div>
             ) : (
               ""
-            )}
+            )} */}
           </div>
 
           <button className={styles.btn}>Đăng kí</button>
 
           <div className={styles.toLogin}>
-            <Link to="/login">Đăng nhập!</Link>
+            <Link to="/">Đăng nhập!</Link>
           </div>
         </form>
       </div>
