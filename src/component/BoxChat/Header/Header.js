@@ -1,18 +1,21 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import Search from './Search/Search';
+import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
+
+const cx = classNames.bind(styles);
 
 function Header() {
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.container}>
+        <div className={cx('wrapper')}>
+            <div className={cx('container')}>
                 <Search />
-                <div className={styles.iconAdd}>
-                    <div className={styles.icon}>
+                <div className={cx('iconAdd')}>
+                    <div className={cx('icon')}>
                         <FontAwesomeIcon icon={faUserPlus} />
                     </div>
-                    <div className={styles.icon}>
+                    <div className={cx('icon')}>
                         <FontAwesomeIcon icon={faUserGroup} />
                     </div>
                 </div>

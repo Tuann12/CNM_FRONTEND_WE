@@ -1,13 +1,16 @@
 import Navbar from '../../component/Navbar/Navbar';
 import Header from '../../component/BoxChat/Header/Header';
+import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
+
+const cx = classNames.bind(styles);
 
 function Home({ children }) {
     return (
-        <div className={styles.wrapper}>
+        <div className={cx('wrapper')}>
             <Navbar />
-            <div className={styles.container}>
-                <div className={styles.chatBox}>
+            <div className={cx('container')}>
+                <div className={cx('chatBox')}>
                     <Header />
                 </div>
             </div>
