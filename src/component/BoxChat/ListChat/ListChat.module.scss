@@ -1,0 +1,13 @@
+.wrapper {
+    overflow-y: auto;
+    max-height: 82.5vh;
+
+    &::-webkit-scrollbar {
+        width: 7px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: #999da396;
+        border-radius: 5px;
+    }
+}
