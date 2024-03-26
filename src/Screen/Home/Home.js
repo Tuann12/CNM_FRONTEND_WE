@@ -1,12 +1,13 @@
 import Navbar from '../../component/Navbar/Navbar';
 import Header from '../../component/BoxChat/Header/Header';
 import BoxChat from '../../component/BoxChat/BoxChat';
+import Chat from '../../component/Chat/Chat';
 import classNames from 'classnames/bind';
 import styles from './Home.module.scss';
 
 const cx = classNames.bind(styles);
 
-function Home({ children }) {
+function Home() {
     return (
         <div className={cx('wrapper')}>
             <Navbar />
@@ -15,7 +16,9 @@ function Home({ children }) {
                     <Header />
                     <BoxChat />
                 </div>
-                <div className={cx('chatBoxDetail')}></div>
+                <div className={cx('chatBoxDetail')}>
+                    <Chat />
+                </div>
             </div>
         </div>
     );
