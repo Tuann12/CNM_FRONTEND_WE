@@ -8,12 +8,12 @@ function App() {
     return (
         <div>
             <Routes>
-                <Route index element={<Login />} />
+                {/* <Route index element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/forgotPass" element={<ForgotPass />} />
-                <Route path="/home" element={<Home />} />
+                <Route path="/forgotPass" element={<ForgotPass />} /> */}
+                <Route index element={<Home />} />
             </Routes>
-            <div className="bg-svg" style={{ position: 'fixed', top: '0', left: 0, width: '100%' }}>
+            {/* <div className="bg-svg" style={{ position: 'fixed', top: '0', left: 0, width: '100%' }}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 1440 810"
@@ -46,7 +46,7 @@ function App() {
                         d="M1278.31,38.196C1245.81,209.874 1197.22,365.556 1144.82,499.838L1144.82,503.638C1185.82,615.924 1216.41,720.211 1239.11,809.6L1439.7,810L1439.7,256.768C1379.4,158.78 1321.41,86.288 1278.31,38.195L1278.31,38.196z"
                     ></path>
                 </svg>
-            </div>
+            </div> */}
         </div>
     );
 }

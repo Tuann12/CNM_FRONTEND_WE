@@ -1,0 +1,22 @@
+.wrapper {
+    background-color: var(--background);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    height: 96px;
+}
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.iconAdd {
+    display: flex;
+    margin-top: 33px;
+}
+.icon {
+    cursor: pointer;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
