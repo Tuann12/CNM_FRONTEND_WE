@@ -11,3 +11,38 @@
         border-radius: 5px;
     }
 }
+.ItemChatWrap {
+    cursor: pointer;
+    height: 74px;
+    &:hover {
+        background-color: var(--background-box);
+    }
+}
+.BoxChatItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.avatar {
+    margin: 15px 0px 15px 10px;
+}
+
+.content {
+    margin-right: 50px;
+    margin-bottom: 10px;
+}
+.title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 2;
+}
+.content-chat {
+    font-size: 14px;
+    font-weight: 500;
+}
+.time {
+    font-size: 14px;
+    font-weight: 500;
+    margin-right: 15px;
+    margin-bottom: 27px;
+}
