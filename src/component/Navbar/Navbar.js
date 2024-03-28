@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faContactBook, faGear } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
 import styles from './Navbar.module.scss';
+import avt1 from '../../images/image1.jpeg';
 
 const cx = classNames.bind(styles);
 
@@ -11,7 +12,7 @@ function Navbar() {
             <div className={cx('container')}>
                 <div className={cx('topIcon')}>
                     <div className={cx('avatar')}>
-                        <img className={cx('avatarImg')} src="https://i.pravatar.cc/150?img=10" alt="avatar" />
+                        <img className={cx('avatarImg')} src={avt1} alt="avatar" />
                     </div>
                     <div className={cx('wrapIcon')}>
                         <div className={cx('boxIcon', 'active')}>

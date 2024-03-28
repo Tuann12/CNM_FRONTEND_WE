@@ -1,11 +1,20 @@
+import React from 'react';
 import classNames from 'classnames/bind';
 import styles from './ListChat.module.scss';
+import mitt from 'mitt';
 
 const cx = classNames.bind(styles);
 
-function ItemChat({ avatar, title, contentChat, time }) {
+const emitter = mitt();
+
+function ItemChat({ avatar, title, contentChat, time, onItemClick }) {
+    const handleClick = () => {
+        onItemClick({ avatar, title });
+        emitter.emit('itemClick', { avatar, title });
+    };
+
     return (
-        <div className={cx('ItemChatWrap')}>
+        <div className={cx('ItemChatWrap')} onClick={handleClick}>
             <div className={cx('BoxChatItem')}>
                 <div className={cx('avatar')}>{avatar}</div>
                 <div className={cx('content')}>
@@ -19,3 +28,4 @@ function ItemChat({ avatar, title, contentChat, time }) {
 }
 
 export default ItemChat;
+export { emitter };
