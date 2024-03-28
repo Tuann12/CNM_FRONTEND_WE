@@ -21,14 +21,17 @@ function HeaderChat() {
             emitter.off('itemClick', handler);
         };
     }, []);
-    console.log(itemData.avatar);
 
     return (
         <div className={cx('wrapper')}>
             <div className={cx('Info')}>
                 <img
                     className={cx('avatarImg')}
-                    src={itemData.avatar ? itemData.avatar.props.src : 'placeholder.jpg'}
+                    src={
+                        itemData.avatar
+                            ? itemData.avatar.props.src
+                            : 'https://vapa.vn/wp-content/uploads/2022/12/anh-nen-mau-trang-001.jpg'
+                    }
                     alt={itemData.avatar ? itemData.avatar.props.alt : 'placeholder'}
                 />
                 <h3 className={cx('title')}>{itemData.title}</h3>
