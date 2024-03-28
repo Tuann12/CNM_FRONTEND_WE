@@ -13,7 +13,7 @@ function Navbar() {
                     <div className={cx('avatar')}>
                         <img
                             className={cx('avatarImg')}
-                            src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vietnamworks.com%2Fhrinsider%2Fanh-dai-dien-facebook-y-nghia.html&psig=AOvVaw3OCxQGJVjRnjJJ6yo4eA0J&ust=1711724887601000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLjqqpiel4UDFQAAAAAdAAAAABAK"
+                            src="https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg"
                             alt="avatar"
                         />
                     </div>
