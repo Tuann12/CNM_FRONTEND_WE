@@ -1,0 +1,37 @@
+@import 'normalize.css';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300&display=swap');
+
+:root {
+    --primary: #0091ff;
+    --color-font: #ffffff;
+    --background-box: #eaedf0;
+    --border: #d6dbe1;
+    --background: #fff;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    font-size: 62.5%;
+    font-family: 'Poppins';
+}
+
+body {
+    font-size: 1.6rem;
+    line-height: 1.6rem;
+}
+
+button,
+input,
+[tabindex] {
+    outline: none;
+    border: none;
+}
+
+a {
+    text-decoration: none;
+}

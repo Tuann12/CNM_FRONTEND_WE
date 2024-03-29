@@ -1,0 +1,70 @@
+.wrapper {
+    height: 92px;
+}
+
+.crossBarIcon {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    height: 41px;
+}
+.tickerIcon {
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    margin-left: 15px;
+    margin-top: 5px;
+    &:hover {
+        background-color: var(--background-box);
+    }
+}
+.icon {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.boxInpChat {
+    display: flex;
+    justify-content: space-between;
+    height: 41px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.chatInp {
+    width: 89%;
+    height: 51px;
+    padding-top: 15px;
+    padding-left: 15px;
+    font-size: 16px;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    border: none;
+    &:focus {
+        outline: none;
+    }
+}
+
+.boxIcon {
+    display: flex;
+}
+.iconInpChat {
+    cursor: pointer;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    &:hover {
+        background-color: var(--background-box);
+    }
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.iconInp {
+    font-size: 20px;
+}

@@ -1,0 +1,48 @@
+.wrapper {
+    min-height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    z-index: 9999;
+}
+
+.Info {
+    display: flex;
+    align-items: center;
+}
+
+.wrapIcon {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--background-box);
+        border-radius: 5px;
+    }
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 2;
+    margin-left: 10px;
+}
+
+.avatarImg {
+    width: 48px;
+    height: 48px;
+    border-radius: 50px;
+    border: 1px solid var(--color-font);
+    margin-left: 15px;
+}
