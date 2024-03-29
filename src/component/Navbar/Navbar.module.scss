@@ -61,3 +61,55 @@
 .bottomIcon {
     margin-top: 47.8vh;
 }
+
+.profile {
+    width: 298px;
+    height: 175px;
+    margin-top: 30px;
+    margin-left: -5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--background);
+    border-radius: 5px;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+}
+.wrapProfile {
+    width: 280px;
+    height: 157px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.header {
+    padding: 10px 0px;
+    font-size: 20px;
+    font-weight: 700;
+}
+.content {
+    line-height: 2.5;
+    border-top: 1px solid var(--border);
+}
+.info {
+    font-size: 16px;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--background-box);
+    }
+}
+.setting {
+    cursor: pointer;
+    font-size: 16px;
+    &:hover {
+        background-color: var(--background-box);
+    }
+}
+.logout {
+    border-top: 1px solid var(--border);
+    padding: 10px 0px;
+    font-size: 16px;
+    cursor: pointer;
+    &:hover {
+        background-color: var(--background-box);
+    }
+}
