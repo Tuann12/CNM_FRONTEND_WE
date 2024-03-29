@@ -87,9 +87,9 @@ const Register = () => {
                 </svg>
             </div>
             <div className={cx('register')}>
-                <div className={cx('register_title')}>
+                {/* <div className={cx('register_title')}>
                     Đăng kí tài khoản Zalo <br></br>để kết nối với ứng dụng Zalo Chat
-                </div>
+                </div> */}
                 <form>
                     <div className={cx('register_form_input')}>
                         <input type="text" placeholder="Họ và tên" required {...register('name')}></input>
