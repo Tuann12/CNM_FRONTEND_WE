@@ -132,7 +132,7 @@
     font-size: 16px;
 }
 
-.radio-group input[type="radio"] {
+.radio-group input[type='radio'] {
     margin-right: 5px;
 }
 
@@ -140,4 +140,33 @@
     color: red;
     font-size: 14px;
     margin-top: 5px;
+}
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.popup h2 {
+    margin-bottom: 10px;
+}
+
+.otp-inputs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.otp-input {
+    width: calc(100% / 6 - 5px);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 16px;
 }
