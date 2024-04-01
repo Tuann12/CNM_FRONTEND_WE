@@ -29,10 +29,11 @@ const Register = () => {
             },
             body: JSON.stringify({ email: data.email }),
         });
-
+        const dataOTPCheck = await response.json();
         if (response.ok) {
             setShowPopup(true);
         } else {
+            alert(dataOTPCheck.message || 'Gửi mã OTP thất bại! Vui lòng thử lại.');
             console.error('Failed to send OTP');
         }
     };
