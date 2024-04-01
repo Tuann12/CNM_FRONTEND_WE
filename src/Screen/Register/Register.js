@@ -10,8 +10,6 @@ import styles from './Register.module.scss';
 const cx = classNames.bind(styles);
 
 const Register = () => {
-    //   const history = useHistory();
-    //   const dispatch = useDispatch();
     const schema = yup.object().shape({
         phone: yup
             .string()
@@ -22,33 +20,20 @@ const Register = () => {
             )
             .required(),
         password: yup.string().min(8, 'Mật khẩu phải trên 8 kí tự').required(),
+        confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Mật khẩu không khớp').required('Nhập lại mật khẩu'),
     });
+
     const {
         register,
+        handleSubmit,
         formState: { errors },
     } = useForm({
         resolver: yupResolver(schema),
     });
 
-    // const [pass, setPass] = useState("");
-    // const [errorMessage, setErrorMessage] = useState("");
-    // const [repeatPass, setRepeatPass] = useState("");
-
-    //   const user = useSelector((state) => state.user);
-    //   const { error } = user;
-
-    //   const onSubmit = async (data) => {
-    //     if (pass === repeatPass) {
-    //       await dispatch(registerUserRequest(data, () => {
-    //         history.push('/login');
-    //       }));
-    //     } else {
-    //       setErrorMessage('Mật khẩu không khớp');
-    //       setTimeout(() => {
-    //         setErrorMessage('');
-    //       }, 2000);
-    //     }
-    //   };
+    const onSubmit = (data) => {
+        console.log(data);
+    };
 
     return (
         <div className={cx('container')}>
@@ -59,7 +44,7 @@ const Register = () => {
                     preserveAspectRatio="xMinYMin slice"
                     style={{ minHeight: '100vh' }}
                 >
-                    <path
+ <path
                         fill="#aad6ff"
                         d="M592.66 0c-15 64.092-30.7 125.285-46.598 183.777C634.056 325.56 748.348 550.932 819.642 809.5h419.672C1184.518 593.727 1083.124 290.064 902.637 0H592.66z"
                     ></path>
@@ -83,14 +68,10 @@ const Register = () => {
                     <path
                         fill="#e8f3ff"
                         d="M1278.31,38.196C1245.81,209.874 1197.22,365.556 1144.82,499.838L1144.82,503.638C1185.82,615.924 1216.41,720.211 1239.11,809.6L1439.7,810L1439.7,256.768C1379.4,158.78 1321.41,86.288 1278.31,38.195L1278.31,38.196z"
-                    ></path>
-                </svg>
+                    ></path>                </svg>
             </div>
             <div className={cx('register')}>
-                {/* <div className={cx('register_title')}>
-                    Đăng kí tài khoản Zalo <br></br>để kết nối với ứng dụng Zalo Chat
-                </div> */}
-                <form>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className={cx('register_form_input')}>
                         <input type="text" placeholder="Họ và tên" required {...register('name')}></input>
                         <span>
@@ -98,46 +79,39 @@ const Register = () => {
                         </span>
                     </div>
                     <div className={cx('register_form_input')}>
-                        <input type="text" placeholder="Số điện thoại hoặc email" {...register('phone')}></input>
+                        <input type="text" placeholder="Email" {...register('phone')}></input>
                         <span>
                             <FontAwesomeIcon icon={faMobileAlt}></FontAwesomeIcon>
                         </span>
-                        {errors.phone ? <div className={cx('error')}>{errors.phone?.message}</div> : ''}
-                        {/* {error ? <div className={cx('error')}>{error}</div> : ""} */}
+                        {errors.phone && <div className={cx('error')}>{errors.phone.message}</div>}
                     </div>
                     <div className={cx('register_form_input')}>
-                        <input
-                            type="password"
-                            placeholder="Mật khẩu"
-                            required
-                            {...register('password')}
-                            // onChange={(e) => setPass(e.target.value)}
-                        ></input>
-                        <div className={cx('error')}>{errors.password?.message}</div>
-                        {errors.password ? <div className={cx('error')}>{errors.password?.message}</div> : ''}
+                        <input type="password" placeholder="Mật khẩu" required {...register('password')}></input>
                         <span>
                             <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
                         </span>
+                        {errors.password && <div className={cx('error')}>{errors.password.message}</div>}
                     </div>
+                
                     <div className={cx('register_form_input')}>
-                        <input
-                            type="password"
-                            placeholder="Nhập lại mật khẩu"
-                            required
-                            // onChange={(e) => setRepeatPass(e.target.value)}
-                        ></input>
+                        <input type="password" placeholder="Nhập lại mật khẩu" required {...register('confirmPassword')}></input>
                         <span>
                             <FontAwesomeIcon icon={faLock}></FontAwesomeIcon>
                         </span>
-                        {/* {errorMessage ? (
-              <div className={cx('error')}>{errorMessage}</div>
-            ) : (
-              ""
-            )} */}
+                        {errors.confirmPassword && <div className={cx('error')}>{errors.confirmPassword.message}</div>}
                     </div>
-
-                    <button className={cx('btn')}>Đăng kí</button>
-
+                    <div className={cx('radio-group')}>
+                        <label>
+                            <input type="radio" value="male" {...register('gender')} /> Nam
+                        </label>
+                        <label>
+                            <input type="radio" value="female" {...register('gender')} /> Nữ
+                        </label>
+                        {errors.gender && <div className={cx('error')}>{errors.gender.message}</div>}
+                    </div>
+                    <button type="submit" className={cx('btn')}>
+                        Đăng kí
+                    </button>
                     <div className={cx('toLogin')}>
                         <Link to="/">Đăng nhập!</Link>
                     </div>
