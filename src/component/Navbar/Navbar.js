@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faContactBook, faGear } from '@fortawesome/free-solid-svg-icons';
 import ShowInfo from '../ShowInfo/ShowInfo';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import styles from './Navbar.module.scss';
@@ -11,7 +11,13 @@ const cx = classNames.bind(styles);
 function Navbar() {
     const [showTippy, setShowTippy] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
-
+    const [userData, setUserData] = useState(null);
+    useEffect(() => {
+        const storedData = localStorage.getItem('loginData');
+        if (storedData) {
+            setUserData(JSON.parse(storedData));
+        }
+    }, []);
     const handleTippyVisibility = () => {
         setShowTippy(!showTippy);
         setShowInfo(false);
@@ -35,7 +41,7 @@ function Navbar() {
                         render={(attrs) => (
                             <div className={cx('profile')} tabIndex="-1" {...attrs}>
                                 <div className={cx('wrapProfile')}>
-                                    <div className={cx('header')}>Tuấn Nguyễn</div>
+                                    <div className={cx('header')}>{userData.foundUser.name || 'Tuấn Nguyễn'}</div>
                                     <div className={cx('content')}>
                                         <div className={cx('info')} onClick={handleProfileClick}>
                                             Hồ sơ của bạn

@@ -8,6 +8,7 @@ const cx = classNames.bind(styles);
 
 function ShowInfo({ onHide }) {
     const [isVisible, setIsVisible] = useState(false);
+    const userData = JSON.parse(localStorage.getItem('loginData'));
 
     useEffect(() => {
         setIsVisible(true);
@@ -16,7 +17,8 @@ function ShowInfo({ onHide }) {
     const handleHide = () => {
         onHide();
     };
-
+    console.log('userData', userData);
+    console.log('userData', JSON.parse(localStorage.getItem('loginData')));
     return (
         <div>
             <div className={cx('overlay')}></div>
@@ -47,7 +49,7 @@ function ShowInfo({ onHide }) {
                             </div>
                         </div>
                         <div className={cx('boxTitle')}>
-                            <h3 className={cx('title')}> Tuấn Nguyễn </h3>
+                            <h3 className={cx('title')}> {userData.foundUser.name || 'Tuấn Nguyễn'} </h3>
                             <div className={cx('titleIcon')}>
                                 <FontAwesomeIcon className={cx('icon')} icon={faPenToSquare} />
                             </div>
@@ -56,12 +58,14 @@ function ShowInfo({ onHide }) {
                     <div className={cx('info')}>
                         <h3 className={cx('infoTitle')}>Thông tin cá nhân</h3>
                         <div className={cx('infoSex')}>
-                            <span className={cx('sex')}> Giới tính </span>
-                            <span className={cx('sexResult')}> Nam</span>
+                            <div className={cx('infoSex')}>
+                                <span className={cx('sex')}> Giới tính </span>
+                                <span className={cx('sexResult')}> {userData.foundUser.gender ? 'Nam' : 'Nữ'}</span>
+                            </div>
                         </div>
                         <div className={cx('infoEmail')}>
                             <span className={cx('email')}> Email</span>
-                            <span className={cx('emailResult')}> ngthtuan333@gmail.com</span>
+                            <span className={cx('emailResult')}> {userData.foundUser.email || 'Tuấn Nguyễn'}</span>
                         </div>
                         <div className={cx('update')}>
                             <div className={cx('updateContainer')}>
