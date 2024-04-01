@@ -9,7 +9,14 @@ const cx = classNames.bind(styles);
 function ShowInfo({ onHide }) {
     const [isVisible, setIsVisible] = useState(false);
     const userData = JSON.parse(localStorage.getItem('loginData'));
-
+    const handleUpdate = () => {
+        // Code xong cai update thi m goi update vao day http://localhost:4000/user/updateUser/:id
+        // nho truyen token vao
+        // no tra lai 1 tk user moi dc cap nhat
+        // cap nhat no vao localstorage de xai
+        // xong thi goi ham onHide de tat cai popup lai
+        console.log('update');
+    };
     useEffect(() => {
         setIsVisible(true);
     }, []);
@@ -41,7 +48,10 @@ function ShowInfo({ onHide }) {
                         <div className={cx('avt')}>
                             <img
                                 className={cx('avtImg')}
-                                src="https://zpsocial-f52-org.zadn.vn/435e11d21a79fb27a268.jpg"
+                                src={
+                                    userData?.foundUser.avatar ||
+                                    'https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg'
+                                }
                                 alt="avt"
                             />
                             <div className={cx('editAvt')}>
@@ -68,7 +78,7 @@ function ShowInfo({ onHide }) {
                             <span className={cx('emailResult')}> {userData.foundUser.email || 'Tuấn Nguyễn'}</span>
                         </div>
                         <div className={cx('update')}>
-                            <div className={cx('updateContainer')}>
+                            <div className={cx('updateContainer')} onSubmit={handleUpdate}>
                                 <FontAwesomeIcon className={cx('updateIcon')} icon={faPenToSquare} />
                                 <h3 className={cx('updateTitle')}>Cập nhật</h3>
                             </div>

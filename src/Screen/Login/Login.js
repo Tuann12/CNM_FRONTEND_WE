@@ -40,8 +40,8 @@ const Login = () => {
             if (response.ok) {
                 console.log('Đăng nhập thành công');
                 console.log('data', responseData);
-
                 localStorage.setItem('loginData', JSON.stringify(responseData));
+                console.log('loginData', localStorage.getItem('loginData'));
                 navigate('/home');
             } else {
                 alert(responseData.message || 'Đăng nhập thất bại! Vui lòng thử lại.');

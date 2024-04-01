@@ -11,13 +11,8 @@ const cx = classNames.bind(styles);
 function Navbar() {
     const [showTippy, setShowTippy] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
-    const [userData, setUserData] = useState(null);
-    useEffect(() => {
-        const storedData = localStorage.getItem('loginData');
-        if (storedData) {
-            setUserData(JSON.parse(storedData));
-        }
-    }, []);
+    const [userData, setUserData] = useState();
+
     const handleTippyVisibility = () => {
         setShowTippy(!showTippy);
         setShowInfo(false);
@@ -31,6 +26,19 @@ function Navbar() {
         localStorage.removeItem('loginData');
         window.location.href = '/';
     };
+
+    const fetchData = () => {
+        console.log('userData', localStorage.getItem('loginData'));
+        const storedData = localStorage.getItem('loginData');
+        if (storedData) {
+            setUserData(JSON.parse(storedData));
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
@@ -44,7 +52,7 @@ function Navbar() {
                         render={(attrs) => (
                             <div className={cx('profile')} tabIndex="-1" {...attrs}>
                                 <div className={cx('wrapProfile')}>
-                                    <div className={cx('header')}>{userData.foundUser.name || 'Tuấn Nguyễn'}</div>
+                                    <div className={cx('header')}>{userData?.foundUser.name || 'Tuấn Nguyễn'}</div>
                                     <div className={cx('content')}>
                                         <div className={cx('info')} onClick={handleProfileClick}>
                                             Hồ sơ của bạn
@@ -62,7 +70,10 @@ function Navbar() {
                         <div className={cx('avatar')} onClick={handleTippyVisibility}>
                             <img
                                 className={cx('avatarImg')}
-                                src="https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg"
+                                src={
+                                    userData?.foundUser.avatar ||
+                                    'https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg'
+                                }
                                 alt="avatar"
                             />
                         </div>
