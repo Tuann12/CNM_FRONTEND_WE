@@ -27,7 +27,10 @@ function Navbar() {
         setShowTippy(false);
         setShowInfo(true);
     };
-
+    const handleLogout = () => {
+        localStorage.removeItem('loginData');
+        window.location.href = '/';
+    };
     return (
         <div className={cx('wrapper')}>
             <div className={cx('container')}>
@@ -49,7 +52,9 @@ function Navbar() {
                                         {/* </Tippy> */}
                                         <div className={cx('setting')}>Cài đặt</div>
                                     </div>
-                                    <div className={cx('logout')}>Đăng xuất</div>
+                                    <div className={cx('logout')} onClick={handleLogout}>
+                                        Đăng xuất
+                                    </div>{' '}
                                 </div>
                             </div>
                         )}
