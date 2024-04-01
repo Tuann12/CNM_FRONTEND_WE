@@ -14,6 +14,7 @@ const Register = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [otp, setOtp] = useState(Array(6).fill(''));
     const [formData, setFormData] = useState({});
+
     const updateFormData = (data) => {
         setFormData(data);
     };
@@ -21,25 +22,28 @@ const Register = () => {
     const onSendOTP = async (data) => {
         updateFormData(data);
 
-        const response = await fetch('http://localhost:4000/user/sendotp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Basic ' + btoa('voongocminhan20072002@gmail.com' + ':' + 'merh xvmu gjsr ghtg'), // Thay thế 'username' và 'password' bằng thông tin đăng nhập của bạn
-            },
-            body: JSON.stringify({ email: data.email }),
-        });
-        const dataOTPCheck = await response.json();
-        if (response.ok) {
-            setShowPopup(true);
-        } else {
-            alert(dataOTPCheck.message || 'Gửi mã OTP thất bại! Vui lòng thử lại.');
-            console.error('Failed to send OTP');
+        try {
+            const response = await fetch('http://localhost:4000/user/sendotp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: data.email }),
+            });
+            const dataOTPCheck = await response.json();
+            if (response.ok) {
+                setShowPopup(true);
+            } else {
+                alert(dataOTPCheck.message || 'Gửi mã OTP thất bại! Vui lòng thử lại.');
+                console.error('Failed to send OTP');
+            }
+        } catch (error) {
+            alert(error.message || 'An error occurred! Please try again.');
+            console.error('Error occurred while sending OTP:', error);
         }
     };
 
     const onSubmit = async (data) => {
-        console.log(data);
         try {
             const response = await fetch('http://localhost:4000/user/signup', {
                 method: 'POST',
@@ -140,7 +144,7 @@ const Register = () => {
                 <path
                     fill="#e8f3ff"
                     d="M1278.31,38.196C1245.81,209.874 1197.22,365.556 1144.82,499.838L1144.82,503.638C1185.82,615.924 1216.41,720.211 1239.11,809.6L1439.7,810L1439.7,256.768C1379.4,158.78 1321.41,86.288 1278.31,38.195L1278.31,38.196z"
-                ></path>
+                ></path>{' '}
             </svg>
             <div className={cx('register')}>
                 <form onSubmit={handleSubmit(onSendOTP)}>
