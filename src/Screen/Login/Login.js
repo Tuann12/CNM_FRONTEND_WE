@@ -4,6 +4,7 @@ import { faLock, faMobileAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import styles from './Login.module.scss';
+import { useGlobalData } from '../../GlobalDataProvider';
 
 const useLoginController = () => {
     const [option, setOption] = useState({
@@ -18,6 +19,8 @@ const useLoginController = () => {
 };
 
 const Login = () => {
+    const { setGlobalData } = useGlobalData();
+
     const navigate = useNavigate();
     const { option, setOption } = useLoginController();
     const {
@@ -37,6 +40,8 @@ const Login = () => {
                 body: JSON.stringify({ email, password }),
             });
             const responseData = await response.json();
+            setGlobalData(responseData.data);
+
             if (response.ok) {
                 console.log('Đăng nhập thành công');
                 navigate('/home', { state: responseData.data });
