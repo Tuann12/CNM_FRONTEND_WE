@@ -15,8 +15,6 @@ const ForgotPass = () => {
     const [otp, setOtp] = useState(Array(6).fill(''));
     const [formData, setFormData] = useState({});
 
-    const navigate = useNavigate();
-
     const updateFormData = (data) => {
         setFormData(data);
     };
@@ -53,25 +51,29 @@ const ForgotPass = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    name: data.name,
                     email: data.email,
+                    password: data.password,
+                    gender: data.gender === 'male' ? 1 : 0,
                     otp: otp.join(''),
                 }),
             });
             const responseData = await response.json();
 
             if (response.ok) {
-                // alert('Đăng kí thành công!');
-                window.location.href = '/getPass';
+                alert('Đăng kí thành công!');
+                window.location.href = '/';
             } else {
-                console.error('Failed to forgotPassword:', response);
-                // alert(responseData.message || 'Đăng kí thất bại! Vui lòng thử lại.');
+                console.error('Failed to register:', response);
+                alert(responseData.message || 'Đăng kí thất bại! Vui lòng thử lại.');
                 setFormData('');
             }
         } catch (error) {
             alert(error.message || 'An error occurred! Please try again.');
-            console.error('Error occurred during forgotPassword:', error);
+            console.error('Error occurred during registration:', error);
         }
     };
+
     const schema = yup.object().shape({
         email: yup
             .string()
@@ -81,6 +83,11 @@ const ForgotPass = () => {
                 'Số điện thoại hoặc email không hợp lệ',
             )
             .required(),
+        password: yup.string().min(8, 'Mật khẩu phải trên 8 kí tự').required(),
+        confirmPassword: yup
+            .string()
+            .oneOf([yup.ref('password'), null], 'Mật khẩu không khớp')
+            .required('Nhập lại mật khẩu'),
     });
 
     const {
@@ -141,7 +148,6 @@ const ForgotPass = () => {
                     ></path>
                 </svg>
             </div>
-
             <div className={cx('login')}>
                 <h1 className={cx('title')}>Zalo</h1>
                 <div className={cx('login_title')}>
@@ -166,30 +172,30 @@ const ForgotPass = () => {
                             </Link>
                         </form>
                     </div>
-                    {showPopup && (
-                        <div className={cx('popup')}>
-                            <h2>Nhập OTP</h2>
-                            <form onSubmit={handleOtpSubmit}>
-                                <div className={cx('otp-inputs')}>
-                                    {otp.map((digit, index) => (
-                                        <input
-                                            key={index}
-                                            type="text"
-                                            maxLength="1"
-                                            className={cx('otp-input')}
-                                            value={digit}
-                                            onChange={(e) => handleChange(index, e.target.value)}
-                                            onFocus={(e) => e.target.select()}
-                                        />
-                                    ))}
-                                </div>
-                                <button type="submit" className={cx('btn')}>
-                                    Xác nhận
-                                </button>
-                            </form>
-                        </div>
-                    )}
                 </div>
+                {showPopup && (
+                    <div className={cx('popup')}>
+                        <h2>Nhập OTP</h2>
+                        <form onSubmit={handleOtpSubmit}>
+                            <div className={cx('otp-inputs')}>
+                                {otp.map((digit, index) => (
+                                    <input
+                                        key={index}
+                                        type="text"
+                                        maxLength="1"
+                                        className={cx('otp-input')}
+                                        value={digit}
+                                        onChange={(e) => handleChange(index, e.target.value)}
+                                        onFocus={(e) => e.target.select()}
+                                    />
+                                ))}
+                            </div>
+                            <button type="submit" className={cx('btn')}>
+                                Xác nhận
+                            </button>
+                        </form>
+                    </div>
+                )}
             </div>
         </div>
     );
