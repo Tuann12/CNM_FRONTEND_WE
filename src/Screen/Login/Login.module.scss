@@ -94,8 +94,8 @@
 }
 
 .container .login .login_main .login_main_content .login_main_content_img img {
-    width: 224px;
-    height: 224px;
+    width: 150px;
+    height: 150px;
 }
 
 .container .login .login_main .login_main_content .login_main_content_text {
@@ -140,8 +140,6 @@
     width: 100%;
     padding: 8px 10px 6px 25px;
     font-size: 14px;
-    border: 1px solid #eee;
-
     outline: none;
 }
 
@@ -173,7 +171,7 @@
     height: 44px;
     line-height: 44px;
     padding: 0 20px;
-    font-size: 0.875rem;
+    font-size: 14px;
     background-color: #0190f3;
     width: 100%;
     min-width: 210px;
@@ -183,7 +181,7 @@
     color: #fff;
     font-weight: 500;
     border: 0 none;
-    margin-bottom: 2rem;
+    margin: 16px 0;
 }
 
 .container .login .login_main .login_main_content form .forgot_password {
@@ -271,4 +269,9 @@
 .login_by_phone {
     color: #7cb2ec;
     margin-bottom: 20px;
+}
+
+.empty_notice {
+    margin-top: 40px;
+    color: rgba(255, 0, 0, 0.808);
 }

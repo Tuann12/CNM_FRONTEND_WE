@@ -140,7 +140,7 @@ const Login = () => {
                             <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className={styles.login_form_input}>
                                     <input type="text" placeholder="Email" {...register('email', { required: true })} />
-                                    {errors.email && <span>Email is required</span>}
+                                    {errors.email && <span className={styles.empty_notice}>Email không được rỗng</span>}
                                     <span>
                                         <FontAwesomeIcon icon={faMobileAlt} />
                                     </span>
@@ -151,7 +151,9 @@ const Login = () => {
                                         placeholder="Password"
                                         {...register('password', { required: true })}
                                     />
-                                    {errors.password && <span>Password is required</span>}
+                                    {errors.password && (
+                                        <span className={styles.empty_notice}>Password không được rỗng</span>
+                                    )}
                                     <span>
                                         <FontAwesomeIcon icon={faLock} />
                                     </span>
