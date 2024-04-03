@@ -1,20 +1,110 @@
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
+import * as yup from 'yup';
 import styles from './ForgotPass.module.scss';
 import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 const ForgotPass = () => {
+    const [showPopup, setShowPopup] = useState(false);
+    const [otp, setOtp] = useState(Array(6).fill(''));
+    const [formData, setFormData] = useState({});
+
     const navigate = useNavigate();
 
-    const onSubmit = async (event) => {
-        event.preventDefault();
-
-        console.log('forgot pass');
-        navigate('/getPass');
+    const updateFormData = (data) => {
+        setFormData(data);
     };
+
+    const onSendOTP = async (data) => {
+        updateFormData(data);
+
+        try {
+            const response = await fetch('http://localhost:4000/user/sendotp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: data.email }),
+            });
+            const dataOTPCheck = await response.json();
+            if (response.ok) {
+                setShowPopup(true);
+            } else {
+                alert(dataOTPCheck.message || 'Gửi mã OTP thất bại! Vui lòng thử lại.');
+                console.error('Failed to send OTP');
+            }
+        } catch (error) {
+            alert(error.message || 'An error occurred! Please try again.');
+            console.error('Error occurred while sending OTP:', error);
+        }
+    };
+
+    const onSubmit = async (data) => {
+        try {
+            const response = await fetch('http://localhost:4000/user/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: data.email,
+                    otp: otp.join(''),
+                }),
+            });
+            const responseData = await response.json();
+
+            if (response.ok) {
+                // alert('Đăng kí thành công!');
+                window.location.href = '/getPass';
+            } else {
+                console.error('Failed to forgotPassword:', response);
+                // alert(responseData.message || 'Đăng kí thất bại! Vui lòng thử lại.');
+                setFormData('');
+            }
+        } catch (error) {
+            alert(error.message || 'An error occurred! Please try again.');
+            console.error('Error occurred during forgotPassword:', error);
+        }
+    };
+    const schema = yup.object().shape({
+        email: yup
+            .string()
+            .trim()
+            .matches(
+                /^(?:\d{10}|(84|0[3|5|7|8|9])+([0-9]{8})\b|\w+@\w+\.\w{2,3})$/,
+                'Số điện thoại hoặc email không hợp lệ',
+            )
+            .required(),
+    });
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: yupResolver(schema),
+    });
+
+    const handleChange = (index, value) => {
+        const updatedOtp = [...otp];
+        updatedOtp[index] = value;
+        setOtp(updatedOtp);
+    };
+
+    const handleOtpSubmit = (e) => {
+        e.preventDefault();
+        const otpValue = otp.join('');
+        console.log('OTP submitted:', otpValue);
+        onSubmit(formData);
+        setShowPopup(false);
+    };
+
     return (
         <div className={cx('container')}>
             <div className="bg-svg" style={{ position: 'fixed', top: '0', left: 0, width: '100%' }}>
@@ -51,6 +141,7 @@ const ForgotPass = () => {
                     ></path>
                 </svg>
             </div>
+
             <div className={cx('login')}>
                 <h1 className={cx('title')}>Zalo</h1>
                 <div className={cx('login_title')}>
@@ -58,22 +149,46 @@ const ForgotPass = () => {
                 </div>
                 <div className={cx('login_main')}>
                     <div className={cx('login_main_content')}>
-                        <form onSubmit={onSubmit}>
+                        <form onSubmit={handleSubmit(onSendOTP)}>
                             <li>Nhập email để nhận mã xác thực</li>
                             <div className={cx('login_form_input')}>
-                                <input type="text" placeholder="Email" />
+                                <input type="email" placeholder="Email" {...register('email')} />
                                 <span>
                                     <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
                                 </span>
+                                {errors.email && <div className={cx('error')}>{errors.email.message}</div>}
                             </div>
-                            <button type="submit" onSubmit={onSubmit} className={cx('btn_login')}>
+                            <button type="submit" className={cx('btn_login')}>
                                 Tiếp tục
                             </button>
+                            <Link to="/" className={cx('back')}>
+                                Quay lại
+                            </Link>
                         </form>
-                        <Link to="/" className={cx('back')}>
-                            Quay lại
-                        </Link>
                     </div>
+                    {showPopup && (
+                        <div className={cx('popup')}>
+                            <h2>Nhập OTP</h2>
+                            <form onSubmit={handleOtpSubmit}>
+                                <div className={cx('otp-inputs')}>
+                                    {otp.map((digit, index) => (
+                                        <input
+                                            key={index}
+                                            type="text"
+                                            maxLength="1"
+                                            className={cx('otp-input')}
+                                            value={digit}
+                                            onChange={(e) => handleChange(index, e.target.value)}
+                                            onFocus={(e) => e.target.select()}
+                                        />
+                                    ))}
+                                </div>
+                                <button type="submit" className={cx('btn')}>
+                                    Xác nhận
+                                </button>
+                            </form>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
