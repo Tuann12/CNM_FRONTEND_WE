@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect } from 'react';
-import { faXmark, faPenToSquare, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
 import styles from './ShowInfo.module.scss';
 import UpdateInfo from './UpdateInfo/UpdateInfo';
@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 function ShowInfo({ onHide }) {
     const [isVisible, setIsVisible] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
-    const [avatarImage, setAvatarImage] = useState(null);
+    const [avatar, setAvatar] = useState(null);
     const userData = JSON.parse(localStorage.getItem('loginData'));
 
     const handleUpdate = () => {
@@ -25,11 +25,15 @@ function ShowInfo({ onHide }) {
         onHide();
     };
 
-    // Hàm xử lý khi người dùng chọn hình ảnh
-    const handleImageChange = (event) => {
-        const imageFile = event.target.files[0];
-        const imageUrl = URL.createObjectURL(imageFile);
-        setAvatarImage(imageUrl); // Cập nhật state với URL của hình ảnh
+    const handleUpdateInfo = (name, gender) => {
+        const updatedUserData = { ...userData };
+        updatedUserData.foundUser.name = name;
+        updatedUserData.foundUser.gender = gender;
+        localStorage.setItem('loginData', JSON.stringify(updatedUserData));
+    };
+
+    const handleAvatarUpdate = (updatedAvatar) => {
+        setAvatar(updatedAvatar);
     };
 
     useEffect(() => {
@@ -43,7 +47,12 @@ function ShowInfo({ onHide }) {
         <div>
             <div className={cx('overlay')}></div>
             {showUpdate ? (
-                <UpdateInfo onCancel={handleCancel} onClose={handleHide} />
+                <UpdateInfo
+                    onCancel={handleCancel}
+                    onClose={handleHide}
+                    onFileChange={handleAvatarUpdate}
+                    onUpdateInfo={handleUpdateInfo}
+                />
             ) : (
                 <div className={cx('wrapper', { visible: isVisible })}>
                     <div className={cx('profileHeader')}>
@@ -65,24 +74,13 @@ function ShowInfo({ onHide }) {
                                 <img
                                     className={cx('avtImg')}
                                     src={
-                                        avatarImage ||
-                                        userData?.foundUser.avatar ||
-                                        'https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg'
+                                        avatar
+                                            ? URL.createObjectURL(avatar)
+                                            : userData?.foundUser.avatar ||
+                                              'https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg'
                                     }
                                     alt="avt"
                                 />
-                                <div className={cx('editAvt')}>
-                                    <label htmlFor="avatarInput">
-                                        <FontAwesomeIcon className={cx('iconEditAvt')} icon={faCamera} />
-                                    </label>
-                                    <input
-                                        type="file"
-                                        id="avatarInput"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        style={{ display: 'none' }}
-                                    />
-                                </div>
                             </div>
                             <div className={cx('boxTitle')}>
                                 <h3 className={cx('title')}> {userData.foundUser.name || 'John Doe'} </h3>
