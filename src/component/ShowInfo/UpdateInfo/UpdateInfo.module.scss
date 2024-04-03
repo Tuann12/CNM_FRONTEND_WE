@@ -1,0 +1,122 @@
+.wrapper {
+    z-index: 99999999999;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 400px;
+    height: 490px;
+    background-color: var(--background);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profileHeader {
+    height: 49px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 15px;
+    border-bottom: 1px solid var(--border);
+}
+.title {
+    font-size: 15px;
+}
+.boxIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50px;
+    &:hover {
+        background-color: var(--background-box);
+    }
+    cursor: pointer;
+}
+.icon {
+    font-size: 20px;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 200px;
+}
+.boxName {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+.lblName {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+.inpName {
+    width: 366px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding-left: 10px;
+    &:focus {
+        border: 1px solid var(--primary);
+    }
+}
+
+.boxInfo {
+    display: flex;
+    flex-direction: column;
+    margin-right: 215px;
+    margin-top: 50px;
+}
+.lblInfo {
+    font-size: 16px;
+}
+.boxGender {
+    margin-top: 15px;
+}
+.inpGender {
+    margin: 0 15px;
+}
+
+.bottomUpdate {
+    width: 100%;
+    height: 61px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: end;
+    padding: 10px;
+}
+.btnCancel {
+    width: 62px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: var(--background-box);
+    font-size: 16px;
+    font-weight: 700;
+    &:hover {
+        background-color: var(--border);
+        cursor: pointer;
+    }
+}
+.btnUpdate {
+    cursor: pointer;
+    width: 99px;
+    height: 40px;
+    border-radius: 5px;
+    background-color: var(--primary);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--color-font);
+    margin-left: 10px;
+    &:hover {
+        background-color: rgb(3, 3, 185);
+    }
+}
