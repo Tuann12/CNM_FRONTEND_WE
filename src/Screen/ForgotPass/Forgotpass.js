@@ -3,10 +3,18 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import styles from './ForgotPass.module.scss';
-
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 const ForgotPass = () => {
+    const navigate = useNavigate();
+
+    const onSubmit = async (event) => {
+        event.preventDefault();
+
+        console.log('forgot pass');
+        navigate('/getPass');
+    };
     return (
         <div className={cx('container')}>
             <div className="bg-svg" style={{ position: 'fixed', top: '0', left: 0, width: '100%' }}>
@@ -50,7 +58,7 @@ const ForgotPass = () => {
                 </div>
                 <div className={cx('login_main')}>
                     <div className={cx('login_main_content')}>
-                        <form>
+                        <form onSubmit={onSubmit}>
                             <li>Nhập email để nhận mã xác thực</li>
                             <div className={cx('login_form_input')}>
                                 <input type="text" placeholder="Email" />
@@ -58,7 +66,7 @@ const ForgotPass = () => {
                                     <FontAwesomeIcon icon={faEnvelope}></FontAwesomeIcon>
                                 </span>
                             </div>
-                            <button type="submit" className={cx('btn_login')}>
+                            <button type="submit" onSubmit={onSubmit} className={cx('btn_login')}>
                                 Tiếp tục
                             </button>
                         </form>
