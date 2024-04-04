@@ -28,7 +28,7 @@ const Register = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email: data.email, checkGetPassEmail: true }),
+                body: JSON.stringify({ email: data.email, checkGetPassEmail: false }),
             });
             const dataOTPCheck = await response.json();
             if (response.ok) {

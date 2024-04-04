@@ -34,7 +34,7 @@ const ForgotPass = () => {
 
     const handleSendOTP = async (data) => {
         try {
-            const checkGetPassEmail = false;
+            const checkGetPassEmail = true;
             const response = await fetch('http://localhost:4000/user/sendotp', {
                 method: 'POST',
                 headers: {
@@ -46,7 +46,6 @@ const ForgotPass = () => {
 
             if (response.ok) {
                 setOtpResp(responseData.otp);
-
                 setShowPopup(true);
             } else {
                 alert(responseData.message || 'Gửi mã OTP thất bại! Vui lòng thử lại.');
