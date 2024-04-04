@@ -143,3 +143,8 @@
         background-color: rgb(3, 3, 185);
     }
 }
+
+.btnUpdate[disabled] {
+    pointer-events: none;
+    opacity: 0.5;
+}

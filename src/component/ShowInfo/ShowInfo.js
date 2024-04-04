@@ -77,7 +77,7 @@ function ShowInfo({ onHide }) {
                                         avatar
                                             ? URL.createObjectURL(avatar)
                                             : userData?.foundUser.avatar ||
-                                              'https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg'
+                                              'https://didongviet.vn/dchannel/wp-content/uploads/2023/08/hinh-nen-3d-hinh-nen-iphone-dep-3d-didongviet@2x-576x1024.jpg'
                                     }
                                     alt="avt"
                                 />

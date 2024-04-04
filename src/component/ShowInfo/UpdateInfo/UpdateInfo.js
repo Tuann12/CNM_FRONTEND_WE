@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faChevronLeft, faImage } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
@@ -11,6 +11,12 @@ function UpdateInfo({ onCancel, onClose, onFileChange, onUpdateInfo }) {
     const [name, setName] = useState(userData.foundUser.name || '');
     const [gender, setGender] = useState(userData.foundUser.gender || false);
     const [avatar, setAvatar] = useState(null);
+    const [isDirty, setIsDirty] = useState(false);
+
+    useEffect(() => {
+        // Kiểm tra xem có thay đổi nào được thực hiện không
+        setIsDirty(name !== userData.foundUser.name || gender !== userData.foundUser.gender || avatar !== null);
+    }, [name, gender, avatar, userData.foundUser.name, userData.foundUser.gender]);
 
     const handleNameChange = (event) => {
         setName(event.target.value);
@@ -25,10 +31,47 @@ function UpdateInfo({ onCancel, onClose, onFileChange, onUpdateInfo }) {
         setAvatar(file);
     };
 
-    const handleUpdate = () => {
-        onUpdateInfo(name, gender);
-        onFileChange(avatar);
-        onCancel();
+    const handleUpdate = async () => {
+        try {
+            const updatedUserData = {
+                name: name,
+                gender: gender,
+                avatar: avatar, // assuming avatar is sent as binary data
+            };
+
+            // Make a PUT request to update the user data
+            const response = await fetch(`http://localhost:4000/user/updateUser/${userData.foundUser._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // You might need to include additional headers like authorization token
+                },
+                body: JSON.stringify(updatedUserData),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update user data');
+            } else {
+                alert('Cập nhật thông tin thành công');
+            }
+
+            // Update local storage with the updated user data
+            const updatedUser = await response.json();
+            localStorage.setItem(
+                'loginData',
+                JSON.stringify({
+                    foundUser: updatedUser,
+                }),
+            );
+
+            // Call the onUpdateInfo function (assuming it's responsible for updating some parent component state)
+            onUpdateInfo(name, gender);
+            onFileChange(avatar);
+            setIsDirty(false);
+            onCancel();
+        } catch (error) {
+            console.error('Error updating user:', error);
+        }
     };
 
     return (
@@ -94,7 +137,7 @@ function UpdateInfo({ onCancel, onClose, onFileChange, onUpdateInfo }) {
                 <button className={cx('btnCancel')} onClick={onCancel}>
                     Hủy
                 </button>
-                <button className={cx('btnUpdate')} onClick={handleUpdate}>
+                <button className={cx('btnUpdate')} onClick={handleUpdate} disabled={!isDirty}>
                     Cập nhật
                 </button>
             </div>

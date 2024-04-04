@@ -52,7 +52,7 @@ function Navbar() {
                         render={(attrs) => (
                             <div className={cx('profile')} tabIndex="-1" {...attrs}>
                                 <div className={cx('wrapProfile')}>
-                                    <div className={cx('header')}>{userData?.foundUser.name || 'Tuấn Nguyễn'}</div>
+                                    <div className={cx('header')}>{userData.foundUser.name || 'Tuấn Nguyễn'}</div>
                                     <div className={cx('content')}>
                                         <div className={cx('info')} onClick={handleProfileClick}>
                                             Hồ sơ của bạn
