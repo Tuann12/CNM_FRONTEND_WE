@@ -18,6 +18,7 @@ const ForgotPass = () => {
     const {
         register,
         handleSubmit,
+        getValues,
         formState: { errors },
     } = useForm();
     const schema = yup.object().shape({
@@ -45,6 +46,7 @@ const ForgotPass = () => {
 
             if (response.ok) {
                 setOtpResp(responseData.otp);
+
                 setShowPopup(true);
             } else {
                 alert(responseData.message || 'Gửi mã OTP thất bại! Vui lòng thử lại.');
@@ -67,10 +69,13 @@ const ForgotPass = () => {
     const handleOtpSubmit = (e) => {
         e.preventDefault();
         const otpEntered = otp.join('');
+        const formData = getValues(); // Lấy dữ liệu từ form
+
         console.log('OTP entered:', otpEntered);
         console.log('otpResp data:', otpResp);
         if (otpEntered === otpResp) {
-            navigate('/getPass');
+            const email = formData.email; // Truy cập vào giá trị của trường email
+            navigate('/getPass', { state: { email: email } });
         } else {
             alert('Mã OTP không đúng. Vui lòng kiểm tra và nhập lại.');
             setOtp(Array(6).fill(''));

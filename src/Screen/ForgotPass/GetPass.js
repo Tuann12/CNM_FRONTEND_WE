@@ -5,12 +5,15 @@ import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import classNames from 'classnames/bind';
 import styles from './ForgotPass.module.scss';
+import { useLocation } from 'react-router-dom';
 
 const cx = classNames.bind(styles);
 
 const GetPass = () => {
     const onSubmit = async (data) => {};
-
+    const location = useLocation();
+    const email = location.state?.email; // Lấy email từ định tuyến
+    console.log(email);
     const schema = yup.object().shape({
         oldPassword: yup.string().required('Vui lòng nhập mật khẩu cũ'),
         newPassword: yup.string().min(8, 'Mật khẩu mới phải có ít nhất 8 ký tự').required('Vui lòng nhập mật khẩu mới'),
@@ -81,7 +84,7 @@ const GetPass = () => {
                         <input
                             className={cx('register-form-input-text')}
                             type="password"
-                            placeholder="Mật khẩu mới"
+                            placeholder={email}
                             required
                             {...register('newPassword')}
                         />
