@@ -1,24 +1,25 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames/bind';
 import * as yup from 'yup';
 import styles from './ForgotPass.module.scss';
-
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 const ForgotPass = () => {
+    const navigate = useNavigate();
     const [showPopup, setShowPopup] = useState(false);
     const [otp, setOtp] = useState(Array(6).fill(''));
+    const [otpResp, setOtpResp] = useState(null);
+
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
-
     const schema = yup.object().shape({
         email: yup
             .string()
@@ -40,11 +41,12 @@ const ForgotPass = () => {
                 },
                 body: JSON.stringify({ email: data.email, checkGetPassEmail: checkGetPassEmail }),
             });
+            const responseData = await response.json();
 
             if (response.ok) {
+                setOtpResp(responseData.otp);
                 setShowPopup(true);
             } else {
-                const responseData = await response.json();
                 alert(responseData.message || 'Gửi mã OTP thất bại! Vui lòng thử lại.');
                 console.error('Failed to send OTP');
             }
@@ -53,11 +55,9 @@ const ForgotPass = () => {
             console.error('Error occurred while sending OTP:', error);
         }
     };
-
     const onSubmit = async (data) => {
         handleSendOTP(data);
     };
-
     const handleChange = (index, value) => {
         const updatedOtp = [...otp];
         updatedOtp[index] = value;
@@ -66,7 +66,15 @@ const ForgotPass = () => {
 
     const handleOtpSubmit = (e) => {
         e.preventDefault();
-        // Handle OTP submission
+        const otpEntered = otp.join('');
+        console.log('OTP entered:', otpEntered);
+        console.log('otpResp data:', otpResp);
+        if (otpEntered === otpResp) {
+            navigate('/getPass');
+        } else {
+            alert('Mã OTP không đúng. Vui lòng kiểm tra và nhập lại.');
+            setOtp(Array(6).fill(''));
+        }
     };
 
     return (
