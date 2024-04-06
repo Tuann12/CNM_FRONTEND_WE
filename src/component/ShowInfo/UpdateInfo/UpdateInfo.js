@@ -6,7 +6,7 @@ import styles from './UpdateInfo.module.scss';
 
 const cx = classNames.bind(styles);
 
-function UpdateInfo({ onCancel, onClose, onFileChange, onUpdateInfo }) {
+function UpdateInfo({ onCancel, onClose, onUpdateInfo }) {
     const userData = JSON.parse(localStorage.getItem('loginData'));
     const [name, setName] = useState(userData.foundUser.name || '');
     const [gender, setGender] = useState(userData.foundUser.gender || false);
@@ -26,49 +26,63 @@ function UpdateInfo({ onCancel, onClose, onFileChange, onUpdateInfo }) {
         setGender(event.target.value === 'male' ? true : false);
     };
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
         setAvatar(file);
     };
 
     const handleUpdate = async () => {
         try {
+            let updatedAvatarUrl = userData.foundUser.avatar;
+
+            if (avatar) {
+                // Tạo formData để gửi file avatar lên server
+                const formData = new FormData();
+                formData.append('avatar', avatar);
+
+                // Gửi file avatar lên API
+                const avatarResponse = await fetch(
+                    `http://localhost:4000/user/uploadAvatarS3/${userData.foundUser._id}`,
+                    {
+                        method: 'POST',
+                        body: formData,
+                    },
+                );
+
+                // Lấy URL của avatar đã tải lên từ phản hồi của API upload
+                const avatarData = await avatarResponse.json();
+                updatedAvatarUrl = avatarData.avatar;
+            }
+            console.log('Avatar:', avatar);
+            console.log('Updated avatar:', updatedAvatarUrl);
+
             const updatedUserData = {
                 name: name,
-                gender: gender,
-                avatar: avatar, // assuming avatar is sent as binary data
+                gender: Boolean(gender),
+                avatar: updatedAvatarUrl || (userData.foundUser.avatar ? userData.foundUser.avatar : null),
             };
 
-            // Make a PUT request to update the user data
+            console.log('Updated user data:', updatedUserData);
+
             const response = await fetch(`http://localhost:4000/user/updateUser/${userData.foundUser._id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    // You might need to include additional headers like authorization token
                 },
                 body: JSON.stringify(updatedUserData),
             });
 
+            const updatedUser = await response.json();
             if (!response.ok) {
                 throw new Error('Failed to update user data');
             } else {
+                console.log('Updated user:', { foundUser: updatedUser });
+                localStorage.setItem('loginData', JSON.stringify({ foundUser: updatedUser }));
                 alert('Cập nhật thông tin thành công');
+                onUpdateInfo(name, gender, avatar);
+                setIsDirty(false);
+                onCancel();
             }
-
-            // Update local storage with the updated user data
-            const updatedUser = await response.json();
-            localStorage.setItem(
-                'loginData',
-                JSON.stringify({
-                    foundUser: updatedUser,
-                }),
-            );
-
-            // Call the onUpdateInfo function (assuming it's responsible for updating some parent component state)
-            onUpdateInfo(name, gender);
-            onFileChange(avatar);
-            setIsDirty(false);
-            onCancel();
         } catch (error) {
             console.error('Error updating user:', error);
         }

@@ -25,34 +25,27 @@ function ShowInfo({ onHide }) {
         onHide();
     };
 
-    const handleUpdateInfo = (name, gender) => {
+    const handleUpdateInfo = (name, gender, updateAvatar) => {
         const updatedUserData = { ...userData };
         updatedUserData.foundUser.name = name;
         updatedUserData.foundUser.gender = gender;
+        updatedUserData.foundUser.gender = updateAvatar;
         localStorage.setItem('loginData', JSON.stringify(updatedUserData));
-    };
-
-    const handleAvatarUpdate = (updatedAvatar) => {
-        setAvatar(updatedAvatar);
+        setAvatar(updateAvatar);
     };
 
     useEffect(() => {
         setIsVisible(true);
     }, []);
 
-    console.log('userData', userData);
-    console.log('userData', JSON.parse(localStorage.getItem('loginData')));
+    console.log('1', userData);
+    console.log('2', JSON.parse(localStorage.getItem('loginData')));
 
     return (
         <div>
             <div className={cx('overlay')}></div>
             {showUpdate ? (
-                <UpdateInfo
-                    onCancel={handleCancel}
-                    onClose={handleHide}
-                    onFileChange={handleAvatarUpdate}
-                    onUpdateInfo={handleUpdateInfo}
-                />
+                <UpdateInfo onCancel={handleCancel} onClose={handleHide} onUpdateInfo={handleUpdateInfo} />
             ) : (
                 <div className={cx('wrapper', { visible: isVisible })}>
                     <div className={cx('profileHeader')}>
@@ -74,10 +67,8 @@ function ShowInfo({ onHide }) {
                                 <img
                                     className={cx('avtImg')}
                                     src={
-                                        avatar
-                                            ? URL.createObjectURL(avatar)
-                                            : userData?.foundUser.avatar ||
-                                              'https://didongviet.vn/dchannel/wp-content/uploads/2023/08/hinh-nen-3d-hinh-nen-iphone-dep-3d-didongviet@2x-576x1024.jpg'
+                                        userData?.foundUser.avatar ||
+                                        'https://didongviet.vn/dchannel/wp-content/uploads/2023/08/hinh-nen-3d-hinh-nen-iphone-dep-3d-didongviet@2x-576x1024.jpg'
                                     }
                                     alt="avt"
                                 />
