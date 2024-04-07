@@ -7,10 +7,9 @@ import UpdateInfo from './UpdateInfo/UpdateInfo';
 
 const cx = classNames.bind(styles);
 
-function ShowInfo({ onHide }) {
+function ShowInfo({ onHide, updateUserData }) {
     const [isVisible, setIsVisible] = useState(false);
     const [showUpdate, setShowUpdate] = useState(false);
-    const [avatar, setAvatar] = useState(null);
     const userData = JSON.parse(localStorage.getItem('loginData'));
 
     const handleUpdate = () => {
@@ -29,17 +28,15 @@ function ShowInfo({ onHide }) {
         const updatedUserData = { ...userData };
         updatedUserData.foundUser.name = name;
         updatedUserData.foundUser.gender = gender;
-        updatedUserData.foundUser.gender = updateAvatar;
+        updatedUserData.foundUser.avatar = updateAvatar;
         localStorage.setItem('loginData', JSON.stringify(updatedUserData));
-        setAvatar(updateAvatar);
+        updateUserData(updatedUserData);
     };
 
     useEffect(() => {
         setIsVisible(true);
-    }, []);
-
-    console.log('1', userData);
-    console.log('2', JSON.parse(localStorage.getItem('loginData')));
+        localStorage.setItem('loginData', JSON.stringify(userData));
+    }, [userData]);
 
     return (
         <div>
@@ -67,8 +64,8 @@ function ShowInfo({ onHide }) {
                                 <img
                                     className={cx('avtImg')}
                                     src={
-                                        userData?.foundUser.avatar ||
-                                        'https://didongviet.vn/dchannel/wp-content/uploads/2023/08/hinh-nen-3d-hinh-nen-iphone-dep-3d-didongviet@2x-576x1024.jpg'
+                                        userData.foundUser.avatar ||
+                                        'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg'
                                     }
                                     alt="avt"
                                 />

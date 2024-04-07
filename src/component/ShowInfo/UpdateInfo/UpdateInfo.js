@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faChevronLeft, faImage } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
@@ -13,22 +13,20 @@ function UpdateInfo({ onCancel, onClose, onUpdateInfo }) {
     const [avatar, setAvatar] = useState(null);
     const [isDirty, setIsDirty] = useState(false);
 
-    useEffect(() => {
-        // Kiểm tra xem có thay đổi nào được thực hiện không
-        setIsDirty(name !== userData.foundUser.name || gender !== userData.foundUser.gender || avatar !== null);
-    }, [name, gender, avatar, userData.foundUser.name, userData.foundUser.gender]);
-
     const handleNameChange = (event) => {
         setName(event.target.value);
+        setIsDirty(true);
     };
 
     const handleGenderChange = (event) => {
         setGender(event.target.value === 'male' ? true : false);
+        setIsDirty(true);
     };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setAvatar(file);
+        setIsDirty(true);
     };
 
     const handleUpdate = async () => {
@@ -53,16 +51,12 @@ function UpdateInfo({ onCancel, onClose, onUpdateInfo }) {
                 const avatarData = await avatarResponse.json();
                 updatedAvatarUrl = avatarData.avatar;
             }
-            console.log('Avatar:', avatar);
-            console.log('Updated avatar:', updatedAvatarUrl);
 
             const updatedUserData = {
                 name: name,
                 gender: Boolean(gender),
                 avatar: updatedAvatarUrl || (userData.foundUser.avatar ? userData.foundUser.avatar : null),
             };
-
-            console.log('Updated user data:', updatedUserData);
 
             const response = await fetch(`http://localhost:4000/user/updateUser/${userData.foundUser._id}`, {
                 method: 'PUT',
@@ -76,10 +70,13 @@ function UpdateInfo({ onCancel, onClose, onUpdateInfo }) {
             if (!response.ok) {
                 throw new Error('Failed to update user data');
             } else {
-                console.log('Updated user:', { foundUser: updatedUser });
-                localStorage.setItem('loginData', JSON.stringify({ foundUser: updatedUser }));
+                const newUserData = {
+                    ...userData,
+                    foundUser: updatedUser,
+                };
+                localStorage.setItem('loginData', JSON.stringify(newUserData));
                 alert('Cập nhật thông tin thành công');
-                onUpdateInfo(name, gender, avatar);
+                onUpdateInfo(updatedUserData.name, updatedUserData.gender, updatedUserData.avatar);
                 setIsDirty(false);
                 onCancel();
             }

@@ -28,12 +28,17 @@ function Navbar() {
     };
 
     const fetchData = () => {
-        console.log('userData', localStorage.getItem('loginData'));
+        console.log('Navbar-userData', localStorage.getItem('loginData'));
         const storedData = localStorage.getItem('loginData');
         if (storedData) {
             setUserData(JSON.parse(storedData));
         }
     };
+
+    const updateUserData = (newUserData) => {
+        setUserData(newUserData);
+    };
+    console.log('Navbar-userData', userData?.foundUser.avatar);
 
     useEffect(() => {
         fetchData();
@@ -72,13 +77,13 @@ function Navbar() {
                                 className={cx('avatarImg')}
                                 src={
                                     userData?.foundUser.avatar ||
-                                    'https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg'
+                                    'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg'
                                 }
                                 alt="avatar"
                             />
                         </div>
                     </Tippy>
-                    {showInfo && <ShowInfo onHide={handleTippyVisibility} />}
+                    {showInfo && <ShowInfo onHide={handleTippyVisibility} updateUserData={updateUserData} />}
                     <div className={cx('wrapIcon')}>
                         <div className={cx('boxIcon', 'active')}>
                             <FontAwesomeIcon className={cx('icon')} icon={faComment} />
