@@ -68,3 +68,11 @@
 .iconInp {
     font-size: 20px;
 }
+
+.emojiPickerWrapper {
+    position: fixed;
+    top: 52%;
+    left: 82%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}

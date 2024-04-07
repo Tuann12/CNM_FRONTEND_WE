@@ -9,17 +9,19 @@ const cx = classNames.bind(styles);
 
 function Chat() {
     const [selectedItem, setSelectedItem] = useState({ avatar: '', title: '' });
+    const [messages, setMessages] = useState([]);
 
-    // const handleItemClick = ({ avatar, title }) => {
-    //     setSelectedItem({ avatar, title });
-    // };
+    const handleMessageSend = (message) => {
+        setMessages([...messages, message]);
+    };
 
     return (
         <div className={cx('wrapper')}>
             <HeaderChat selectedItem={selectedItem} />
-            <ContentChat />
-            <InputChat />
+            <ContentChat messages={messages} />
+            <InputChat onSend={handleMessageSend} />
         </div>
     );
 }
+
 export default Chat;
