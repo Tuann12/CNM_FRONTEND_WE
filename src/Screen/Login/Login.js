@@ -39,7 +39,6 @@ const Login = () => {
             const responseData = await response.json();
             if (response.ok) {
                 console.log('Đăng nhập thành công');
-                console.log('data', responseData);
                 localStorage.setItem('loginData', JSON.stringify(responseData));
                 console.log('loginData', localStorage.getItem('loginData'));
                 navigate('/home');

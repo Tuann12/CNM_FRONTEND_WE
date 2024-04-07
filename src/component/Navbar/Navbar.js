@@ -28,7 +28,6 @@ function Navbar() {
     };
 
     const fetchData = () => {
-        console.log('Navbar-userData', localStorage.getItem('loginData'));
         const storedData = localStorage.getItem('loginData');
         if (storedData) {
             setUserData(JSON.parse(storedData));
@@ -38,7 +37,6 @@ function Navbar() {
     const updateUserData = (newUserData) => {
         setUserData(newUserData);
     };
-    console.log('Navbar-userData', userData?.foundUser.avatar);
 
     useEffect(() => {
         fetchData();
