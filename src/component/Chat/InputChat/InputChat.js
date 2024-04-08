@@ -4,6 +4,7 @@ import { faImage, faFaceLaugh, faFaceGrinWide, faCircleRight } from '@fortawesom
 import classNames from 'classnames/bind';
 import styles from './InputChat.module.scss';
 import EmojiPicker from 'emoji-picker-react';
+import { emitter } from '../../BoxChat/ListChat/ItemChat';
 
 const cx = classNames.bind(styles);
 
@@ -13,6 +14,19 @@ function InputChat({ onSend }) {
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const textareaRef = useRef(null);
     const emojiPickerRef = useRef(null);
+    const [itemData, setItemData] = useState({ id: '' }); // Thêm id vào itemData
+    useEffect(() => {
+        const handler = (data) => {
+            setItemData(data);
+        };
+
+        emitter.on('itemClick', handler);
+
+        return () => {
+            emitter.off('itemClick', handler);
+        };
+    }, []);
+    console.log('ID in InputChat:', itemData.id); // Log id của ItemChat được chọn từ localStorage
 
     useEffect(() => {
         document.addEventListener('mousedown', handleOutsideClick);
