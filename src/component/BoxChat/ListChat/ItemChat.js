@@ -10,10 +10,11 @@ const cx = classNames.bind(styles);
 
 const emitter = mitt();
 
-function ItemChat({ avatar, title, contentChat, email, time, icon, iconAccept, iconDecline, onItemClick }) {
+function ItemChat({ id, avatar, title, contentChat, email, time, icon, iconAccept, iconDecline, onItemClick }) {
     const handleClick = () => {
-        onItemClick({ avatar, title });
-        emitter.emit('itemClick', { avatar, title });
+        console.log('Item clicked:', { avatar, title, id });
+        onItemClick({ avatar, title, id });
+        emitter.emit('itemClick', { avatar, title, id });
     };
 
     return (
