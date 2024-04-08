@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faContactBook, faGear } from '@fortawesome/free-solid-svg-icons';
 import ShowInfo from '../ShowInfo/ShowInfo';
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import styles from './Navbar.module.scss';
@@ -13,6 +13,7 @@ function Navbar() {
     const [showTippy, setShowTippy] = useState(false);
     const [showInfo, setShowInfo] = useState(false);
     const [userData, setUserData] = useState();
+    const location = useLocation();
 
     const handleTippyVisibility = () => {
         setShowTippy(!showTippy);
@@ -37,6 +38,10 @@ function Navbar() {
 
     const updateUserData = (newUserData) => {
         setUserData(newUserData);
+    };
+
+    const isActive = (path) => {
+        return location.pathname === path;
     };
 
     useEffect(() => {
@@ -84,11 +89,13 @@ function Navbar() {
                     </Tippy>
                     {showInfo && <ShowInfo onHide={handleTippyVisibility} updateUserData={updateUserData} />}
                     <div className={cx('wrapIcon')}>
-                        <div className={cx('boxIcon', 'active')}>
-                            <FontAwesomeIcon className={cx('icon')} icon={faComment} />
+                        <div className={cx('boxIcon', { active: isActive('/home') })}>
+                            <Link to="/home">
+                                <FontAwesomeIcon className={cx('icon')} icon={faComment} />
+                            </Link>
                         </div>
 
-                        <div className={cx('boxIcon')}>
+                        <div className={cx('boxIcon', { active: isActive('/contact') })}>
                             <Link to="/contact">
                                 <FontAwesomeIcon className={cx('icon')} icon={faContactBook} />
                             </Link>

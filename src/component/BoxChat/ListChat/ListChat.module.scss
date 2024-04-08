@@ -3,12 +3,7 @@
     max-height: 82.5vh;
 
     &::-webkit-scrollbar {
-        width: 7px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background: #999da396;
-        border-radius: 5px;
+        width: 0px;
     }
 }
 .ItemChatWrap {
@@ -69,17 +64,35 @@
     }
 }
 
-.BoxAcceptFriends {
+.iconAcceptFriends {
     display: flex;
-    align-items: center;
+    position: relative;
 }
-.btnDecline {
-    width: 50px;
-    height: 30px;
-    margin-right: 10px;
+.iconAccept {
+    position: absolute;
+    border-radius: 5px;
+    padding: 8px;
+    background-color: var(--background-box);
+    color: var(--primary);
+    border: 1px solid var(--primary);
+    margin-left: 10px;
+    right: 10px;
+    top: -20px;
+    opacity: 1;
+    &:hover {
+        opacity: 0.7;
+    }
 }
-.btnAccept {
-    width: 50px;
-    height: 30px;
-    margin-right: 10px;
+.iconDecline {
+    position: absolute;
+    right: 60px;
+    top: -20px;
+    border-radius: 5px;
+    padding: 8px;
+    background-color: var(--background-box);
+    border: 1px solid rgba(0, 0, 0, 0.483);
+    opacity: 1;
+    &:hover {
+        opacity: 0.7;
+    }
 }
