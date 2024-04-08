@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComment, faContactBook, faGear } from '@fortawesome/free-solid-svg-icons';
 import ShowInfo from '../ShowInfo/ShowInfo';
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react/headless';
 import classNames from 'classnames/bind';
 import styles from './Navbar.module.scss';
@@ -88,7 +89,9 @@ function Navbar() {
                         </div>
 
                         <div className={cx('boxIcon')}>
-                            <FontAwesomeIcon className={cx('icon')} icon={faContactBook} />
+                            <Link to="/contact">
+                                <FontAwesomeIcon className={cx('icon')} icon={faContactBook} />
+                            </Link>
                         </div>
                     </div>
                 </div>

@@ -68,3 +68,18 @@
         background-color: var(--border);
     }
 }
+
+.BoxAcceptFriends {
+    display: flex;
+    align-items: center;
+}
+.btnDecline {
+    width: 50px;
+    height: 30px;
+    margin-right: 10px;
+}
+.btnAccept {
+    width: 50px;
+    height: 30px;
+    margin-right: 10px;
+}

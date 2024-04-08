@@ -9,7 +9,7 @@ const cx = classNames.bind(styles);
 
 const emitter = mitt();
 
-function ItemChat({ avatar, title, contentChat, email, time, icon, onItemClick }) {
+function ItemChat({ avatar, title, contentChat, email, time, icon, btnDecline, btnAccept, onItemClick }) {
     const handleClick = () => {
         onItemClick({ avatar, title });
         emitter.emit('itemClick', { avatar, title });
@@ -27,6 +27,10 @@ function ItemChat({ avatar, title, contentChat, email, time, icon, onItemClick }
                 <div className={cx('time')}>{time}</div>
                 <div className={cx('iconRequestFriend')}>
                     <FontAwesomeIcon className={cx('icon')} icon={icon} />
+                </div>
+                <div className={cx('BoxAcceptFriends')}>
+                    <button className={cx('btnDecline')}>{btnDecline}</button>
+                    <button className={cx('btnAccept')}>{btnAccept}</button>
                 </div>
             </div>
         </div>
