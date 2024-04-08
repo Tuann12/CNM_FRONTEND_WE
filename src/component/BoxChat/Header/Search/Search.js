@@ -6,88 +6,69 @@ import classNames from 'classnames/bind';
 import styles from './Search.module.scss';
 import ListChat from '../../ListChat/ListChat';
 import ItemChat from '../../ListChat/ItemChat';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
 function Search() {
     const [selectedItem, setSelectedItem] = useState(null);
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchEmail, setSearchEmail] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [searchError, setSearchError] = useState('');
 
-    function onItemClick(item) {
+    async function handleSearch() {
+        try {
+            const response = await axios.get(`http://localhost:4000/user/findUserByEmail/${searchEmail}`);
+            if (response.data.success) {
+                setSearchResults([response.data.user]);
+                setSearchError('');
+            } else {
+                setSearchResults([]);
+                setSearchError('Không tìm thấy người dùng');
+            }
+        } catch (error) {
+            console.error('Error searching for user:', error);
+            setSearchError('Đã xảy ra lỗi khi tìm kiếm người dùng');
+        }
+    }
+
+    async function onItemClick(item) {
         setSelectedItem(item);
+        const storedData = localStorage.getItem('loginData');
+        console.log(JSON.parse(storedData));
+        try {
+            const response = await axios.post('http://localhost:4000/user/sendFriendRequest', {
+                senderId: JSON.parse(storedData).foundUser._id, // Lấy ID của người gửi từ localStorage
+                receiverId: item._id, // Lấy ID của người nhận từ item được nhấp
+            });
+            console.log(response.data.message); // In ra thông báo từ server
+        } catch (error) {
+            console.error('Error sending friend request:', error);
+        }
     }
 
-    function filterItems() {
-        return searchTerm.trim() !== '' ? (
-            <ListChat>
-                {filteredItems.map((item, index) => (
-                    <ItemChat
-                        key={index}
-                        avatar={item.avatar}
-                        title={item.title}
-                        email={item.email}
-                        icon={item.icon}
-                        onItemClick={onItemClick}
-                    />
-                ))}
-            </ListChat>
-        ) : null;
+    function renderSearchResults() {
+        return searchResults.map((user, index) => (
+            <ItemChat
+                key={index}
+                avatar={
+                    user.avatar ? (
+                        <img className={cx('avatarImg')} src={user.avatar} alt="avatar" />
+                    ) : (
+                        <img
+                            className={cx('avatarImg')}
+                            src="https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg"
+                            alt="default-avatar"
+                        />
+                    )
+                }
+                title={user.name}
+                email={user.email}
+                icon={faUserPlus}
+                onItemClick={() => onItemClick(user)} // Truyền user vào hàm onItemClick
+            />
+        ));
     }
-
-    const filteredItems = [
-        {
-            avatar: (
-                <img
-                    className={cx('avatarImg')}
-                    src="https://nhadepso.com/wp-content/uploads/2023/03/loa-mat-voi-101-hinh-anh-avatar-meo-cute-dang-yeu-dep-mat_2.jpg"
-                    alt="avatar"
-                />
-            ),
-            title: 'Nguyen Van A',
-            email: 'ngthtuan333@gmail.com',
-            icon: faUserPlus,
-        },
-        {
-            avatar: (
-                <img
-                    className={cx('avatarImg')}
-                    src="https://img.lovepik.com/free-png/20211130/lovepik-cartoon-avatar-png-image_401205594_wh1200.png"
-                    alt="avatar"
-                />
-            ),
-            title: 'Nguyen Van B',
-            email: 'tuannguyen12@gmail.com',
-            icon: faUserPlus,
-        },
-        {
-            avatar: (
-                <img
-                    className={cx('avatarImg')}
-                    src="https://img.lovepik.com/free-png/20211204/lovepik-cartoon-avatar-png-image_401302777_wh1200.png"
-                    alt="avatar"
-                />
-            ),
-            title: 'Nguyen Van C',
-            email: 'nguyenvanC@gmail.com',
-            icon: faUserPlus,
-        },
-        {
-            avatar: (
-                <img
-                    className={cx('avatarImg')}
-                    src="https://img.lovepik.com/free-png/20211206/lovepik-cartoon-avatar-png-image_401349915_wh1200.png"
-                    alt="avatar"
-                />
-            ),
-            title: 'Nguyen Van D',
-            email: 'dinhdoclap@gmail.com',
-            icon: faUserPlus,
-        },
-    ].filter(
-        (item) =>
-            item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            item.email.toLowerCase().includes(searchTerm.toLowerCase()),
-    );
 
     return (
         <div className={cx('wrapper')}>
@@ -96,8 +77,8 @@ function Search() {
                     className={cx('searchBtn')}
                     type="text"
                     placeholder="Tìm kiếm"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    value={searchEmail}
+                    onChange={(e) => setSearchEmail(e.target.value)}
                 />
                 <Tippy
                     interactive
@@ -105,11 +86,15 @@ function Search() {
                     trigger="click"
                     render={(attrs) => (
                         <div className={cx('showBoxSearch')} tabIndex="-1" {...attrs}>
-                            {filterItems()}
+                            {searchResults.length > 0 ? (
+                                <ListChat>{renderSearchResults()}</ListChat>
+                            ) : (
+                                <p>{searchError}</p>
+                            )}
                         </div>
                     )}
                 >
-                    <FontAwesomeIcon className={cx('searchIcon')} icon={faMagnifyingGlass} />
+                    <FontAwesomeIcon className={cx('searchIcon')} icon={faMagnifyingGlass} onClick={handleSearch} />
                 </Tippy>
             </div>
         </div>
