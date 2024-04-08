@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ListChat from './ListChat/ListChat';
 import ItemChat from './ListChat/ItemChat';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import styles from './BoxChat.module.scss';
 import classNames from 'classnames/bind';
 

@@ -3,6 +3,7 @@
     height: 64px;
 }
 .searchBox {
+    position: relative;
     display: flex;
     align-items: center;
     border-radius: 5px;
@@ -12,7 +13,12 @@
     margin: 33px auto;
 }
 .searchIcon {
-    margin-left: 10px;
+    padding: 6px;
+    border-radius: 5px;
+    &:hover {
+        cursor: pointer;
+        background-color: var(--border);
+    }
 }
 .searchBtn {
     padding: 5px 8px;
@@ -20,4 +26,21 @@
     height: 32px;
     background-color: var(--background-box);
     border-radius: 5px;
+}
+
+.avatarImg {
+    width: 48px;
+    height: 48px;
+    border-radius: 50px;
+    border: 1px solid var(--color-font);
+}
+
+.showBoxSearch {
+    position: fixed;
+    width: 336px;
+    top: 5px;
+    left: -236px;
+    overflow: hidden;
+    background-color: rgb(234, 233, 233);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
 }
