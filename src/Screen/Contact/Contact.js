@@ -28,6 +28,22 @@ function Contact() {
         fetchFriendRequestsSent();
     }, []);
 
+    // Function to handle accepting friend request
+    const handleAccept = async (user) => {
+        try {
+            const response = await axios.post('http://localhost:4000/user/acceptFriendRequestAndSendMessage', {
+                userId: JSON.parse(storedData).foundUser._id, // Lấy ID của người gửi từ localStorage
+                friendId: user._id,
+            });
+            console.log(response.data.message);
+
+            // Update friendRequestsSent by filtering out the accepted user
+            setFriendRequestsSent((prevRequests) => prevRequests.filter((request) => request._id !== user._id));
+        } catch (error) {
+            console.error('Error accepting friend request:', error);
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             <Navbar />
@@ -41,6 +57,7 @@ function Contact() {
                                 email={user.email}
                                 iconAccept={faCheck}
                                 iconDecline={faXmark}
+                                onItemClick={() => handleAccept(user)} // Pass a function reference
                             />
                         </div>
                     ))}

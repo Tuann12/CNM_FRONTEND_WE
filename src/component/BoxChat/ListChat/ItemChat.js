@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import styles from './ListChat.module.scss';
 import mitt from 'mitt';
+import axios from 'axios'; // Import axios to make API calls
 
 const cx = classNames.bind(styles);
 
@@ -30,7 +31,8 @@ function ItemChat({ avatar, title, contentChat, email, time, icon, iconAccept, i
                 </div>
                 <div className={cx('iconAcceptFriends')}>
                     <FontAwesomeIcon className={cx('iconDecline')} icon={iconDecline} />
-                    <FontAwesomeIcon className={cx('iconAccept')} icon={iconAccept} />
+                    {/* Call handleAccept function when the accept button is clicked */}
+                    <FontAwesomeIcon className={cx('iconAccept')} icon={iconAccept} onClick={onItemClick} />
                 </div>
             </div>
         </div>
