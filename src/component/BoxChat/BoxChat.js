@@ -28,17 +28,22 @@ function BoxChat() {
         // Xử lý khi một item được chọn
     };
 
+    const getAvatarUrl = (friend) => {
+        // Kiểm tra xem avatar có hợp lệ không
+        return friend.avatar
+            ? friend.avatar
+            : 'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
+    };
+
     return (
-        <div>
+        <div className={cx('boxChat')}>
             <ListChat>
                 {friendList.map((friend) => (
                     <ItemChat
                         key={friend._id}
                         id={friend._id}
-                        avatar={<img className={cx('avatarImg')} src={friend.avatar} alt="avatar" />}
+                        avatar={<img className={cx('avatarImg')} src={getAvatarUrl(friend)} alt="avatar" />}
                         title={friend.name}
-                        contentChat="Hello"
-                        time="14 Minutes"
                         onItemClick={onItemClick}
                     />
                 ))}

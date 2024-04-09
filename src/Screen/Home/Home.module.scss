@@ -1,11 +1,15 @@
 .wrapper {
     display: flex;
+    height: 100vh; // chiều cao của wrapper dựa trên chiều cao của màn hình
 }
+
 .container {
     display: flex;
+    width: 100vw; // chiều rộng của container dựa trên chiều rộng của màn hình
 }
+
 .chatBox {
     width: 344px;
-    max-height: 100vh;
     border-right: 1px solid var(--border);
+    height: 100%; // chiều cao của chatBox dựa trên chiều cao của wrapper
 }

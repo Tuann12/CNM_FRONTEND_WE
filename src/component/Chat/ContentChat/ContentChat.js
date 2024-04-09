@@ -8,7 +8,7 @@ import axios from 'axios';
 const cx = classNames.bind(styles);
 
 function ContentChat({ setMessages }) {
-    const [itemData, setItemData] = useState({ id: '' });
+    const [itemData, setItemData] = useState({ id: '', avatar: '' });
     const storedData = localStorage.getItem('loginData');
     const [messages, setMessage] = useState([]);
     let userId = null;
@@ -31,6 +31,7 @@ function ContentChat({ setMessages }) {
             emitter.off('itemClick', handler);
         };
     }, []);
+    console.log('avatar ContentChat', itemData.avatar);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -58,8 +59,13 @@ function ContentChat({ setMessages }) {
         <div className={cx('wrapper')}>
             <div className={cx('containerMessage')}>
                 {messages.map((message, index) => (
-                    <div key={index} className={cx('message', { fromSelf: message.fromSelf })}>
-                        {message.message}
+                    <div className={cx('boxMessage')}>
+                        {!message.fromSelf && (
+                            <img className={cx('avatarImg')} src={itemData.avatar.props.src} alt="avatar" />
+                        )}
+                        <div key={index} className={cx('message', { fromSelf: message.fromSelf })}>
+                            {message.message}
+                        </div>
                     </div>
                 ))}
             </div>

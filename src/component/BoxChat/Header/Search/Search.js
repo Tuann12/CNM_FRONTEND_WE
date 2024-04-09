@@ -42,6 +42,7 @@ function Search() {
                 receiverId: item._id, // Lấy ID của người nhận từ item được nhấp
             });
             console.log(response.data.message); // In ra thông báo từ server
+            alert('Đã gửi lời mời kết bạn'); // Hiển thị thông báo đã gửi lời mời kết bạn
         } catch (error) {
             console.error('Error sending friend request:', error);
         }

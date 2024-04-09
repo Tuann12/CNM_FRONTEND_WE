@@ -39,6 +39,7 @@ function Contact() {
 
             // Update friendRequestsSent by filtering out the accepted user
             setFriendRequestsSent((prevRequests) => prevRequests.filter((request) => request._id !== user._id));
+            alert('Đã chấp nhận lời mời kết bạn');
         } catch (error) {
             console.error('Error accepting friend request:', error);
         }
