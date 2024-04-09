@@ -67,10 +67,10 @@ function ContentChat({ setMessages }) {
     const handleDeleteMessage = async (index, messageId) => {
         try {
             // Gọi API để xóa tin nhắn với ID cụ thể
-            await axios.delete(`http://localhost:3000/deletemsg/${messageId}`);
+            await axios.delete(`http://localhost:4000/deletemsg/${messageId}`);
 
             // Xóa tin nhắn khỏi mảng messages
-            const updatedMessages = [...messages];
+            const updatedMessages = messages.filter((message) => message.id !== messageId);
             updatedMessages.splice(index, 1);
             console.log('updatedMessages:', updatedMessages);
             // Cập nhật lại state messages
@@ -99,7 +99,7 @@ function ContentChat({ setMessages }) {
                                         onClick={() => handleDeleteMessage(index, message.id)}
                                     >
                                         <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
-                                        <h3 className={cx('title')}>Xóa ở phía tôi</h3>
+                                        <h3 className={cx('title')}>Xóa</h3>
                                     </div>
                                     <div>
                                         {message.fromSelf && !isRecalled && (
