@@ -1,25 +1,21 @@
 .wrapper {
-    width: 871px;
-    height: 71.5%;
+    width: 100%;
+    height: 100%;
     background-color: rgb(198, 198, 198);
     overflow: hidden;
     overflow-y: auto;
     display: flex;
     flex-direction: column-reverse;
-    align-items: flex-end;
-    &::-webkit-scrollbar {
-        width: 0px;
-    }
+    align-items: flex-end; /* Giữ nguyên */
 }
 
 .containerMessage {
+    width: 80%; /* Giữ nguyên */
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    margin-right: 10px;
-    margin-left: 10px;
-    margin-bottom: 40px;
+    margin-right: 10px; /* Giữ nguyên */
+    margin-left: 10px; /* Giữ nguyên */
+    margin-bottom: 40px; /* Giữ nguyên */
 }
 
 .message {
@@ -29,4 +25,20 @@
     margin-bottom: 8px;
     max-width: 100%;
     word-wrap: break-word;
+    margin: 5px; /* Giữ nguyên */
+    padding: 10px; /* Giữ nguyên */
+    border-radius: 5px; /* Giữ nguyên */
+}
+
+.fromSelf {
+    align-self: flex-end;
+    background-color: lightblue;
+    margin-left: auto; /* Đổi từ 'auto' thành 'flex-end' */
+}
+
+.fromOther {
+    align-self: flex-start; /* Căn lề tin nhắn sang trái */
+    background-color: lightgreen;
+    margin-right: auto; /* Để tin nhắn từ người dùng khác nằm bên trái */
+    margin-left: 5px; /* Tạo khoảng cách giữa tin nhắn và viền container */
 }

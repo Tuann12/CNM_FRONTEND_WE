@@ -15,8 +15,7 @@ function ItemChat({ id, avatar, title, contentChat, email, time, icon, iconAccep
         console.log('Item clicked:', { avatar, title, id });
         onItemClick({ avatar, title, id });
         emitter.emit('itemClick', { avatar, title, id });
-
-        localStorage.setItem('loginData', id);
+        localStorage.setItem('selectedID', id);
     };
 
     return (
