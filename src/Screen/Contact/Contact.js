@@ -45,6 +45,13 @@ function Contact() {
         }
     };
 
+    const getAvatarUrl = (user) => {
+        // Kiểm tra xem avatar có hợp lệ không
+        return user.avatar
+            ? user.avatar
+            : 'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
+    };
+
     return (
         <div className={cx('wrapper')}>
             <Navbar />
@@ -53,7 +60,7 @@ function Contact() {
                     {friendRequestsSent.map((user, index) => (
                         <div key={index} className={cx('itemChat')}>
                             <ItemChat
-                                avatar={<img className={cx('avatarImg')} src={user.avatar} alt="avatar" />}
+                                avatar={<img className={cx('avatarImg')} src={getAvatarUrl(user)} alt="avatar" />}
                                 title={user.name}
                                 email={user.email}
                                 iconAccept={faCheck}
