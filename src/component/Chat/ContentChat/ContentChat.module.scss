@@ -53,3 +53,47 @@
     border: 1px solid var(--color-font);
     margin-right: 10px;
 }
+
+.wrapOption {
+    width: 217px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.1);
+    background-color: var(--color-font);
+}
+.wrapOptionDelete {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    height: 36px;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+    &:hover {
+        background-color: var(--border);
+        cursor: pointer;
+    }
+}
+.wrapOptionRecall {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    height: 36px;
+    width: 100%;
+    border-bottom: 1px solid var(--border);
+    &:hover {
+        background-color: var(--border);
+        cursor: pointer;
+    }
+}
+.icon {
+    color: rgba(255, 0, 0, 0.736);
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0 10px;
+    margin-right: 10px;
+}
+.title {
+    color: rgba(255, 0, 0, 0.736);
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0 10x;
+}

@@ -1,8 +1,10 @@
-// ContentChat.jsx
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRotateBack, faArrowRotateRight, faComment, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentChat.module.scss';
 import { emitter } from '../../BoxChat/ListChat/ItemChat';
+import Tippy from '@tippyjs/react/headless';
 import axios from 'axios';
 
 const cx = classNames.bind(styles);
@@ -55,6 +57,10 @@ function ContentChat({ setMessages }) {
         return () => clearInterval(fetchInterval); // Hủy interval khi component unmount
     }, [storedData, itemData.id, userId]);
 
+    const handleContextMenu = (event) => {
+        event.preventDefault(); // Ngăn chặn sự kiện mặc định của chuột phải
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('containerMessage')}>
@@ -63,9 +69,31 @@ function ContentChat({ setMessages }) {
                         {!message.fromSelf && (
                             <img className={cx('avatarImg')} src={itemData.avatar.props.src} alt="avatar" />
                         )}
-                        <div key={index} className={cx('message', { fromSelf: message.fromSelf })}>
-                            {message.message}
-                        </div>
+                        <Tippy
+                            interactive
+                            placement="top"
+                            trigger="contextmenu"
+                            render={(attrs) => (
+                                <div className={cx('wrapOption')} tabIndex="-1" {...attrs}>
+                                    <div className={cx('wrapOptionDelete')}>
+                                        <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
+                                        <h3 className={cx('title')}>Xóa chỉ ở phía tôi</h3>
+                                    </div>
+                                    <div className={cx('wrapOptionRecall')}>
+                                        <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
+                                        <h3 className={cx('title')}>Thu hồi</h3>
+                                    </div>
+                                </div>
+                            )}
+                        >
+                            <div
+                                key={index}
+                                className={cx('message', { fromSelf: message.fromSelf })}
+                                onContextMenu={handleContextMenu}
+                            >
+                                {message.message}
+                            </div>
+                        </Tippy>
                     </div>
                 ))}
             </div>
