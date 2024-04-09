@@ -118,7 +118,7 @@ function ContentChat({}) {
                                         onClick={() => handleDeleteMessage(index, message.id)}
                                     >
                                         <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
-                                        <h3 className={cx('title')}>Xóa</h3>
+                                        <h3 className={cx('title')}>Thu hồi</h3>
                                     </div>
                                     <div>
                                         {message.fromSelf && !message.isHidden && (
