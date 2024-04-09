@@ -11,6 +11,7 @@ const cx = classNames.bind(styles);
 
 function ContentChat({ setMessages }) {
     const [itemData, setItemData] = useState({ id: '', avatar: '' });
+    const [isRecalled, setIsRecalled] = useState(false); // state để check tin nhắn đã được thu hồi chưa
     const storedData = localStorage.getItem('loginData');
     const [messages, setMessage] = useState([]);
     let userId = null;
@@ -21,6 +22,31 @@ function ContentChat({ setMessages }) {
             console.error('Error parsing loginData:', error);
         }
     }
+
+    const handleDeleteMessage = async (messageId) => {
+        // try {
+        //     // Gửi yêu cầu xóa tin nhắn tới máy chủ
+        //     await axios.delete(`http://localhost:4000/messages/${messageId}`);
+        //     // Cập nhật danh sách tin nhắn bằng cách loại bỏ tin nhắn đã xóa
+        //     setMessage(messages.filter(message => message._id !== messageId));
+        // } catch (error) {
+        //     console.error('Error deleting message:', error);
+        // }
+    };
+
+    const handleRecallMessage = async (messageId) => {
+        // try {
+        //     // Gửi yêu cầu thu hồi tin nhắn tới máy chủ
+        //     const response = await axios.put(`http://localhost:4000/messages/recall/${messageId}`);
+        //     // Cập nhật tin nhắn đã thu hồi trên giao diện
+        //     const recalledMessage = response.data;
+        //     setMessage(messages.map(message => message._id === recalledMessage._id ? recalledMessage : message));
+        //     // Đánh dấu tin nhắn đã được thu hồi
+        //     setIsRecalled(true);
+        // } catch (error) {
+        //     console.error('Error recalling message:', error);
+        // }
+    };
 
     useEffect(() => {
         const handler = (data) => {
@@ -76,12 +102,25 @@ function ContentChat({ setMessages }) {
                             render={(attrs) => (
                                 <div className={cx('wrapOption')} tabIndex="-1" {...attrs}>
                                     <div className={cx('wrapOptionDelete')}>
-                                        <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
+                                        <FontAwesomeIcon
+                                            className={cx('icon')}
+                                            icon={faTrashCan}
+                                            onClick={() => handleDeleteMessage(message._id)} //  gọi hàm xóa tin nhắn
+                                        />
                                         <h3 className={cx('title')}>Xóa chỉ ở phía tôi</h3>
                                     </div>
-                                    <div className={cx('wrapOptionRecall')}>
-                                        <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
-                                        <h3 className={cx('title')}>Thu hồi</h3>
+                                    <div>
+                                        {isRecalled ? (
+                                            <h3 className={cx('title')}>Tin nhắn đã được thu hồi</h3> // sau khi thu hồi tin nhắn thành công sẽ render dòng này
+                                        ) : (
+                                            <div
+                                                className={cx('wrapOptionRecall')}
+                                                onClick={() => handleRecallMessage(message._id)}
+                                            >
+                                                <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
+                                                <h3 className={cx('title')}>Thu hồi</h3>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             )}
