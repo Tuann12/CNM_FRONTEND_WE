@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRotateBack, faArrowRotateRight, faComment, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateRight, faMessage, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentChat.module.scss';
@@ -23,31 +23,6 @@ function ContentChat({ setMessages }) {
         }
     }
 
-    const handleDeleteMessage = async (messageId) => {
-        // try {
-        //     // Gửi yêu cầu xóa tin nhắn tới máy chủ
-        //     await axios.delete(`http://localhost:4000/messages/${messageId}`);
-        //     // Cập nhật danh sách tin nhắn bằng cách loại bỏ tin nhắn đã xóa
-        //     setMessage(messages.filter(message => message._id !== messageId));
-        // } catch (error) {
-        //     console.error('Error deleting message:', error);
-        // }
-    };
-
-    const handleRecallMessage = async (messageId) => {
-        // try {
-        //     // Gửi yêu cầu thu hồi tin nhắn tới máy chủ
-        //     const response = await axios.put(`http://localhost:4000/messages/recall/${messageId}`);
-        //     // Cập nhật tin nhắn đã thu hồi trên giao diện
-        //     const recalledMessage = response.data;
-        //     setMessage(messages.map(message => message._id === recalledMessage._id ? recalledMessage : message));
-        //     // Đánh dấu tin nhắn đã được thu hồi
-        //     setIsRecalled(true);
-        // } catch (error) {
-        //     console.error('Error recalling message:', error);
-        // }
-    };
-
     useEffect(() => {
         const handler = (data) => {
             setItemData(data);
@@ -59,7 +34,6 @@ function ContentChat({ setMessages }) {
             emitter.off('itemClick', handler);
         };
     }, []);
-    console.log('avatar ContentChat', itemData.avatar);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -86,6 +60,25 @@ function ContentChat({ setMessages }) {
     const handleContextMenu = (event) => {
         event.preventDefault(); // Ngăn chặn sự kiện mặc định của chuột phải
     };
+    // setTimeout(() => {
+    //     console.log('messages:', messages);
+    // }, 2000);
+
+    const handleDeleteMessage = async (index, messageId) => {
+        try {
+            // Gọi API để xóa tin nhắn với ID cụ thể
+            await axios.delete(`http://localhost:3000/deletemsg/${messageId}`);
+
+            // Xóa tin nhắn khỏi mảng messages
+            const updatedMessages = [...messages];
+            updatedMessages.splice(index, 1);
+            console.log('updatedMessages:', updatedMessages);
+            // Cập nhật lại state messages
+            setMessage(updatedMessages);
+        } catch (error) {
+            console.error('Error deleting message:', error);
+        }
+    };
 
     return (
         <div className={cx('wrapper')}>
@@ -101,22 +94,18 @@ function ContentChat({ setMessages }) {
                             trigger="contextmenu"
                             render={(attrs) => (
                                 <div className={cx('wrapOption')} tabIndex="-1" {...attrs}>
-                                    <div className={cx('wrapOptionDelete')}>
-                                        <FontAwesomeIcon
-                                            className={cx('icon')}
-                                            icon={faTrashCan}
-                                            onClick={() => handleDeleteMessage(message._id)} //  gọi hàm xóa tin nhắn
-                                        />
-                                        <h3 className={cx('title')}>Xóa chỉ ở phía tôi</h3>
+                                    <div
+                                        className={cx('wrapOptionDelete')}
+                                        onClick={() => handleDeleteMessage(index, message.id)}
+                                    >
+                                        <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
+                                        <h3 className={cx('title')}>Xóa ở phía tôi</h3>
                                     </div>
                                     <div>
                                         {isRecalled ? (
                                             <h3 className={cx('title')}>Tin nhắn đã được thu hồi</h3> // sau khi thu hồi tin nhắn thành công sẽ render dòng này
                                         ) : (
-                                            <div
-                                                className={cx('wrapOptionRecall')}
-                                                onClick={() => handleRecallMessage(message._id)}
-                                            >
+                                            <div className={cx('wrapOptionRecall')}>
                                                 <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
                                                 <h3 className={cx('title')}>Thu hồi</h3>
                                             </div>
