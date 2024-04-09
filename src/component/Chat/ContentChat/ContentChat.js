@@ -9,9 +9,8 @@ import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
-function ContentChat({ setMessages }) {
+function ContentChat({}) {
     const [itemData, setItemData] = useState({ id: '', avatar: '' });
-    const [isRecalled, setIsRecalled] = useState(false); // state để check tin nhắn đã được thu hồi chưa
     const storedData = localStorage.getItem('loginData');
     const [messages, setMessage] = useState([]);
     let userId = null;
@@ -43,7 +42,10 @@ function ContentChat({ setMessages }) {
                         from: userId,
                         to: itemData.id,
                     });
-                    setMessage(response.data);
+                    // Sort messages by createdAt field
+                    const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                    // Update state
+                    setMessage(sortedMessages);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -52,9 +54,9 @@ function ContentChat({ setMessages }) {
 
         const fetchInterval = setInterval(() => {
             fetchData();
-        }, 500); // Fetch dữ liệu sau mỗi 0.5 giây
+        }, 500); // Fetch data every 0.5 seconds
 
-        return () => clearInterval(fetchInterval); // Hủy interval khi component unmount
+        return () => clearInterval(fetchInterval); // Clear interval on unmount
     }, [storedData, itemData.id, userId]);
 
     const handleContextMenu = (event) => {
@@ -79,12 +81,29 @@ function ContentChat({ setMessages }) {
             console.error('Error deleting message:', error);
         }
     };
+    const handleRecallMessage = async (messageId) => {
+        try {
+            await axios.put(`http://localhost:4000/retrievemsg/${messageId}/${userId}`);
+
+            // Update the messages array without changing the order or index of the recalled message
+            setMessage(
+                messages.map((message) => {
+                    if (message.id === messageId) {
+                        return { ...message, isHidden: true };
+                    }
+                    return message;
+                }),
+            );
+        } catch (error) {
+            console.error('Error recalling message:', error);
+        }
+    };
 
     return (
         <div className={cx('wrapper')}>
             <div className={cx('containerMessage')}>
                 {messages.map((message, index) => (
-                    <div className={cx('boxMessage')}>
+                    <div className={cx('boxMessage')} key={index}>
                         {!message.fromSelf && (
                             <img className={cx('avatarImg')} src={itemData.avatar.props.src} alt="avatar" />
                         )}
@@ -102,10 +121,13 @@ function ContentChat({ setMessages }) {
                                         <h3 className={cx('title')}>Xóa</h3>
                                     </div>
                                     <div>
-                                        {message.fromSelf && !isRecalled && (
-                                            <div className={cx('wrapOptionRecall')}>
+                                        {message.fromSelf && !message.isHidden && (
+                                            <div
+                                                className={cx('wrapOptionRecall')}
+                                                onClick={() => handleRecallMessage(message.id)}
+                                            >
                                                 <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
-                                                <h3 className={cx('title')}>Thu hồi</h3>
+                                                <h3 className={cx('title')}>Gở ở phía tôi</h3>
                                             </div>
                                         )}
                                     </div>
@@ -113,8 +135,10 @@ function ContentChat({ setMessages }) {
                             )}
                         >
                             <div
-                                key={index}
-                                className={cx('message', { fromSelf: message.fromSelf })}
+                                className={cx('message', {
+                                    fromSelf: message.fromSelf,
+                                    hidden: message.isHidden && message.fromSelf, // Ẩn tin nhắn nếu là từ người gửi và isHidden là true
+                                })}
                                 onContextMenu={handleContextMenu}
                             >
                                 {message.message}
