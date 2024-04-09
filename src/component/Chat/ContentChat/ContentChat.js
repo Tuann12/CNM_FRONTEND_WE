@@ -102,9 +102,7 @@ function ContentChat({ setMessages }) {
                                         <h3 className={cx('title')}>Xóa ở phía tôi</h3>
                                     </div>
                                     <div>
-                                        {isRecalled ? (
-                                            <h3 className={cx('title')}>Tin nhắn đã được thu hồi</h3> // sau khi thu hồi tin nhắn thành công sẽ render dòng này
-                                        ) : (
+                                        {message.fromSelf && !isRecalled && (
                                             <div className={cx('wrapOptionRecall')}>
                                                 <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
                                                 <h3 className={cx('title')}>Thu hồi</h3>

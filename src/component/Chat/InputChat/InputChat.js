@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage, faFaceLaugh, faFaceGrinWide, faCircleRight } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faFile, faFaceGrinWide, faCircleRight } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
 import styles from './InputChat.module.scss';
 import EmojiPicker from 'emoji-picker-react';
 import { emitter } from '../../BoxChat/ListChat/ItemChat';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
@@ -91,10 +92,19 @@ function InputChat({ onSend }) {
         <div className={cx('wrapper')}>
             <div className={cx('crossBarIcon')}>
                 <div className={cx('tickerIcon')}>
-                    <FontAwesomeIcon className={cx('icon')} icon={faFaceLaugh} />
+                    <FontAwesomeIcon className={cx('icon')} icon={faFile} />
                 </div>
                 <div className={cx('tickerIcon')}>
-                    <FontAwesomeIcon className={cx('icon')} icon={faImage} />
+                    <label htmlFor="imageInput">
+                        <FontAwesomeIcon className={cx('icon')} icon={faImage} />
+                    </label>
+                    <input
+                        type="file"
+                        id="imageInput"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onClick={handleSendClick}
+                    />
                 </div>
             </div>
             <div className={cx('boxInpChat')}>
