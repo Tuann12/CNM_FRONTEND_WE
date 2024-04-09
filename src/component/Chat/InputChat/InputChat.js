@@ -13,6 +13,7 @@ function InputChat({ onSend }) {
     const [message, setMessage] = useState('');
     const [selectedEmojis, setSelectedEmojis] = useState([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
     const textareaRef = useRef(null);
     const emojiPickerRef = useRef(null);
     const [itemData, setItemData] = useState({ id: '' }); // Thêm id vào itemData
@@ -45,9 +46,10 @@ function InputChat({ onSend }) {
     };
 
     const handleSendClick = () => {
-        if (message.trim() !== '') {
-            onSend(message);
+        if (message.trim() !== '' || selectedImage) {
+            onSend(message, selectedImage);
             setMessage('');
+            setSelectedImage(null); // Đặt lại hình ảnh đã chọn
             if (textareaRef.current) {
                 textareaRef.current.focus();
             }
@@ -103,7 +105,7 @@ function InputChat({ onSend }) {
                         id="imageInput"
                         accept="image/*"
                         style={{ display: 'none' }}
-                        onClick={handleSendClick}
+                        onChange={(event) => setSelectedImage(event.target.files[0])}
                     />
                 </div>
             </div>
