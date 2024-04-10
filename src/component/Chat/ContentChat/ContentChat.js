@@ -96,7 +96,7 @@ function ContentChat(to) {
             const updatedMessages = messages.filter((message) => message.id !== messageId);
             updatedMessages.splice(index, 1);
             console.log('updatedMessages:', updatedMessages);
-            // Cập nhật lại state messages
+            fetchDataFromServer();
             setMessage(updatedMessages);
         } catch (error) {
             console.error('Error deleting message:', error);
