@@ -126,6 +126,17 @@ function ContentChat(to) {
         return imageUrlRegex.test(url);
     }
 
+    const supportedFileExtensions = ['doc', 'docx', 'xls', 'xlsx', 'pdf', 'json', 'csv'];
+
+    // Kiểm tra nếu đuôi tệp được hỗ trợ
+    const isFileExtensionSupported = (filename) => {
+        if (filename) {
+            const extension = filename.split('.').pop(); // Lấy phần mở rộng của tệp
+            return supportedFileExtensions.includes(extension);
+        }
+        return false; // Trả về false nếu filename không tồn tại
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('containerMessage')}>
@@ -172,7 +183,19 @@ function ContentChat(to) {
                                 })}
                                 onContextMenu={handleContextMenu}
                             >
-                                {isImageUrl(message.message) ? (
+                                {isFileExtensionSupported(message.message) ? (
+                                    <div className="file-wrapper">
+                                        <a className={cx('editFile')} href={message.message} download>
+                                            <img
+                                                className={cx('imageFile')}
+                                                src="https://fileviewerplus.com/img/icon/256/jpg-63.png"
+                                                alt="imageFile"
+                                            />
+                                            {message.message}
+                                        </a>
+                                    </div>
+                                ) : // Nếu không phải là tệp được hỗ trợ, hiển thị nội dung thông thường
+                                isImageUrl(message.message) ? (
                                     <img src={message.message} alt="imageURL" className={cx('imageURL')} />
                                 ) : (
                                     message.message

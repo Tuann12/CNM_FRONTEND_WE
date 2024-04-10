@@ -85,7 +85,16 @@ function InputChat({ onSend, onFileChange, avatarToSend }) {
         <div className={cx('wrapper')}>
             <div className={cx('crossBarIcon')}>
                 <div className={cx('tickerIcon')}>
-                    <FontAwesomeIcon className={cx('icon')} icon={faFile} />
+                    <label htmlFor="imageInput">
+                        <FontAwesomeIcon className={cx('icon')} icon={faFile} />
+                    </label>
+                    <input
+                        type="file"
+                        id="imageInput"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={onFileChange}
+                    />
                 </div>
                 <div className={cx('tickerIcon')}>
                     <label htmlFor="imageInput">
