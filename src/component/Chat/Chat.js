@@ -8,7 +8,7 @@ import InputChat from './InputChat/InputChat';
 import classNames from 'classnames/bind';
 import styles from './Chat.module.scss';
 import { emitter } from '../BoxChat/ListChat/ItemChat';
-
+import socketIOClient from 'socket.io-client';
 const cx = classNames.bind(styles);
 
 function Chat({ isOpenInfo }) {
@@ -21,6 +21,28 @@ function Chat({ isOpenInfo }) {
     const storedData = localStorage.getItem('loginData');
     let userId = null;
     let updatedAvatarUrl = '';
+    const socketRef = useRef();
+    const [id, setId] = useState();
+    const [mess, setMess] = useState([]);
+    const messagesEnd = useRef();
+    const host = 'http://localhost:4000';
+    const scrollToBottom = () => {};
+    useEffect(() => {
+        socketRef.current = socketIOClient.connect(host);
+
+        socketRef.current.on('getId', (data) => {
+            setId(data);
+        });
+
+        socketRef.current.on('sendDataServer', (dataGot) => {
+            setMess((oldMsgs) => [...oldMsgs, dataGot.data]);
+            scrollToBottom();
+        });
+
+        return () => {
+            socketRef.current.disconnect();
+        };
+    }, []);
 
     if (storedData) {
         try {
@@ -42,14 +64,6 @@ function Chat({ isOpenInfo }) {
         return () => {
             emitter.off('itemClick', handler);
         };
-    }, []);
-
-    useEffect(() => {
-        socket.current.on('msg-recieve', (msg) => {
-            setArrivalMessage({ fromSelf: false, message: msg });
-            setReloadToggle((prev) => !prev); // Kích hoạt render lại khi có tin nhắn mới
-        });
-        return () => socket.current.disconnect();
     }, []);
 
     useEffect(() => {
@@ -105,7 +119,7 @@ function Chat({ isOpenInfo }) {
         try {
             const messageToSend = updatedAvatarUrl ? { message: updatedAvatarUrl } : { message: msg };
             console.log('messageToSend:', messageToSend);
-            socket.current.emit('send-msg', {
+            socketRef.current.emit('sendDataClient', {
                 to: itemData.id,
                 from: userId,
                 ...messageToSend,
@@ -128,7 +142,7 @@ function Chat({ isOpenInfo }) {
     return (
         <div className={cx('wrapper')}>
             <HeaderChat />
-            <ContentChat key={reloadToggle} setMessages={messages} />
+            <ContentChat key={reloadToggle} to={itemData.id} setMessages={messages} />
             <InputChat
                 avatarToSend={avatarToSend}
                 onSend={(msg, updatedAvatarUrl) => handleSendMsg(msg, updatedAvatarUrl)}

@@ -1,15 +1,24 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRotateRight, faMessage, faTrashCan } from '@fortawesome/free-solid-svg-icons';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentChat.module.scss';
 import { emitter } from '../../BoxChat/ListChat/ItemChat';
 import Tippy from '@tippyjs/react/headless';
 import axios from 'axios';
+import socketIOClient from 'socket.io-client';
 
 const cx = classNames.bind(styles);
 
-function ContentChat() {
+function ContentChat(to) {
+    console.log('click 11111');
+    console.log('to:', to.to);
+    const host = 'http://localhost:4000';
+
+    const selectedID = localStorage.getItem('selectedID');
+    const [receivedMessage, setReceivedMessage] = useState(false); // Biến để kiểm tra đã nhận tin nhắn từ server hay chưa
+
+    const socketRef = useRef();
     const [itemData, setItemData] = useState({ id: '', avatar: '' });
     const storedData = localStorage.getItem('loginData');
     const [messages, setMessage] = useState([]);
@@ -34,30 +43,45 @@ function ContentChat() {
         };
     }, []);
 
+    const fetchDataFromServer = async () => {
+        try {
+            // Gửi yêu cầu POST để lấy tin nhắn mới từ server
+            const response = await axios.post('http://localhost:4000/getmsg', {
+                from: userId,
+                to: to.to,
+            });
+
+            // Sắp xếp tin nhắn theo thời gian tạo
+            const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+            // Cập nhật state messages với các tin nhắn mới
+            setMessage(sortedMessages);
+            console.log('userId:', userId);
+            console.log('selectedID:', selectedID);
+            console.log('sortedMessages:', sortedMessages);
+            // Đánh dấu rằng đã nhận tin nhắn từ server
+            setReceivedMessage(true);
+        } catch (error) {
+            console.error('Error receiving message:', error);
+        }
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                if (storedData && itemData.id) {
-                    const response = await axios.post('http://localhost:4000/getmsg', {
-                        from: userId,
-                        to: itemData.id,
-                    });
-                    // Sort messages by createdAt field
-                    const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-                    // Update state
-                    setMessage(sortedMessages);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
+        if (to.to) {
+            fetchDataFromServer(); // Gọi hàm để lấy dữ liệu từ server khi có giá trị của to.to
+        }
+        // Kết nối tới server socket.io
+        socketRef.current = socketIOClient.connect(host);
+
+        // Lắng nghe sự kiện 'sendDataServer' từ server
+        socketRef.current.on('sendDataServer', () => {
+            fetchDataFromServer(); // Gọi hàm để lấy dữ liệu từ server
+        });
+
+        // Ngắt kết nối khi component unmount
+        return () => {
+            socketRef.current.disconnect();
         };
-
-        const fetchInterval = setInterval(() => {
-            fetchData();
-        }, 500); // Fetch data every 0.5 seconds
-
-        return () => clearInterval(fetchInterval); // Clear interval on unmount
-    }, [storedData, itemData.id, userId]);
+    }, [to.to]); // Gọi useEffect khi selectedID thay đổi
 
     const handleContextMenu = (event) => {
         event.preventDefault(); // Ngăn chặn sự kiện mặc định của chuột phải
