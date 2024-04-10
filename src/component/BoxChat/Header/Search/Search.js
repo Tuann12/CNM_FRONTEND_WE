@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import Tippy from '@tippyjs/react/headless';
@@ -12,9 +12,25 @@ const cx = classNames.bind(styles);
 
 function Search() {
     const [selectedItem, setSelectedItem] = useState(null);
+    const [friendList, setFriendList] = useState([]);
     const [searchEmail, setSearchEmail] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [searchError, setSearchError] = useState('');
+    const storedData = localStorage.getItem('loginData');
+    const userId = JSON.parse(storedData).foundUser._id;
+
+    useEffect(() => {
+        const fetchFriendList = async () => {
+            try {
+                const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
+                setFriendList(response.data.friendList);
+            } catch (error) {
+                console.error('Error fetching friend list:', error);
+            }
+        };
+
+        fetchFriendList();
+    }, [userId]);
 
     async function handleSearch() {
         try {
@@ -48,6 +64,14 @@ function Search() {
         }
     }
 
+    function isFriend(userId) {
+        return friendList.some((friend) => friend._id === userId);
+    }
+    function empty() {
+        setSearchResults([]);
+        setSearchError('');
+    }
+
     function renderSearchResults() {
         return searchResults.map((user, index) => (
             <ItemChat
@@ -65,8 +89,8 @@ function Search() {
                 }
                 title={user.name}
                 email={user.email}
-                icon={faUserPlus}
-                onItemClick={() => onItemClick(user)} // Truyền user vào hàm onItemClick
+                icon={isFriend(user._id) ? null : faUserPlus} // Hiển thị icon bất kể user có là bạn bè hay không
+                onItemClick={isFriend(user._id) ? empty : () => onItemClick(user)} // Không cần kiểm tra điều kiện, onItemClick vẫn được gán cho mọi user
             />
         ));
     }
