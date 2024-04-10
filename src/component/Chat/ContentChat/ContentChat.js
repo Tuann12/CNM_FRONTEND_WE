@@ -140,22 +140,25 @@ function ContentChat(to) {
                             trigger="contextmenu"
                             render={(attrs) => (
                                 <div className={cx('wrapOption')} tabIndex="-1" {...attrs}>
-                                    <div
-                                        className={cx('wrapOptionRecall')}
-                                        onClick={() => handleRecallMessage(message.id)}
-                                    >
-                                        <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
-
-                                        <h3 className={cx('title')}>Gở ở phía tôi</h3>
-                                    </div>
                                     <div>
                                         {message.fromSelf && !message.isHidden && (
-                                            <div
-                                                className={cx('wrapOptionDelete')}
-                                                onClick={() => handleDeleteMessage(index, message.id)}
-                                            >
-                                                <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
-                                                <h3 className={cx('title')}>Thu hồi tin nhắn</h3>
+                                            <div>
+                                                {' '}
+                                                <div
+                                                    className={cx('wrapOptionRecall')}
+                                                    onClick={() => handleRecallMessage(message.id)}
+                                                >
+                                                    <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
+
+                                                    <h3 className={cx('title')}>Gở ở phía tôi</h3>
+                                                </div>
+                                                <div
+                                                    className={cx('wrapOptionDelete')}
+                                                    onClick={() => handleDeleteMessage(index, message.id)}
+                                                >
+                                                    <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
+                                                    <h3 className={cx('title')}>Thu hồi tin nhắn</h3>
+                                                </div>
                                             </div>
                                         )}
                                     </div>
