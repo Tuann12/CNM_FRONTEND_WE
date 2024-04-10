@@ -96,6 +96,12 @@ function ContentChat() {
         }
     };
 
+    function isImageUrl(url) {
+        // Biểu thức chính quy để kiểm tra định dạng URL hình ảnh
+        const imageUrlRegex = /\.(jpeg|jpg|gif|png)$/;
+        return imageUrlRegex.test(url);
+    }
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('containerMessage')}>
@@ -116,7 +122,6 @@ function ContentChat() {
                                     >
                                         <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
 
-                                        <h3 className={cx('title')}>Thu hồi </h3>
                                         <h3 className={cx('title')}>Gở ở phía tôi</h3>
                                     </div>
                                     <div>
@@ -140,7 +145,11 @@ function ContentChat() {
                                 })}
                                 onContextMenu={handleContextMenu}
                             >
-                                {message.message}
+                                {isImageUrl(message.message) ? (
+                                    <img src={message.message} alt="imageURL" className={cx('imageURL')} />
+                                ) : (
+                                    message.message
+                                )}
                             </div>
                         </Tippy>
                     </div>
