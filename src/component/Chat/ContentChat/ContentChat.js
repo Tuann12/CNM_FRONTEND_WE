@@ -62,9 +62,6 @@ function ContentChat() {
     const handleContextMenu = (event) => {
         event.preventDefault(); // Ngăn chặn sự kiện mặc định của chuột phải
     };
-    // setTimeout(() => {
-    //     console.log('messages:', messages);
-    // }, 2000);
 
     const handleDeleteMessage = async (index, messageId) => {
         try {
@@ -114,20 +111,22 @@ function ContentChat() {
                             render={(attrs) => (
                                 <div className={cx('wrapOption')} tabIndex="-1" {...attrs}>
                                     <div
-                                        className={cx('wrapOptionDelete')}
-                                        onClick={() => handleDeleteMessage(index, message.id)}
+                                        className={cx('wrapOptionRecall')}
+                                        onClick={() => handleRecallMessage(message.id)}
                                     >
                                         <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
+
                                         <h3 className={cx('title')}>Thu hồi </h3>
+                                        <h3 className={cx('title')}>Gở ở phía tôi</h3>
                                     </div>
                                     <div>
                                         {message.fromSelf && !message.isHidden && (
                                             <div
-                                                className={cx('wrapOptionRecall')}
-                                                onClick={() => handleRecallMessage(message.id)}
+                                                className={cx('wrapOptionDelete')}
+                                                onClick={() => handleDeleteMessage(index, message.id)}
                                             >
                                                 <FontAwesomeIcon className={cx('icon')} icon={faArrowRotateRight} />
-                                                <h3 className={cx('title')}>Gở ở phía tôi</h3>
+                                                <h3 className={cx('title')}>Thu hồi tin nhắn</h3>
                                             </div>
                                         )}
                                     </div>
