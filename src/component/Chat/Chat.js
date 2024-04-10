@@ -16,9 +16,12 @@ function Chat({ isOpenInfo }) {
     const scrollRef = useRef();
     const [arrivalMessage, setArrivalMessage] = useState(null);
     const [reloadToggle, setReloadToggle] = useState(false); // State để kích hoạt render lại
-
+    const [avatar, setAvatar] = useState(null);
+    const [avatarToSend, setAvatarToSend] = useState(null);
     const storedData = localStorage.getItem('loginData');
     let userId = null;
+    let updatedAvatarUrl = '';
+
     if (storedData) {
         try {
             userId = JSON.parse(storedData).foundUser._id;
@@ -59,18 +62,60 @@ function Chat({ isOpenInfo }) {
         scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, reloadToggle]);
 
+    const handleFileChange = async (e) => {
+        const imageUrl = e.target.files[0]; // Get the selected file
+        setAvatar(imageUrl); // Set the selected file as the avatar
+
+        if (imageUrl) {
+            // Check if an image is selected
+            try {
+                // Create formData to send the avatar file to the server
+                const formData = new FormData();
+                formData.append('avatar', imageUrl);
+
+                // Send the avatar file to the API
+                const avatarResponse = await fetch(`http://localhost:4000/user/uploadAvatarS3/${userId}`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                // Check if the avatar was uploaded successfully
+                if (!avatarResponse.ok) {
+                    throw new Error('Failed to upload avatar');
+                }
+
+                // Get the URL of the uploaded avatar from the API response
+                const avatarData = await avatarResponse.json();
+                const updatedAvatarUrl = avatarData.avatar;
+                console.log('updatedAvatarUrl:', updatedAvatarUrl);
+
+                // Set the updatedAvatarUrl state
+                setAvatarToSend(updatedAvatarUrl);
+            } catch (error) {
+                console.error('Error uploading avatar:', error);
+                // Handle error uploading avatar
+            }
+        }
+    };
+
+    console.log('avatar in chat:', updatedAvatarUrl);
+    console.log('avatar in chat:', avatar);
+
     const handleSendMsg = async (msg, toUserId) => {
         try {
+            const messageToSend = updatedAvatarUrl ? { message: updatedAvatarUrl } : { message: msg };
+            console.log('messageToSend:', messageToSend);
             socket.current.emit('send-msg', {
                 to: itemData.id,
                 from: userId,
-                msg,
+                ...messageToSend,
             });
             await axios.post('http://localhost:4000/addmsg', {
                 from: userId,
                 to: itemData.id,
-                message: msg,
+                ...messageToSend,
             });
+            console.log('image in chat ', updatedAvatarUrl);
             console.log('Message sent:', msg);
             console.log('To:', itemData.id);
             console.log('From:', userId);
@@ -79,12 +124,17 @@ function Chat({ isOpenInfo }) {
             console.error('Error sending message:', error);
         }
     };
-
+    console.log('avatarToSend:', avatarToSend);
     return (
         <div className={cx('wrapper')}>
             <HeaderChat />
-            <ContentChat key={reloadToggle} setMessages={setMessages} />
-            <InputChat onSend={(msg) => handleSendMsg(msg)} />
+            <ContentChat key={reloadToggle} setMessages={messages} />
+            <InputChat
+                avatarToSend={avatarToSend}
+                onSend={(msg, updatedAvatarUrl) => handleSendMsg(msg, updatedAvatarUrl)}
+                image={avatar}
+                onFileChange={handleFileChange}
+            />
             <div ref={scrollRef} />
         </div>
     );

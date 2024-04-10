@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
-function ContentChat({}) {
+function ContentChat() {
     const [itemData, setItemData] = useState({ id: '', avatar: '' });
     const storedData = localStorage.getItem('loginData');
     const [messages, setMessage] = useState([]);
@@ -118,7 +118,7 @@ function ContentChat({}) {
                                         onClick={() => handleDeleteMessage(index, message.id)}
                                     >
                                         <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
-                                        <h3 className={cx('title')}>Thu hồi</h3>
+                                        <h3 className={cx('title')}>Thu hồi </h3>
                                     </div>
                                     <div>
                                         {message.fromSelf && !message.isHidden && (

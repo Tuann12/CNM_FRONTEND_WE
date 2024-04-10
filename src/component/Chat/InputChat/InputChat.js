@@ -4,32 +4,21 @@ import { faImage, faFile, faFaceGrinWide, faCircleRight } from '@fortawesome/fre
 import classNames from 'classnames/bind';
 import styles from './InputChat.module.scss';
 import EmojiPicker from 'emoji-picker-react';
-import { emitter } from '../../BoxChat/ListChat/ItemChat';
-import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
-function InputChat({ onSend }) {
+function InputChat({ onSend, onFileChange, avatarToSend }) {
+    console.log('avatar input chat:', avatarToSend);
     const [message, setMessage] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
     const [selectedEmojis, setSelectedEmojis] = useState([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
     const textareaRef = useRef(null);
     const emojiPickerRef = useRef(null);
-    const [itemData, setItemData] = useState({ id: '' }); // Thêm id vào itemData
     useEffect(() => {
-        const handler = (data) => {
-            setItemData(data);
-        };
-
-        emitter.on('itemClick', handler);
-
-        return () => {
-            emitter.off('itemClick', handler);
-        };
-    }, []);
-    console.log('ID in InputChat:', itemData.id); // Log id của ItemChat được chọn từ localStorage
-
+        setMessage(avatarToSend);
+    }, [avatarToSend]);
+    console.log('message input chat:', message);
     useEffect(() => {
         document.addEventListener('mousedown', handleOutsideClick);
         return () => {
@@ -46,14 +35,16 @@ function InputChat({ onSend }) {
     };
 
     const handleSendClick = () => {
-        if (message.trim() !== '' || selectedImage) {
-            onSend(message, selectedImage);
+        if (message.trim() !== '' || avatarToSend !== null) {
+            onSend(message, avatarToSend);
             setMessage('');
-            setSelectedImage(null); // Đặt lại hình ảnh đã chọn
+            setImageUrl(null);
             if (textareaRef.current) {
                 textareaRef.current.focus();
             }
         }
+        console.log('image input chat:', avatarToSend);
+        console.log('message input chat:', message);
     };
 
     const handleEmojiClick = (emoji) => {
@@ -105,7 +96,7 @@ function InputChat({ onSend }) {
                         id="imageInput"
                         accept="image/*"
                         style={{ display: 'none' }}
-                        onChange={(event) => setSelectedImage(event.target.files[0])}
+                        onChange={onFileChange}
                     />
                 </div>
             </div>
