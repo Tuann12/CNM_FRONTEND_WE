@@ -23,6 +23,7 @@ function ContentChat(to) {
     const [itemData, setItemData] = useState({ id: '', avatar: '' });
     const storedData = localStorage.getItem('loginData');
     const [messages, setMessage] = useState([]);
+    const [sharedMessage, setSharedMessage] = useState(''); // Tin nhắn được chia sẻ
     let userId = null;
     if (storedData) {
         try {
@@ -139,11 +140,14 @@ function ContentChat(to) {
         return false; // Trả về false nếu filename không tồn tại
     };
 
-    const handleListFriendsShareClick = () => {
+    const handleListFriendsShareClick = (messageContent) => {
+        console.log('messageContent:', messageContent);
+        setSharedMessage(messageContent);
         setShowListFriends(true);
     };
 
     const handleShareMessageClose = () => {
+        fetchDataFromServer(); // Gọi hàm để lấy dữ liệu từ server
         setShowListFriends(false); // Đóng component ShareMessage
     };
 
@@ -166,7 +170,7 @@ function ContentChat(to) {
                                             <div>
                                                 <div
                                                     className={cx('wrapOptionShareMsg')}
-                                                    onClick={handleListFriendsShareClick}
+                                                    onClick={() => handleListFriendsShareClick(message)}
                                                 >
                                                     <FontAwesomeIcon className={cx('icon')} icon={faShare} />
                                                     <h3 className={cx('title')}>Chia sẻ</h3>
@@ -220,7 +224,7 @@ function ContentChat(to) {
                         </Tippy>
                     </div>
                 ))}
-                {showListFriends && <ShareMessage onClose={handleShareMessageClose} />}
+                {showListFriends && <ShareMessage sharedMessage={sharedMessage} />}
             </div>
         </div>
     );
