@@ -11,6 +11,8 @@ const cx = classNames.bind(styles);
 
 function ShareMessage({ onClose }) {
     const [friendList, setFriendList] = useState([]);
+    const [selectedFriendIds, setSelectedFriendIds] = useState([]);
+
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
 
@@ -27,6 +29,24 @@ function ShareMessage({ onClose }) {
         fetchFriendList();
     }, [userId]);
 
+    const handleShare = async () => {
+        try {
+            // Gửi request API forwardMessage để chia sẻ message với các bạn đã chọn
+            const response = await axios.post('http://localhost:4000/forwardMessage', {
+                from: userId,
+                to: selectedFriendIds,
+                // message: ,
+            });
+
+            // Xử lý phản hồi từ server (nếu cần)
+            console.log('response cua ham handleShare', response.data);
+        } catch (error) {
+            console.error('Error sharing message:', error);
+        }
+    };
+
+    console.log('listfrineds', friendList);
+
     const getAvatarUrl = (friend) => {
         // Kiểm tra xem avatar có hợp lệ không
         return friend.avatar
@@ -34,9 +54,26 @@ function ShareMessage({ onClose }) {
             : 'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
     };
 
-    const onItemClick = (item) => {
-        // Xử lý khi một item được chọn
+    const toggleFriendSelection = (friendId) => {
+        // Kiểm tra xem friendId đã được chọn chưa
+        const isSelected = selectedFriendIds.includes(friendId);
+        // Nếu đã được chọn, loại bỏ friendId khỏi mảng selectedFriendIds, ngược lại thêm vào
+        const updatedSelectedFriendIds = isSelected
+            ? selectedFriendIds.filter((id) => id !== friendId)
+            : [...selectedFriendIds, friendId];
+        setSelectedFriendIds(updatedSelectedFriendIds);
     };
+
+    const onCheckboxChange = (event) => {
+        const { value } = event.target;
+        toggleFriendSelection(value);
+    };
+
+    const isSelected = (friendId) => {
+        return selectedFriendIds.includes(friendId);
+    };
+
+    console.log('selectedFriendId', selectedFriendIds);
 
     return (
         <div className={cx('wrapListShare')}>
@@ -56,7 +93,7 @@ function ShareMessage({ onClose }) {
                                             <img className={cx('avatarImg')} src={getAvatarUrl(friend)} alt="avatar" />
                                         }
                                         title={friend.name}
-                                        onItemClick={onItemClick}
+                                        onItemClick={() => toggleFriendSelection(friend._id)}
                                     />
                                 </div>
                                 <input
@@ -65,13 +102,17 @@ function ShareMessage({ onClose }) {
                                     id={`content-${friend._id}`}
                                     name={`content-${friend._id}`}
                                     value={friend._id}
+                                    onChange={onCheckboxChange}
+                                    checked={isSelected(friend._id)}
                                 />
                             </div>
                         ))}
                     </ListChat>
                 </div>
 
-                <button className={cx('btnUpdate')}>Chia sẻ</button>
+                <button className={cx('btnUpdate')} onClick={handleShare}>
+                    Chia sẻ
+                </button>
             </div>
         </div>
     );

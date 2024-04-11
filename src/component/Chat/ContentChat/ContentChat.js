@@ -103,6 +103,7 @@ function ContentChat(to) {
             console.error('Error deleting message:', error);
         }
     };
+    console.log('messagesContentChat:', messages);
     const handleRecallMessage = async (messageId) => {
         try {
             await axios.put(`http://localhost:4000/retrievemsg/${messageId}/${userId}`);
