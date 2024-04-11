@@ -36,8 +36,14 @@ function Search() {
         try {
             const response = await axios.get(`http://localhost:4000/user/findUserByEmail/${searchEmail}`);
             if (response.data.success) {
-                setSearchResults([response.data.user]);
-                setSearchError('');
+                const foundUser = response.data.user;
+                if (foundUser.email === JSON.parse(storedData).foundUser.email) {
+                    setSearchResults([]);
+                    setSearchError('Đây là địa chỉ email của bạn.');
+                } else {
+                    setSearchResults([foundUser]);
+                    setSearchError('');
+                }
             } else {
                 setSearchResults([]);
                 setSearchError('Không tìm thấy người dùng');
@@ -47,7 +53,6 @@ function Search() {
             setSearchError('Đã xảy ra lỗi khi tìm kiếm người dùng');
         }
     }
-
     async function onItemClick(item) {
         setSelectedItem(item);
         const storedData = localStorage.getItem('loginData');
