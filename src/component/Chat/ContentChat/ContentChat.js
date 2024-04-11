@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRotateRight, faMessage, faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRotateRight, faMessage, faShare, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './ContentChat.module.scss';
@@ -7,6 +7,7 @@ import { emitter } from '../../BoxChat/ListChat/ItemChat';
 import Tippy from '@tippyjs/react/headless';
 import axios from 'axios';
 import socketIOClient from 'socket.io-client';
+import ShareMessage from './ShareMessage';
 
 const cx = classNames.bind(styles);
 
@@ -17,7 +18,7 @@ function ContentChat(to) {
 
     const selectedID = localStorage.getItem('selectedID');
     const [receivedMessage, setReceivedMessage] = useState(false); // Biến để kiểm tra đã nhận tin nhắn từ server hay chưa
-
+    const [showListFriends, setShowListFriends] = useState(false);
     const socketRef = useRef();
     const [itemData, setItemData] = useState({ id: '', avatar: '' });
     const storedData = localStorage.getItem('loginData');
@@ -137,6 +138,14 @@ function ContentChat(to) {
         return false; // Trả về false nếu filename không tồn tại
     };
 
+    const handleListFriendsShareClick = () => {
+        setShowListFriends(true);
+    };
+
+    const handleShareMessageClose = () => {
+        setShowListFriends(false); // Đóng component ShareMessage
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('containerMessage')}>
@@ -154,7 +163,13 @@ function ContentChat(to) {
                                     <div>
                                         {message.fromSelf && !message.isHidden && (
                                             <div>
-                                                {' '}
+                                                <div
+                                                    className={cx('wrapOptionShareMsg')}
+                                                    onClick={handleListFriendsShareClick}
+                                                >
+                                                    <FontAwesomeIcon className={cx('icon')} icon={faShare} />
+                                                    <h3 className={cx('title')}>Chia sẻ</h3>
+                                                </div>
                                                 <div
                                                     className={cx('wrapOptionRecall')}
                                                     onClick={() => handleRecallMessage(message.id)}
@@ -204,6 +219,7 @@ function ContentChat(to) {
                         </Tippy>
                     </div>
                 ))}
+                {showListFriends && <ShareMessage onClose={handleShareMessageClose} />}
             </div>
         </div>
     );

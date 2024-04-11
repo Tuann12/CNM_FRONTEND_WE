@@ -24,6 +24,7 @@ function ItemChat({ id, avatar, title, contentChat, email, time, icon, iconAccep
                 <div className={cx('avatar')}>{avatar}</div>
                 <div className={cx('content')}>
                     <h3 className={cx('title')}>{title}</h3>
+
                     <span className={cx('content-chat')}>{contentChat}</span>
                     <span className={cx('email')}>{email}</span>
                 </div>

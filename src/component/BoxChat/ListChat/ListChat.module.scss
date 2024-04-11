@@ -7,7 +7,7 @@
 .ItemChatWrap {
     cursor: pointer;
     height: 74px;
-    border: 1px solid var(--border);
+    border-bottom: 0.1px solid var(--border);
     &:hover {
         background-color: var(--background-box);
     }
