@@ -151,6 +151,20 @@ function ContentChat(to) {
         setShowListFriends(false); // Đóng component ShareMessage
     };
 
+    function isVideoUrl(url) {
+        // Biểu thức chính quy để kiểm tra định dạng URL video MP4
+        const mp4UrlRegex = /\.(mp4)$/;
+        return mp4UrlRegex.test(url);
+    }
+
+    function isAudioUrl(url) {
+        // Biểu thức chính quy để kiểm tra định dạng URL âm thanh MP3
+        const mp3UrlRegex = /\.(mp3)$/;
+        return mp3UrlRegex.test(url);
+    }
+
+    const isRecipient = to.to === userId;
+
     return (
         <div className={cx('wrapper')}>
             <div className={cx('containerMessage')}>
@@ -166,7 +180,7 @@ function ContentChat(to) {
                             render={(attrs) => (
                                 <div className={cx('wrapOption')} tabIndex="-1" {...attrs}>
                                     <div>
-                                        {message.fromSelf && !message.isHidden && (
+                                        {!message.fromSelf && (
                                             <div>
                                                 <div
                                                     className={cx('wrapOptionShareMsg')}
@@ -175,12 +189,25 @@ function ContentChat(to) {
                                                     <FontAwesomeIcon className={cx('icon')} icon={faShare} />
                                                     <h3 className={cx('title')}>Chia sẻ</h3>
                                                 </div>
+                                            </div>
+                                        )}
+                                        {/* Render các tùy chọn khác nếu tin nhắn từ người dùng hiện tại */}
+                                        {message.fromSelf && !message.isHidden && (
+                                            <div>
+                                                <div>
+                                                    <div
+                                                        className={cx('wrapOptionShareMsg')}
+                                                        onClick={() => handleListFriendsShareClick(message)}
+                                                    >
+                                                        <FontAwesomeIcon className={cx('icon')} icon={faShare} />
+                                                        <h3 className={cx('title')}>Chia sẻ</h3>
+                                                    </div>
+                                                </div>
                                                 <div
                                                     className={cx('wrapOptionRecall')}
                                                     onClick={() => handleRecallMessage(message.id)}
                                                 >
                                                     <FontAwesomeIcon className={cx('icon')} icon={faTrashCan} />
-
                                                     <h3 className={cx('title')}>Gở ở phía tôi</h3>
                                                 </div>
                                                 <div
@@ -214,9 +241,16 @@ function ContentChat(to) {
                                             {message.message}
                                         </a>
                                     </div>
-                                ) : // Nếu không phải là tệp được hỗ trợ, hiển thị nội dung thông thường
-                                isImageUrl(message.message) ? (
+                                ) : isVideoUrl(message.message) ? (
+                                    <video controls className={cx('video')}>
+                                        <source src={message.message} type="video/mp4" />
+                                    </video>
+                                ) : isImageUrl(message.message) ? (
                                     <img src={message.message} alt="imageURL" className={cx('imageURL')} />
+                                ) : isAudioUrl(message.message) ? (
+                                    <audio controls className={cx('audio')}>
+                                        <source src={message.message} type="audio/mpeg" />
+                                    </audio>
                                 ) : (
                                     message.message
                                 )}
