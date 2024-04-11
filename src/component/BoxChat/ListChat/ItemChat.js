@@ -55,7 +55,7 @@ function ItemChat({
                 <div className={cx('iconAcceptFriends')}>
                     <FontAwesomeIcon className={cx('iconDecline')} icon={iconDecline} onClick={handleDecline} />
                     {/* Call handleAccept function when the accept button is clicked */}
-                    <FontAwesomeIcon className={cx('iconAccept')} icon={iconAccept} onClick={handleDecline} />
+                    <FontAwesomeIcon className={cx('iconAccept')} icon={iconAccept} onClick={handleAccept} />
                 </div>
             </div>
         </div>

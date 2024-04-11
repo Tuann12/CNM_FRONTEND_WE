@@ -30,7 +30,6 @@ function Contact() {
 
     // Function to handle accepting friend request
     const handleAccept = async (user) => {
-        alert('acc');
         try {
             const response = await axios.post('http://localhost:4000/user/acceptFriendRequestAndSendMessage', {
                 userId: JSON.parse(storedData).foundUser._id, // Lấy ID của người gửi từ localStorage
@@ -46,7 +45,19 @@ function Contact() {
         }
     };
     const handleDecline = async (user) => {
-        alert('dec');
+        try {
+            const response = await axios.post('http://localhost:4000/user/rejectFriendRequest', {
+                userId: JSON.parse(storedData).foundUser._id, // Lấy ID của người gửi từ localStorage
+                friendId: user._id,
+            });
+            console.log(response.data.message);
+
+            // Update friendRequestsSent by filtering out the declined user
+            setFriendRequestsSent((prevRequests) => prevRequests.filter((request) => request._id !== user._id));
+            alert('Đã từ chối lời mời kết bạn');
+        } catch (error) {
+            console.error('Error declining friend request:', error);
+        }
     };
     const getAvatarUrl = (user) => {
         // Kiểm tra xem avatar có hợp lệ không
