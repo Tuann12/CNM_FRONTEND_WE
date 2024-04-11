@@ -10,14 +10,34 @@ const cx = classNames.bind(styles);
 
 const emitter = mitt();
 
-function ItemChat({ id, avatar, title, contentChat, email, time, icon, iconAccept, iconDecline, onItemClick }) {
+function ItemChat({
+    id,
+    avatar,
+    title,
+    contentChat,
+    email,
+    time,
+    icon,
+    iconAccept,
+    iconDecline,
+    onItemClick,
+    onAdd,
+    onDec,
+}) {
     const handleClick = () => {
         console.log('Item clicked:', { avatar, title, id });
         onItemClick({ avatar, title, id });
         emitter.emit('itemClick', { avatar, title, id });
         localStorage.setItem('selectedID', id);
     };
-
+    const handleAccept = async (event) => {
+        event.stopPropagation();
+        onAdd();
+    };
+    const handleDecline = async (event) => {
+        event.stopPropagation();
+        onDec();
+    };
     return (
         <div className={cx('ItemChatWrap')} onClick={handleClick}>
             <div className={cx('BoxChatItem')}>
@@ -33,9 +53,9 @@ function ItemChat({ id, avatar, title, contentChat, email, time, icon, iconAccep
                     <FontAwesomeIcon className={cx('icon')} icon={icon} />
                 </div>
                 <div className={cx('iconAcceptFriends')}>
-                    <FontAwesomeIcon className={cx('iconDecline')} icon={iconDecline} />
+                    <FontAwesomeIcon className={cx('iconDecline')} icon={iconDecline} onClick={handleDecline} />
                     {/* Call handleAccept function when the accept button is clicked */}
-                    <FontAwesomeIcon className={cx('iconAccept')} icon={iconAccept} onClick={onItemClick} />
+                    <FontAwesomeIcon className={cx('iconAccept')} icon={iconAccept} onClick={handleDecline} />
                 </div>
             </div>
         </div>
