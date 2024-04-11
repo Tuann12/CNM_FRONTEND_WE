@@ -38,6 +38,7 @@ function ShareMessage({ sharedMessage }) {
             console.log('Shared successfully!'); // Thông báo chia sẻ thành công (có thể thay bằng hành động thực tế)
         }
     }, [isShared]);
+    console.log('share messsage content', sharedMessage.message);
 
     const handleShare = async () => {
         try {
@@ -47,6 +48,7 @@ function ShareMessage({ sharedMessage }) {
                 message: sharedMessage.message,
             });
             console.log('response cua ham handleShare', response.data);
+            alert('Chia sẻ thành công!'); // Thông báo chia sẻ thành công
             setIsShared(true); // Khi chia sẻ thành công, ẩn component
         } catch (error) {
             console.error('Error sharing message:', error);
