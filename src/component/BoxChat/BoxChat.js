@@ -8,20 +8,22 @@ import styles from './BoxChat.module.scss';
 const cx = classNames.bind(styles);
 function BoxChat() {
     const [friendList, setFriendList] = useState([]);
+    const [groupList, setGroupList] = useState([]);
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
 
     useEffect(() => {
-        const fetchFriendList = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
-                setFriendList(response.data.friendList);
+                const response = await axios.get(`http://localhost:4000/group/getGroupList/${userId}`);
+                setFriendList(response.data.userData.friendList);
+                setGroupList(response.data.userData.groupList);
             } catch (error) {
-                console.error('Error fetching friend list:', error);
+                console.error('Error fetching user data:', error);
             }
         };
 
-        fetchFriendList();
+        fetchData();
     }, [userId]);
 
     const onItemClick = (item) => {
@@ -44,6 +46,17 @@ function BoxChat() {
                         id={friend._id}
                         avatar={<img className={cx('avatarImg')} src={getAvatarUrl(friend)} alt="avatar" />}
                         title={friend.name}
+                        onItemClick={onItemClick}
+                    />
+                ))}
+            </ListChat>
+            <ListChat>
+                {groupList.map((group) => (
+                    <ItemChat
+                        key={group._id}
+                        id={group._id}
+                        avatar={<img className={cx('avatarImg')} src={group.avatar} alt="avatar" />}
+                        title={group.name}
                         onItemClick={onItemClick}
                     />
                 ))}

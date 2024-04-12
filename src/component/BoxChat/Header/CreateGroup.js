@@ -9,9 +9,10 @@ import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
-function CreateGroup({ onHide }) {
+const CreateGroup = ({ onHide }) => {
     const [friendList, setFriendList] = useState([]);
     const [selectedFriendIds, setSelectedFriendIds] = useState([]);
+    const [groupName, setGroupName] = useState(''); // Thêm state để lưu tên nhóm
     const [avatarToSend, setAvatarToSend] = useState(null);
     const [avatar, setAvatar] = useState(null);
     const storedData = localStorage.getItem('loginData');
@@ -57,10 +58,6 @@ function CreateGroup({ onHide }) {
         return selectedFriendIds.includes(friendId);
     };
 
-    useEffect(() => {
-        setAvatarToSend(avatarToSend);
-    }, [avatarToSend]);
-
     const handleFileChange = async (e) => {
         const imageUrl = e.target.files[0]; // Get the selected file
         setAvatar(imageUrl); // Set the selected file as the avatar
@@ -97,8 +94,22 @@ function CreateGroup({ onHide }) {
         }
     };
 
-    console.log('avatar create group:', avatar);
-    console.log('url của avatar ở createGroup:', avatarToSend);
+    const createGroup = async () => {
+        try {
+            const response = await axios.post(`http://localhost:4000/group/newGroups`, {
+                name: groupName,
+                creatorId: userId,
+                avatar: avatarToSend,
+                members: [...selectedFriendIds, userId],
+            });
+            console.log('Group created successfully:', response.data);
+            alert('Tạo nhóm thành công');
+            handleHide();
+        } catch (error) {
+            console.error('Error creating group:', error);
+            // Handle error creating group
+        }
+    };
 
     return (
         <div className={cx('wrapListShare')}>
@@ -125,7 +136,12 @@ function CreateGroup({ onHide }) {
                         />
                     </div>
                     <div className={cx('inpCreateGroup')}>
-                        <input className={cx('inpCreateTitleGroup')} placeholder="Nhập tên nhóm..." />
+                        <input
+                            className={cx('inpCreateTitleGroup')}
+                            placeholder="Nhập tên nhóm..."
+                            value={groupName}
+                            onChange={(e) => setGroupName(e.target.value)}
+                        />
                     </div>
                 </div>
                 <div className={cx('listFriends')}>
@@ -157,10 +173,12 @@ function CreateGroup({ onHide }) {
                     </ListChat>
                 </div>
 
-                <button className={cx('btnUpdate')}>Tạo Nhóm</button>
+                <button className={cx('btnUpdate')} onClick={createGroup}>
+                    Tạo Nhóm
+                </button>
             </div>
         </div>
     );
-}
+};
 
 export default CreateGroup;
