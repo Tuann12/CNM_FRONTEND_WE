@@ -1,14 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVideo, faMagnifyingGlass, faUserGroup } from '@fortawesome/free-solid-svg-icons';
+import { faVideo, faMagnifyingGlass, faUserGroup, faBars } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
 import styles from './HeaderChat.module.scss';
 import { emitter } from '../../BoxChat/ListChat/ItemChat';
 
 const cx = classNames.bind(styles);
 
-function HeaderChat() {
-    const [itemData, setItemData] = useState({ avatar: '', title: '' });
+function HeaderChat(parsedData) {
+    const [itemData, setItemData] = useState({});
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+    const togglePopup = () => {
+        setIsPopupOpen(!isPopupOpen);
+    };
+
+    const handleAddMember = () => {
+        // Xử lý khi nhấn vào thêm thành viên
+    };
+
+    const handleDeleteMember = () => {
+        // Xử lý khi nhấn vào xóa thành viên
+    };
+
+    const handleAssignRole = () => {
+        // Xử lý khi nhấn vào phân quyền
+    };
+
+    const handleDeleteGroup = () => {
+        // Xử lý khi nhấn vào xóa nhóm
+    };
 
     useEffect(() => {
         const handler = (data) => {
@@ -21,6 +42,7 @@ function HeaderChat() {
             emitter.off('itemClick', handler);
         };
     }, []);
+    console.log(parsedData);
 
     return (
         <div className={cx('wrapper')}>
@@ -46,11 +68,22 @@ function HeaderChat() {
                 <div className={cx('icon')}>
                     <FontAwesomeIcon icon={faVideo} />
                 </div>
-                <div className={cx('icon')}>
-                    <FontAwesomeIcon icon={faUserGroup} />
+                <div className={cx('icon')} onClick={togglePopup}>
+                    <FontAwesomeIcon icon={faBars} />
                 </div>
             </div>
+            {isPopupOpen && (
+                <div className={cx('popup')}>
+                    <ul>
+                        <li onClick={handleAddMember}>Thêm thành viên</li>
+                        <li onClick={handleDeleteMember}>Xóa thành viên</li>
+                        <li onClick={handleAssignRole}>Gán quyền</li>
+                        <li onClick={handleDeleteGroup}>Giải tán</li>
+                    </ul>
+                </div>
+            )}
         </div>
     );
 }
+
 export default HeaderChat;

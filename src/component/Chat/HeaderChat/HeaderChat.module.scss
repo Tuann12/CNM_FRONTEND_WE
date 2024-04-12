@@ -45,3 +45,29 @@
     border: 1px solid var(--color-font);
     margin-left: 15px;
 }
+
+.popup {
+    position: absolute;
+    top: 40px; /* Adjust this value based on your design */
+    right: 10px; /* Adjust this value based on your design */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+}
+
+.popup ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.popup ul li {
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.popup ul li:hover {
+    background-color: #f0f0f0;
+}

@@ -19,6 +19,7 @@ function Chat({ isOpenInfo }) {
     const [avatar, setAvatar] = useState(null);
     const [avatarToSend, setAvatarToSend] = useState(null);
     const storedData = localStorage.getItem('loginData');
+    const parsedData = JSON.parse(storedData);
     let userId = null;
     let updatedAvatarUrl = '';
     const socketRef = useRef();
@@ -141,7 +142,7 @@ function Chat({ isOpenInfo }) {
     console.log('avatarToSend:', avatarToSend);
     return (
         <div className={cx('wrapper')}>
-            <HeaderChat />
+            <HeaderChat parsedData={parsedData} />
             <ContentChat key={reloadToggle} to={itemData.id} setMessages={messages} />
             <InputChat
                 avatarToSend={avatarToSend}
