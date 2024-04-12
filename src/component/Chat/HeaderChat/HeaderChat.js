@@ -4,6 +4,7 @@ import { faVideo, faMagnifyingGlass, faUserGroup, faBars } from '@fortawesome/fr
 import classNames from 'classnames/bind';
 import styles from './HeaderChat.module.scss';
 import { emitter } from '../../BoxChat/ListChat/ItemChat';
+import axios from 'axios'; // Import axios để gọi API
 
 const cx = classNames.bind(styles);
 
@@ -27,8 +28,20 @@ function HeaderChat(parsedData) {
         // Xử lý khi nhấn vào phân quyền
     };
 
-    const handleDeleteGroup = () => {
-        // Xử lý khi nhấn vào xóa nhóm
+    const handleDeleteGroup = async () => {
+        try {
+            // Gọi API xóa nhóm
+            await axios.delete(`http://localhost:4000/group/deleteGroup/${itemData.id}`);
+
+            // Đóng popup sau khi xóa nhóm thành công
+            setIsPopupOpen(false);
+
+            // Hiển thị thông báo hoặc thực hiện các xử lý khác nếu cần
+            alert('Nhóm đã được giải tán thành công');
+        } catch (error) {
+            console.error('Error deleting group:', error);
+            alert('Đã xảy ra lỗi khi giải tán nhóm');
+        }
     };
 
     useEffect(() => {

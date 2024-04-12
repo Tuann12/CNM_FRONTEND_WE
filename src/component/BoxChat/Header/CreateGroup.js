@@ -93,7 +93,6 @@ const CreateGroup = ({ onHide }) => {
             }
         }
     };
-
     const createGroup = async () => {
         try {
             const response = await axios.post(`http://localhost:4000/group/newGroups`, {
@@ -107,7 +106,7 @@ const CreateGroup = ({ onHide }) => {
             handleHide();
         } catch (error) {
             console.error('Error creating group:', error);
-            // Handle error creating group
+            alert(error.response.data.message || 'Đã xảy ra lỗi khi tạo nhóm');
         }
     };
 
