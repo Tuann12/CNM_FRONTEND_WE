@@ -1,3 +1,4 @@
+// BoxChat.js
 import React, { useState, useEffect } from 'react';
 import ListChat from './ListChat/ListChat';
 import ItemChat from './ListChat/ItemChat';
@@ -6,6 +7,7 @@ import classNames from 'classnames/bind';
 import styles from './BoxChat.module.scss';
 
 const cx = classNames.bind(styles);
+
 function BoxChat() {
     const [friendList, setFriendList] = useState([]);
     const [groupList, setGroupList] = useState([]);
@@ -26,8 +28,9 @@ function BoxChat() {
         fetchData();
     }, [userId]);
 
-    const onItemClick = (item) => {
-        // Xử lý khi một item được chọn
+    const onItemClick = (item, type) => {
+        console.log('Đã chọn:', type, item);
+        // Thực hiện các hành động khác sau khi nhấp vào một mục
     };
 
     const getAvatarUrl = (friend) => {
@@ -46,7 +49,8 @@ function BoxChat() {
                         id={friend._id}
                         avatar={<img className={cx('avatarImg')} src={getAvatarUrl(friend)} alt="avatar" />}
                         title={friend.name}
-                        onItemClick={onItemClick}
+                        onItemClick={() => onItemClick(friend, 'friend')} // Truyền hàm callback và thông tin về người bạn khi nhấp vào
+                        type="friend" // Truyền giá trị "friend" vào prop type
                     />
                 ))}
             </ListChat>
@@ -57,7 +61,8 @@ function BoxChat() {
                         id={group._id}
                         avatar={<img className={cx('avatarImg')} src={group.avatar} alt="avatar" />}
                         title={group.name}
-                        onItemClick={onItemClick}
+                        onItemClick={() => onItemClick(group, 'group')} // Truyền hàm callback và thông tin về nhóm khi nhấp vào
+                        type="group" // Truyền giá trị "group" vào prop type
                     />
                 ))}
             </ListChat>

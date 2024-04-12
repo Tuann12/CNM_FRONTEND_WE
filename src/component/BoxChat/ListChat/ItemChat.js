@@ -18,16 +18,19 @@ function ItemChat({
     email,
     time,
     icon,
+    group,
     iconAccept,
     iconDecline,
     onItemClick,
     onAdd,
     onDec,
+    type,
 }) {
     const handleClick = () => {
-        console.log('Item clicked:', { avatar, title, id });
-        onItemClick({ avatar, title, id });
-        emitter.emit('itemClick', { avatar, title, id });
+        onItemClick({ avatar, title, id, type }); // Truyền type khi gọi hàm onItemClick
+        emitter.emit('itemClick', { avatar, title, id, type });
+        console.log('Item clicked:', { avatar, title, id, type });
+
         localStorage.setItem('selectedID', id);
     };
     const handleAccept = async (event) => {

@@ -42,7 +42,6 @@ function HeaderChat(parsedData) {
             emitter.off('itemClick', handler);
         };
     }, []);
-    console.log(parsedData);
 
     return (
         <div className={cx('wrapper')}>
@@ -68,9 +67,11 @@ function HeaderChat(parsedData) {
                 <div className={cx('icon')}>
                     <FontAwesomeIcon icon={faVideo} />
                 </div>
-                <div className={cx('icon')} onClick={togglePopup}>
-                    <FontAwesomeIcon icon={faBars} />
-                </div>
+                {itemData.type === 'group' && (
+                    <div className={cx('icon')} onClick={togglePopup}>
+                        <FontAwesomeIcon icon={faBars} />
+                    </div>
+                )}
             </div>
             {isPopupOpen && (
                 <div className={cx('popup')}>
