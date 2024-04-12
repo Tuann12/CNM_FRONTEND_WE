@@ -2,15 +2,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
-import styles from './ContentChat.module.scss';
-import ListChat from '../../BoxChat/ListChat/ListChat';
-import ItemChat from '../../BoxChat/ListChat/ItemChat';
+import styles from './Header.module.scss';
+import ListChat from '../ListChat/ListChat';
+import ItemChat from '../ListChat/ItemChat';
 import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
-function ShareMessage({ sharedMessage, onHide }) {
-    console.log('sharedMessage', sharedMessage);
+function CreateGroup({ onHide }) {
     const [friendList, setFriendList] = useState([]);
     const [selectedFriendIds, setSelectedFriendIds] = useState([]);
 
@@ -30,29 +29,14 @@ function ShareMessage({ sharedMessage, onHide }) {
         fetchFriendList();
     }, [userId]);
 
-    const handleHide = () => {
-        onHide();
-    };
-
-    const handleShare = async () => {
-        try {
-            const response = await axios.post('http://localhost:4000/forwardMessage', {
-                from: userId,
-                to: selectedFriendIds,
-                message: sharedMessage.message,
-            });
-            console.log('response cua ham handleShare', response.data);
-            alert('Chia sẻ thành công!'); // Thông báo chia sẻ thành công
-            handleHide(); // Khi chia sẻ thành công, ẩn component
-        } catch (error) {
-            console.error('Error sharing message:', error);
-        }
-    };
-
     const getAvatarUrl = (friend) => {
         return friend.avatar
             ? friend.avatar
             : 'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
+    };
+
+    const handleHide = () => {
+        onHide();
     };
 
     const toggleFriendSelection = (friendId) => {
@@ -75,8 +59,16 @@ function ShareMessage({ sharedMessage, onHide }) {
     return (
         <div className={cx('wrapListShare')}>
             <div className={cx('containerListShare')}>
-                <div className={cx('iconClose')} onClick={handleHide}>
-                    <FontAwesomeIcon className={cx('iconX')} icon={faXmark} />
+                <div className={cx('headerGroup')}>
+                    <div>
+                        <h3 className={cx('titleGroup')}>Tạo Nhóm</h3>
+                    </div>
+                    <div className={cx('iconClose')} onClick={handleHide}>
+                        <FontAwesomeIcon className={cx('iconX')} icon={faXmark} />
+                    </div>
+                </div>
+                <div className={cx('createGroup')}>
+                    <input className={cx('inpCreateTitleGroup')} placeholder="Nhập tên nhóm..." />
                 </div>
                 <div className={cx('listFriends')}>
                     <ListChat>
@@ -107,12 +99,10 @@ function ShareMessage({ sharedMessage, onHide }) {
                     </ListChat>
                 </div>
 
-                <button className={cx('btnUpdate')} onClick={handleShare}>
-                    Chia sẻ
-                </button>
+                <button className={cx('btnUpdate')}>Tạo Nhóm</button>
             </div>
         </div>
     );
 }
 
-export default ShareMessage;
+export default CreateGroup;

@@ -140,15 +140,14 @@ function ContentChat(to) {
         return false; // Trả về false nếu filename không tồn tại
     };
 
+    const handleVisibility = () => {
+        setShowListFriends(false);
+    };
+
     const handleListFriendsShareClick = (messageContent) => {
         console.log('messageContent:', messageContent);
         setSharedMessage(messageContent);
         setShowListFriends(true);
-    };
-
-    const handleShareMessageClose = () => {
-        fetchDataFromServer(); // Gọi hàm để lấy dữ liệu từ server
-        setShowListFriends(false); // Đóng component ShareMessage
     };
 
     function isVideoUrl(url) {
@@ -162,8 +161,6 @@ function ContentChat(to) {
         const mp3UrlRegex = /\.(mp3)$/;
         return mp3UrlRegex.test(url);
     }
-
-    const isRecipient = to.to === userId;
 
     return (
         <div className={cx('wrapper')}>
@@ -258,7 +255,7 @@ function ContentChat(to) {
                         </Tippy>
                     </div>
                 ))}
-                {showListFriends && <ShareMessage sharedMessage={sharedMessage} />}
+                {showListFriends && <ShareMessage sharedMessage={sharedMessage} onHide={handleVisibility} />}
             </div>
         </div>
     );
