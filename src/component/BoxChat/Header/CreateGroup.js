@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faXmark, faCamera } from '@fortawesome/free-solid-svg-icons';
 import React, { useState, useEffect } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
@@ -12,7 +12,8 @@ const cx = classNames.bind(styles);
 function CreateGroup({ onHide }) {
     const [friendList, setFriendList] = useState([]);
     const [selectedFriendIds, setSelectedFriendIds] = useState([]);
-
+    const [avatarToSend, setAvatarToSend] = useState(null);
+    const [avatar, setAvatar] = useState(null);
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
 
@@ -56,6 +57,49 @@ function CreateGroup({ onHide }) {
         return selectedFriendIds.includes(friendId);
     };
 
+    useEffect(() => {
+        setAvatarToSend(avatarToSend);
+    }, [avatarToSend]);
+
+    const handleFileChange = async (e) => {
+        const imageUrl = e.target.files[0]; // Get the selected file
+        setAvatar(imageUrl); // Set the selected file as the avatar
+
+        if (imageUrl) {
+            // Check if an image is selected
+            try {
+                // Create formData to send the avatar file to the server
+                const formData = new FormData();
+                formData.append('avatar', imageUrl);
+
+                // Send the avatar file to the API
+                const avatarResponse = await fetch(`http://localhost:4000/user/uploadAvatarS3/${userId}`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                // Check if the avatar was uploaded successfully
+                if (!avatarResponse.ok) {
+                    throw new Error('Failed to upload avatar');
+                }
+
+                // Get the URL of the uploaded avatar from the API response
+                const avatarData = await avatarResponse.json();
+                const updatedAvatarUrl = avatarData.avatar;
+                console.log('updatedAvatarUrl:', updatedAvatarUrl);
+
+                // Set the updatedAvatarUrl state
+                setAvatarToSend(updatedAvatarUrl);
+            } catch (error) {
+                console.error('Error uploading avatar:', error);
+                // Handle error uploading avatar
+            }
+        }
+    };
+
+    console.log('avatar create group:', avatar);
+    console.log('url của avatar ở createGroup:', avatarToSend);
+
     return (
         <div className={cx('wrapListShare')}>
             <div className={cx('containerListShare')}>
@@ -67,8 +111,22 @@ function CreateGroup({ onHide }) {
                         <FontAwesomeIcon className={cx('iconX')} icon={faXmark} />
                     </div>
                 </div>
-                <div className={cx('createGroup')}>
-                    <input className={cx('inpCreateTitleGroup')} placeholder="Nhập tên nhóm..." />
+                <div className={cx('wrapInp')}>
+                    <div className={cx('uploadAvt')}>
+                        <label htmlFor="avatarInput" className={cx('lblTitle')}>
+                            <FontAwesomeIcon className={cx('iconEditAvt')} icon={faCamera} />
+                        </label>
+                        <input
+                            type="file"
+                            id="avatarInput"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+                    </div>
+                    <div className={cx('inpCreateGroup')}>
+                        <input className={cx('inpCreateTitleGroup')} placeholder="Nhập tên nhóm..." />
+                    </div>
                 </div>
                 <div className={cx('listFriends')}>
                     <ListChat>
