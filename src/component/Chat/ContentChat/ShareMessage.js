@@ -173,9 +173,29 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
         setSelectedFriendIds(updatedSelectedFriendIds);
     };
 
+    const toggleFriendSelection1 = (friendId) => {
+        const isSelected = selectedFriendIds.includes(friendId);
+        let updatedSelectedFriendIds = [];
+        if (isSelected) {
+            // Nếu mục đã được chọn, chỉ giữ mục đó
+            updatedSelectedFriendIds = [friendId];
+        } else {
+            // Nếu mục chưa được chọn, loại bỏ tất cả các mục khác và thêm mục mới
+            updatedSelectedFriendIds = [friendId];
+        }
+        setSelectedFriendIds(updatedSelectedFriendIds);
+    };
+
     const onCheckboxChange = (event) => {
         const { value } = event.target;
-        toggleFriendSelection(value);
+        switch (action) {
+            case 'assignRole':
+                toggleFriendSelection1(value);
+                break;
+            default:
+                toggleFriendSelection(value);
+                break;
+        }
     };
 
     const isSelected = (friendId) => {
@@ -200,7 +220,16 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                                             <img className={cx('avatarImg')} src={getAvatarUrl(friend)} alt="avatar" />
                                         }
                                         title={friend.name}
-                                        onItemClick={() => toggleFriendSelection(friend._id)}
+                                        onItemClick={() => {
+                                            switch (action) {
+                                                case 'assignRole':
+                                                    toggleFriendSelection1(friend._id);
+                                                    break;
+                                                default:
+                                                    toggleFriendSelection(friend._id);
+                                                    break;
+                                            }
+                                        }}
                                     />
                                 </div>
                                 <input
