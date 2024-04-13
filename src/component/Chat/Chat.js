@@ -118,14 +118,22 @@ function Chat({ isOpenInfo }) {
 
     const handleSendMsg = async (msg, toUserId) => {
         try {
+            console.log('sen to sock', parsedData.foundUser);
+            let avatar = parsedData.foundUser.avatar;
+            if (!avatar) {
+                avatar =
+                    'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
+            }
             const messageToSend = updatedAvatarUrl ? { message: updatedAvatarUrl } : { message: msg };
             console.log('messageToSend:', messageToSend);
-            socketRef.current.emit('sendDataClient', {
+            await socketRef.current.emit('sendDataClient', {
+                _id: itemData.id,
                 to: itemData.id,
                 from: userId,
                 ...messageToSend,
             });
             await axios.post('http://localhost:4000/addmsg', {
+                _id: itemData.id,
                 from: userId,
                 to: itemData.id,
                 ...messageToSend,
