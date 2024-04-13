@@ -117,34 +117,73 @@ function Chat({ isOpenInfo }) {
     console.log('avatar in chat:', avatar);
 
     const handleSendMsg = async (msg, toUserId) => {
-        try {
-            console.log('sen to sock', parsedData.foundUser);
-            let avatar = parsedData.foundUser.avatar;
-            if (!avatar) {
-                avatar =
-                    'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
+        if (itemData.type === 'group') {
+            try {
+                console.log('sen to sock', parsedData.foundUser);
+                let avatar = parsedData.foundUser.avatar;
+                if (!avatar) {
+                    avatar =
+                        'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
+                }
+                const messageToSend = updatedAvatarUrl ? { message: updatedAvatarUrl } : { message: msg };
+                console.log('messageToSend:', messageToSend);
+                await socketRef.current.emit('sendDataClient', {
+                    _id: itemData.id,
+                    to: itemData.id,
+                    from: userId,
+                    ...messageToSend,
+                    group: itemData.type,
+                });
+                console.log('image in chat ', parsedData.foundUser);
+                await axios.post('http://localhost:4000/sendMessageToGroup', {
+                    _id: itemData.id,
+                    from: userId,
+                    to: itemData.id,
+                    group: itemData.id,
+                    ...messageToSend,
+                    avatar: avatar,
+                });
+                console.log('image in chat ', updatedAvatarUrl);
+                console.log('Message sent:', msg);
+                console.log('To:', itemData.id);
+                console.log('From:', userId);
+                console.log('itemData:', itemData);
+                setMessages((prev) => [...prev, { fromSelf: true, message: msg }]);
+            } catch (error) {
+                console.error('Error sending message:', error);
             }
-            const messageToSend = updatedAvatarUrl ? { message: updatedAvatarUrl } : { message: msg };
-            console.log('messageToSend:', messageToSend);
-            await socketRef.current.emit('sendDataClient', {
-                _id: itemData.id,
-                to: itemData.id,
-                from: userId,
-                ...messageToSend,
-            });
-            await axios.post('http://localhost:4000/addmsg', {
-                _id: itemData.id,
-                from: userId,
-                to: itemData.id,
-                ...messageToSend,
-            });
-            console.log('image in chat ', updatedAvatarUrl);
-            console.log('Message sent:', msg);
-            console.log('To:', itemData.id);
-            console.log('From:', userId);
-            setMessages((prev) => [...prev, { fromSelf: true, message: msg }]);
-        } catch (error) {
-            console.error('Error sending message:', error);
+        } else {
+            try {
+                console.log('sen to sock', parsedData.foundUser);
+                let avatar = parsedData.foundUser.avatar;
+                if (!avatar) {
+                    avatar =
+                        'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
+                }
+                const messageToSend = updatedAvatarUrl ? { message: updatedAvatarUrl } : { message: msg };
+                console.log('messageToSend:', messageToSend);
+                await socketRef.current.emit('sendDataClient', {
+                    _id: itemData.id,
+                    to: itemData.id,
+                    from: userId,
+                    ...messageToSend,
+                });
+                await axios.post('http://localhost:4000/addmsg', {
+                    _id: itemData.id,
+                    from: userId,
+                    to: itemData.id,
+                    ...messageToSend,
+                    avatar: avatar,
+                });
+                console.log('image in chat ', updatedAvatarUrl);
+                console.log('Message sent:', msg);
+                console.log('To:', itemData.id);
+                console.log('From:', userId);
+                console.log('itemData:', itemData);
+                setMessages((prev) => [...prev, { fromSelf: true, message: msg }]);
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
         }
     };
     console.log('avatarToSend:', avatarToSend);

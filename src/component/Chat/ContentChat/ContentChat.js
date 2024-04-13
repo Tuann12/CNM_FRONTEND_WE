@@ -46,25 +46,49 @@ function ContentChat(to) {
     }, []);
 
     const fetchDataFromServer = async () => {
-        try {
-            // Gửi yêu cầu POST để lấy tin nhắn mới từ server
-            const response = await axios.post('http://localhost:4000/getmsg', {
-                from: userId,
-                to: to.to,
-            });
+        if (itemData.type === 'group') {
+            try {
+                // Gửi yêu cầu POST để lấy tin nhắn mới từ server
+                const response = await axios.post('http://localhost:4000/getGroupMessages', {
+                    from: userId,
+                    groupId: to.to,
+                });
+                console.log('response:', response);
+                // Sắp xếp tin nhắn theo thời gian tạo
+                const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                setMessage(sortedMessages);
 
-            // Sắp xếp tin nhắn theo thời gian tạo
-            const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                // Cập nhật state messages với các tin nhắn mới
+                console.log('userId:', userId);
+                console.log('selectedID:', selectedID);
+                console.log('sortedMessages:', sortedMessages);
+                // Đánh dấu rằng đã nhận tin nhắn từ server
+                setReceivedMessage(true);
+            } catch (error) {
+                console.error('Error receiving message:', error);
+            }
+        } else {
+            try {
+                // Gửi yêu cầu POST để lấy tin nhắn mới từ server
+                const response = await axios.post('http://localhost:4000/getmsg', {
+                    from: userId,
+                    to: to.to,
+                });
+                console.log('response:', response);
+                // Sắp xếp tin nhắn theo thời gian tạo
+                const sortedMessages = response.data.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
-            // Cập nhật state messages với các tin nhắn mới
-            setMessage(sortedMessages);
-            console.log('userId:', userId);
-            console.log('selectedID:', selectedID);
-            console.log('sortedMessages:', sortedMessages);
-            // Đánh dấu rằng đã nhận tin nhắn từ server
-            setReceivedMessage(true);
-        } catch (error) {
-            console.error('Error receiving message:', error);
+                // Cập nhật state messages với các tin nhắn mới
+                setMessage(sortedMessages);
+
+                console.log('userId:', userId);
+                console.log('selectedID:', selectedID);
+                console.log('sortedMessages:', sortedMessages);
+                // Đánh dấu rằng đã nhận tin nhắn từ server
+                setReceivedMessage(true);
+            } catch (error) {
+                console.error('Error receiving message:', error);
+            }
         }
     };
     useEffect(() => {
@@ -167,9 +191,10 @@ function ContentChat(to) {
             <div className={cx('containerMessage')}>
                 {messages.map((message, index) => (
                     <div className={cx('boxMessage')} key={index}>
-                        {!message.fromSelf && (
-                            <img className={cx('avatarImg')} src={itemData.avatar.props.src} alt="avatar" />
-                        )}
+                        <span className={cx('senderName', { fromSelf: message.fromSelf })}>{message.name}</span>
+
+                        {!message.fromSelf && <img className={cx('avatarImg')} src={message.avatar} alt="avatar" />}
+
                         <Tippy
                             interactive
                             placement="top"
