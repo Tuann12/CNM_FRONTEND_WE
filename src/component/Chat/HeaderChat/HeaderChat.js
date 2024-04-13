@@ -47,7 +47,7 @@ function HeaderChat(parsedData) {
     };
 
     const handleDeleteMember = () => {
-        // Handle delete member action
+        setShowShareMessage({ action: 'deleteMember', groupId: itemData.id });
     };
 
     const handleAssignRole = () => {

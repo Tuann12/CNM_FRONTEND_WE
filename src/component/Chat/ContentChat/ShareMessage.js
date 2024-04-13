@@ -23,6 +23,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                 fetchNonGroupFriends();
                 break;
             case 'deleteMember':
+                fetchMembersList();
                 console.log('Delete member action');
                 break;
             case 'assignRole':
@@ -33,6 +34,15 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                 break;
         }
     }, [action]);
+    const fetchMembersList = async () => {
+        try {
+            const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${groupId}`);
+            const filteredMembers = response.data.groupMembers.filter((member) => member.role !== 'leader');
+            setFriendList(filteredMembers);
+        } catch (error) {
+            console.error('Error fetching members list:', error);
+        }
+    };
     const fetchFriendList = async () => {
         try {
             const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
@@ -68,13 +78,30 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     const addMemberToGroup = async (groupId, selectedFriendIds, handleHide) => {
         try {
             const response = await axios.put(`http://localhost:4000/group/addMemberToGroup/${groupId}`, {
-                memberId: selectedFriendIds,
+                memberIds: selectedFriendIds,
             });
             console.log('Response from addMemberToGroup:', response.data);
             alert('Thêm thành viên vào nhóm thành công!');
             handleHide();
         } catch (error) {
             console.error('Error adding member to group:', error);
+        }
+    };
+    const removeMembersFromGroup = async (groupId, memberIdsToRemove, handleHide) => {
+        try {
+            const response = await axios.put(`http://localhost:4000/group/removeMembersFromGroup/${groupId}`, {
+                memberIds: memberIdsToRemove,
+            });
+            console.log('Response from removeMembersFromGroup:', response.data);
+            alert('Xóa thành viên khỏi nhóm thành công!');
+            handleHide();
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message);
+            } else {
+                // Otherwise, log the error
+                console.error('Error removing members from group:', error);
+            }
         }
     };
 
@@ -86,6 +113,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
         switch (action) {
             case 'addMember':
                 addMemberToGroup(groupId, selectedFriendIds, handleHide);
+                break;
+            case 'deleteMember':
+                removeMembersFromGroup(groupId, selectedFriendIds, handleHide);
                 break;
             default:
                 sendForwardMessageRequest();
