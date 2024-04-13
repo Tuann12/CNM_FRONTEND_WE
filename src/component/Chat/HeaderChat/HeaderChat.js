@@ -12,43 +12,60 @@ const cx = classNames.bind(styles);
 function HeaderChat(parsedData) {
     const [itemData, setItemData] = useState({});
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [showShareMessage, setShowShareMessage] = useState({ action: '', groupId: '' }); // Include action and groupId in showShareMessage state
+    const [showShareMessage, setShowShareMessage] = useState({ action: '', groupId: '' });
+    const [membersList, setMembersList] = useState([]);
+    const [showMembersList, setShowMembersList] = useState(false); // State to control member list visibility
 
     const togglePopup = () => {
         setIsPopupOpen(!isPopupOpen);
+        setShowMembersList(false);
     };
 
+    const fetchMembersList = async () => {
+        try {
+            const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${itemData.id}`);
+            setMembersList(response.data.groupMembers);
+            setShowMembersList(true);
+        } catch (error) {
+            console.error('Error fetching members list:', error);
+        }
+    };
+
+    const handleViewMembers = () => {
+        togglePopup();
+        setMembersList(true);
+        if (isPopupOpen) {
+            console.log('Fetching members list');
+            fetchMembersList();
+        } else {
+            console.log('Closing members list');
+            setShowMembersList(false); // Hide members list when closing popup
+        }
+    };
     const handleAddMember = () => {
-        setShowShareMessage({ action: 'addMember', groupId: itemData.id }); // Set action and groupId when adding member
+        setShowShareMessage({ action: 'addMember', groupId: itemData.id });
     };
 
     const handleDeleteMember = () => {
-        // Xử lý khi nhấn vào xóa thành viên
+        // Handle delete member action
     };
 
     const handleAssignRole = () => {
-        // Xử lý khi nhấn vào phân quyền
+        // Handle assign role action
     };
 
     const handleDeleteGroup = async () => {
         try {
-            // Gọi API xóa nhóm
             await axios.delete(`http://localhost:4000/group/deleteGroup/${itemData.id}`);
-
-            // Đóng popup sau khi xóa nhóm thành công
             setIsPopupOpen(false);
-
-            // Hiển thị thông báo hoặc thực hiện các xử lý khác nếu cần
             alert('Nhóm đã được giải tán thành công');
         } catch (error) {
             console.error('Error deleting group:', error);
             alert('Đã xảy ra lỗi khi giải tán nhóm');
         }
     };
-
     const onHideShareMessage = () => {
-        // Function to handle hiding the ShareMessage component
-        setShowShareMessage({ action: '', groupId: '' }); // Reset action and groupId when hiding ShareMessage
+        setShowShareMessage({ action: '', groupId: '' });
     };
 
     useEffect(() => {
@@ -62,10 +79,14 @@ function HeaderChat(parsedData) {
             emitter.off('itemClick', handler);
         };
     }, []);
-
+    const clostList = () => {
+        setShowMembersList(false);
+    };
+    console.log('showMembersList:', showMembersList);
+    console.log('membersList:', membersList);
+    console.log('isShowPopup:', isPopupOpen);
     return (
         <div className={cx('wrapper')}>
-            {/* Content of HeaderChat component */}
             <div className={cx('Info')}>
                 <img
                     className={cx('avatarImg')}
@@ -94,9 +115,11 @@ function HeaderChat(parsedData) {
                     </div>
                 )}
             </div>
+
             {isPopupOpen && (
                 <div className={cx('popup')}>
                     <ul>
+                        <li onClick={handleViewMembers}>Xem Danh sách thành viên</li>
                         <li onClick={handleAddMember}>Thêm thành viên</li>
                         <li onClick={handleDeleteMember}>Xóa thành viên</li>
                         <li onClick={handleAssignRole}>Gán quyền</li>
@@ -105,7 +128,20 @@ function HeaderChat(parsedData) {
                 </div>
             )}
 
-            {/* Render ShareMessage component if showShareMessage action is set */}
+            {showMembersList && (
+                <div className={cx('popup')}>
+                    <ul>
+                        {membersList.map((member) => (
+                            <div key={member._id}>
+                                <li>
+                                    {member.name} - {member.role}
+                                </li>
+                            </div>
+                        ))}
+                    </ul>
+                    <button onClick={clostList}>Đóng</button>
+                </div>
+            )}
             {showShareMessage.action && (
                 <ShareMessage
                     onHide={onHideShareMessage}
@@ -116,5 +152,4 @@ function HeaderChat(parsedData) {
         </div>
     );
 }
-
 export default HeaderChat;

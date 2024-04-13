@@ -151,7 +151,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                 </div>
 
                 <button className={cx('btnUpdate')} onClick={handleShare}>
-                    Chia sẻ
+                    Xác nhận
                 </button>
             </div>
         </div>

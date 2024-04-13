@@ -48,9 +48,9 @@
 
 .popup {
     position: absolute;
-    top: 40px; /* Adjust this value based on your design */
-    right: 10px; /* Adjust this value based on your design */
-    background-color: white;
+    top: 40px; /* Adjust as needed */
+    right: 10px; /* Adjust as needed */
+    background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -66,8 +66,23 @@
 .popup ul li {
     padding: 10px 20px;
     cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover transition */
 }
 
 .popup ul li:hover {
     background-color: #f0f0f0;
+}
+
+.popup button {
+    border: none;
+    background-color: #007bff; /* Blue color */
+    color: #fff; /* White text */
+    padding: 8px 16px; /* Padding around the text */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth hover transition */
+}
+
+.popup button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }
