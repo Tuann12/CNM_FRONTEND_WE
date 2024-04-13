@@ -9,14 +9,30 @@ import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
-function ShareMessage({ sharedMessage, onHide }) {
+function ShareMessage({ sharedMessage, onHide, dataFromHeaderChat, action }) {
     console.log('sharedMessage', sharedMessage);
     const [friendList, setFriendList] = useState([]);
     const [selectedFriendIds, setSelectedFriendIds] = useState([]);
 
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
-
+    useEffect(() => {
+        console.log(`ShareMessage component is called with action: ${action}`);
+        // Handle action accordingly
+        switch (action) {
+            case 'addMember':
+                console.log('Add member action');
+                break;
+            case 'deleteMember':
+                console.log('Delete member action');
+                break;
+            case 'assignRole':
+                console.log('Assign role action');
+                break;
+            default:
+                break;
+        }
+    }, [action]);
     useEffect(() => {
         const fetchFriendList = async () => {
             try {

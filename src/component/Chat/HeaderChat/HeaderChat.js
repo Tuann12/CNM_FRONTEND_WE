@@ -4,30 +4,31 @@ import { faVideo, faMagnifyingGlass, faUserGroup, faBars } from '@fortawesome/fr
 import classNames from 'classnames/bind';
 import styles from './HeaderChat.module.scss';
 import { emitter } from '../../BoxChat/ListChat/ItemChat';
-import axios from 'axios'; // Import axios để gọi API
+import ShareMessage from '../../Chat/ContentChat/ShareMessage';
+import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
 function HeaderChat(parsedData) {
     const [itemData, setItemData] = useState({});
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [showShareMessage, setShowShareMessage] = useState(false); // State to control the ShareMessage component
 
     const togglePopup = () => {
         setIsPopupOpen(!isPopupOpen);
     };
 
     const handleAddMember = () => {
-        // Xử lý khi nhấn vào thêm thành viên
+        setShowShareMessage({ action: 'addMember' });
     };
 
     const handleDeleteMember = () => {
-        // Xử lý khi nhấn vào xóa thành viên
+        setShowShareMessage({ action: 'deleteMember' });
     };
 
     const handleAssignRole = () => {
-        // Xử lý khi nhấn vào phân quyền
+        setShowShareMessage({ action: 'assignRole' });
     };
-
     const handleDeleteGroup = async () => {
         try {
             // Gọi API xóa nhóm
@@ -44,6 +45,11 @@ function HeaderChat(parsedData) {
         }
     };
 
+    const onHideShareMessage = () => {
+        // Function to handle hiding the ShareMessage component
+        setShowShareMessage(false);
+    };
+
     useEffect(() => {
         const handler = (data) => {
             setItemData(data);
@@ -58,6 +64,7 @@ function HeaderChat(parsedData) {
 
     return (
         <div className={cx('wrapper')}>
+            {/* Content of HeaderChat component */}
             <div className={cx('Info')}>
                 <img
                     className={cx('avatarImg')}
@@ -96,6 +103,9 @@ function HeaderChat(parsedData) {
                     </ul>
                 </div>
             )}
+
+            {/* Render ShareMessage component if showShareMessage state is true */}
+            {showShareMessage && <ShareMessage onHide={onHideShareMessage} action={showShareMessage.action} />}
         </div>
     );
 }
