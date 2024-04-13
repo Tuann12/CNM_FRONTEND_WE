@@ -29,9 +29,19 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                 console.log('Assign role action');
                 break;
             default:
+                fetchFriendList();
                 break;
         }
     }, [action]);
+    const fetchFriendList = async () => {
+        try {
+            const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
+            setFriendList(response.data.friendList);
+        } catch (error) {
+            console.error('Error fetching friend list:', error);
+        }
+    };
+
     const fetchNonGroupFriends = async () => {
         try {
             const response = await axios.get(`http://localhost:4000/group/getNonGroupFriends/${userId}/${groupId}`);
@@ -41,36 +51,44 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             console.error('Error fetching non-group friends:', error);
         }
     };
-
-    useEffect(() => {
-        const fetchFriendList = async () => {
-            try {
-                const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
-                setFriendList(response.data.friendList);
-            } catch (error) {
-                console.error('Error fetching friend list:', error);
-            }
-        };
-
-        fetchFriendList();
-    }, [userId]);
-
-    const handleHide = () => {
-        onHide();
-    };
-
-    const handleShare = async () => {
+    const sendForwardMessageRequest = async () => {
         try {
             const response = await axios.post('http://localhost:4000/forwardMessage', {
                 from: userId,
                 to: selectedFriendIds,
                 message: sharedMessage.message,
             });
-            console.log('response cua ham handleShare', response.data);
-            alert('Chia sẻ thành công!'); // Thông báo chia sẻ thành công
-            handleHide(); // Khi chia sẻ thành công, ẩn component
+            console.log('Response from handleShare:', response.data);
+            alert('Chia sẻ thành công!'); // Thông báo thành công
+            handleHide(); // Ẩn component sau khi hoàn thành hành động
         } catch (error) {
             console.error('Error sharing message:', error);
+        }
+    };
+    const addMemberToGroup = async (groupId, selectedFriendIds, handleHide) => {
+        try {
+            const response = await axios.put(`http://localhost:4000/group/addMemberToGroup/${groupId}`, {
+                memberId: selectedFriendIds,
+            });
+            console.log('Response from addMemberToGroup:', response.data);
+            alert('Thêm thành viên vào nhóm thành công!');
+            handleHide();
+        } catch (error) {
+            console.error('Error adding member to group:', error);
+        }
+    };
+
+    const handleHide = () => {
+        onHide();
+    };
+
+    const handleShare = async () => {
+        switch (action) {
+            case 'addMember':
+                addMemberToGroup(groupId, selectedFriendIds, handleHide);
+                break;
+            default:
+                sendForwardMessageRequest();
         }
     };
 
