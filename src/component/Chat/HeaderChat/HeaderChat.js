@@ -51,7 +51,7 @@ function HeaderChat(parsedData) {
     };
 
     const handleAssignRole = () => {
-        // Handle assign role action
+        setShowShareMessage({ action: 'assignRole', groupId: itemData.id });
     };
 
     const handleDeleteGroup = async () => {

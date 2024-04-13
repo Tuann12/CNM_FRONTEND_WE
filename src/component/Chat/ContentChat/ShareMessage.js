@@ -13,9 +13,13 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     console.log('sharedMessage', sharedMessage);
     const [friendList, setFriendList] = useState([]);
     const [selectedFriendIds, setSelectedFriendIds] = useState([]);
+    const [selectedCoLeader, setSelectedCoLeader] = useState(null);
 
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
+    const handleCoLeaderSelection = (friendId) => {
+        setSelectedCoLeader(friendId); // Cập nhật ID của nhóm phó đã chọn
+    };
     useEffect(() => {
         console.log(`ShareMessage component is called with action: ${action}`, groupId);
         switch (action) {
@@ -27,6 +31,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                 console.log('Delete member action');
                 break;
             case 'assignRole':
+                fetchMembersForCoLeader();
                 console.log('Assign role action');
                 break;
             default:
@@ -43,6 +48,19 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             console.error('Error fetching members list:', error);
         }
     };
+    const fetchMembersForCoLeader = async () => {
+        try {
+            const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${groupId}`);
+            const filteredMembers = response.data.groupMembers.filter(
+                (member) => member.role !== 'leader' && member.role !== 'coLeader',
+            );
+            console.log('Filtered members:', filteredMembers);
+            setFriendList(filteredMembers);
+        } catch (error) {
+            console.error('Error fetching members list:', error);
+        }
+    };
+
     const fetchFriendList = async () => {
         try {
             const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
@@ -104,6 +122,22 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             }
         }
     };
+    const setCoLeader = async (groupId, userId) => {
+        try {
+            const response = await axios.put(`http://localhost:4000/group/setCoLeader/${groupId}/${userId}`);
+            console.log('Response from setCoLeader:', response.data);
+            alert('Đặt thành viên làm nhóm phó thành công!');
+            handleHide();
+            return response.data; // Trả về dữ liệu phản hồi từ API
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message);
+            } else {
+                // Otherwise, log the error
+                console.error('Error removing members from group:', error);
+            }
+        }
+    };
 
     const handleHide = () => {
         onHide();
@@ -116,6 +150,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                 break;
             case 'deleteMember':
                 removeMembersFromGroup(groupId, selectedFriendIds, handleHide);
+                break;
+            case 'assignRole':
+                setCoLeader(groupId, selectedFriendIds, handleHide);
                 break;
             default:
                 sendForwardMessageRequest();
