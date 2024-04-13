@@ -25,11 +25,12 @@ function ItemChat({
     onAdd,
     onDec,
     type,
+    groupID,
 }) {
     const handleClick = () => {
         onItemClick({ avatar, title, id, type }); // Truyền type khi gọi hàm onItemClick
-        emitter.emit('itemClick', { avatar, title, id, type });
-        console.log('Item clicked:', { avatar, title, id, type });
+        emitter.emit('itemClick', { avatar, title, id, type, groupID });
+        console.log('Item clicked:', { avatar, title, id, type, groupID });
 
         localStorage.setItem('selectedID', id);
     };

@@ -12,23 +12,24 @@ const cx = classNames.bind(styles);
 function HeaderChat(parsedData) {
     const [itemData, setItemData] = useState({});
     const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [showShareMessage, setShowShareMessage] = useState(false); // State to control the ShareMessage component
+    const [showShareMessage, setShowShareMessage] = useState({ action: '', groupId: '' }); // Include action and groupId in showShareMessage state
 
     const togglePopup = () => {
         setIsPopupOpen(!isPopupOpen);
     };
 
     const handleAddMember = () => {
-        setShowShareMessage({ action: 'addMember' });
+        setShowShareMessage({ action: 'addMember', groupId: itemData.id }); // Set action and groupId when adding member
     };
 
     const handleDeleteMember = () => {
-        setShowShareMessage({ action: 'deleteMember' });
+        // Xử lý khi nhấn vào xóa thành viên
     };
 
     const handleAssignRole = () => {
-        setShowShareMessage({ action: 'assignRole' });
+        // Xử lý khi nhấn vào phân quyền
     };
+
     const handleDeleteGroup = async () => {
         try {
             // Gọi API xóa nhóm
@@ -47,7 +48,7 @@ function HeaderChat(parsedData) {
 
     const onHideShareMessage = () => {
         // Function to handle hiding the ShareMessage component
-        setShowShareMessage(false);
+        setShowShareMessage({ action: '', groupId: '' }); // Reset action and groupId when hiding ShareMessage
     };
 
     useEffect(() => {
@@ -104,8 +105,14 @@ function HeaderChat(parsedData) {
                 </div>
             )}
 
-            {/* Render ShareMessage component if showShareMessage state is true */}
-            {showShareMessage && <ShareMessage onHide={onHideShareMessage} action={showShareMessage.action} />}
+            {/* Render ShareMessage component if showShareMessage action is set */}
+            {showShareMessage.action && (
+                <ShareMessage
+                    onHide={onHideShareMessage}
+                    action={showShareMessage.action}
+                    groupId={showShareMessage.groupId}
+                />
+            )}
         </div>
     );
 }

@@ -63,6 +63,7 @@ function BoxChat() {
                         title={group.name}
                         onItemClick={() => onItemClick(group, 'group')} // Truyền hàm callback và thông tin về nhóm khi nhấp vào
                         type="group" // Truyền giá trị "group" vào prop type
+                        groupID={group._id} // Truyền ID của nhóm vào prop groupID
                     />
                 ))}
             </ListChat>

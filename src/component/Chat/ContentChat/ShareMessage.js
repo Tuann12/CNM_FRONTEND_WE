@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
-function ShareMessage({ sharedMessage, onHide, dataFromHeaderChat, action }) {
+function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     console.log('sharedMessage', sharedMessage);
     const [friendList, setFriendList] = useState([]);
     const [selectedFriendIds, setSelectedFriendIds] = useState([]);
@@ -17,11 +17,10 @@ function ShareMessage({ sharedMessage, onHide, dataFromHeaderChat, action }) {
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
     useEffect(() => {
-        console.log(`ShareMessage component is called with action: ${action}`);
-        // Handle action accordingly
+        console.log(`ShareMessage component is called with action: ${action}`, groupId);
         switch (action) {
             case 'addMember':
-                console.log('Add member action');
+                fetchNonGroupFriends();
                 break;
             case 'deleteMember':
                 console.log('Delete member action');
@@ -33,6 +32,16 @@ function ShareMessage({ sharedMessage, onHide, dataFromHeaderChat, action }) {
                 break;
         }
     }, [action]);
+    const fetchNonGroupFriends = async () => {
+        try {
+            const response = await axios.get(`http://localhost:4000/group/getNonGroupFriends/${userId}/${groupId}`);
+            const { friendList } = response.data;
+            setFriendList(friendList);
+        } catch (error) {
+            console.error('Error fetching non-group friends:', error);
+        }
+    };
+
     useEffect(() => {
         const fetchFriendList = async () => {
             try {
