@@ -51,7 +51,10 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     const fetchMembersList = async () => {
         try {
             const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${groupId}`);
-            const filteredMembers = response.data.groupMembers.filter((member) => member.role !== 'leader');
+            const filteredMembers = response.data.groupMembers.filter((member) => {
+                // Kiểm tra xem thành viên không phải là nhóm trưởng và không phải là người dùng hiện tại
+                return member.role !== 'leader' && member._id !== userId;
+            });
             setFriendList(filteredMembers);
         } catch (error) {
             console.error('Error fetching members list:', error);
