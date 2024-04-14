@@ -13,13 +13,10 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     console.log('sharedMessage', sharedMessage);
     const [friendList, setFriendList] = useState([]);
     const [selectedFriendIds, setSelectedFriendIds] = useState([]);
-    const [selectedCoLeader, setSelectedCoLeader] = useState(null);
 
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
-    const handleCoLeaderSelection = (friendId) => {
-        setSelectedCoLeader(friendId); // Cập nhật ID của nhóm phó đã chọn
-    };
+
     useEffect(() => {
         console.log(`ShareMessage component is called with action: ${action}`, groupId);
         switch (action) {
@@ -96,6 +93,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             console.error('Error sharing message:', error);
         }
     };
+
     const addMemberToGroup = async (groupId, selectedFriendIds, handleHide) => {
         try {
             const response = await axios.put(`http://localhost:4000/group/addMemberToGroup/${groupId}`, {
@@ -175,6 +173,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                 break;
             case 'transferLeader':
                 setTransferLeader(groupId, selectedFriendIds, handleHide);
+                break;
             default:
                 sendForwardMessageRequest();
         }

@@ -65,6 +65,22 @@ function HeaderChat() {
     const handleTranferLeader = () => {
         setShowShareMessage({ action: 'transferLeader', groupId: itemData.id });
     };
+    const handleLeaveGroup = async () => {
+        try {
+            const response = await axios.put(`http://localhost:4000/group/leaveGroup/${itemData.id}/${userId}`);
+            console.log('Response from setCoLeader:', response.data);
+
+            alert('Rời khỏi nhóm thành công!');
+            return response.data; // Trả về dữ liệu phản hồi từ API
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message);
+            } else {
+                // Otherwise, log the error
+                console.error('Error removing members from group:', error);
+            }
+        }
+    };
     const handleDeleteGroup = async () => {
         try {
             await axios.delete(`http://localhost:4000/group/deleteGroup/${itemData.id}`);
@@ -106,7 +122,6 @@ function HeaderChat() {
                 <li onClick={handleAssignRole}>Gán nhóm phó</li>
                 <li onClick={handleTranferLeader}>Nhường nhóm trưởng</li>
                 <li onClick={handleDeleteGroup}>Giải tán</li>
-                <li>Rời nhóm</li>
             </>
         );
     } else if (role === 'coLeader') {
@@ -115,14 +130,14 @@ function HeaderChat() {
                 <li onClick={handleViewMembers}>Xem Danh sách thành viên</li>
                 <li onClick={handleAddMember}>Thêm thành viên</li>
                 <li onClick={handleDeleteMember}>Xóa thành viên</li>
-                <li>Rời nhóm</li>
+                <li onClick={handleLeaveGroup}>Rời nhóm</li>
             </>
         );
     } else if (role === 'member') {
         renderMenuItems = (
             <>
                 <li onClick={handleViewMembers}>Xem Danh sách thành viên</li>
-                <li>Rời nhóm</li>
+                <li onClick={handleLeaveGroup}>Rời nhóm</li>
             </>
         );
     } else {
