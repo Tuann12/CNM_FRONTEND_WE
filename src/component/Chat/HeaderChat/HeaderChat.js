@@ -28,11 +28,12 @@ function HeaderChat() {
     useEffect(() => {
         socketRef.current = socketIOClient.connect(host);
         socketRef.current.on('getId', (data) => {});
-
-        socketRef.current.on('transferLeader', () => {
-            setReloadComponent((prevState) => !prevState);
-            setIsPopupOpen(false);
+        socketRef.current.on('deleteGroupWhenMem', () => {
+            setItemData({});
         });
+        socketRef.current.on('transferLeader', () => {});
+        setReloadComponent((prevState) => !prevState);
+        setIsPopupOpen(false);
         return () => {
             socketRef.current.disconnect();
         };
@@ -40,6 +41,7 @@ function HeaderChat() {
     useEffect(() => {
         setIsPopupOpen(false);
     }, [itemData]);
+
     const togglePopup = async () => {
         setIsPopupOpen(!isPopupOpen);
         const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${itemData.id}`);
@@ -98,6 +100,15 @@ function HeaderChat() {
             await socketRef.current.emit('addGroup', {
                 responseData: 'deleteGroup',
             });
+            console.log('Response from leaveGroup:', response.data);
+            if (response.data.message === 'Nhóm đã được giải tán vì ít hơn 3 thành viên') {
+                alert('Nhóm đã được giải tán vì ít hơn 3 thành viên');
+                setIsPopupOpen(false);
+                setItemData({});
+                await socketRef.current.emit('deleteGroupWhenMem', {
+                    responseData: 'deleteGroupWhenMem',
+                });
+            }
             setIsPopupOpen(false);
             setItemData({});
             return response.data; // Trả về dữ liệu phản hồi từ API
