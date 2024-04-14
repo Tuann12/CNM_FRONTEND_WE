@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import socketIOClient from 'socket.io-client';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVideo, faMagnifyingGlass, faUserGroup, faBars } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
@@ -17,9 +19,26 @@ function HeaderChat() {
     const [showMembersList, setShowMembersList] = useState(false); // State to control member list visibility
     const [role, setRole] = useState(''); // State to store role of current user in group
     const storedData = localStorage.getItem('loginData');
-    const parsedData = JSON.parse(storedData);
     let userId = JSON.parse(storedData).foundUser._id;
+    const [reloadComponent, setReloadComponent] = useState(false); // State để reload component
 
+    const socketRef = useRef();
+    const host = 'http://localhost:4000';
+    useEffect(() => {
+        socketRef.current = socketIOClient.connect(host);
+        socketRef.current.on('getId', (data) => {});
+
+        socketRef.current.on('transferLeader', () => {
+            setReloadComponent((prevState) => !prevState);
+            setIsPopupOpen(false);
+        });
+        return () => {
+            socketRef.current.disconnect();
+        };
+    }, []);
+    useEffect(() => {
+        console.log('Reloading component');
+    }, [reloadComponent]);
     const togglePopup = async () => {
         setIsPopupOpen(!isPopupOpen);
         const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${itemData.id}`);
@@ -71,6 +90,9 @@ function HeaderChat() {
             console.log('Response from setCoLeader:', response.data);
 
             alert('Rời khỏi nhóm thành công!');
+            await socketRef.current.emit('addGroup', {
+                responseData: 'deleteGroup',
+            });
             return response.data; // Trả về dữ liệu phản hồi từ API
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {
@@ -84,6 +106,10 @@ function HeaderChat() {
     const handleDeleteGroup = async () => {
         try {
             await axios.delete(`http://localhost:4000/group/deleteGroup/${itemData.id}`);
+            await socketRef.current.emit('addGroup', {
+                responseData: 'deleteGroup',
+            });
+            setItemData({});
             setIsPopupOpen(false);
             alert('Nhóm đã được giải tán thành công');
         } catch (error) {

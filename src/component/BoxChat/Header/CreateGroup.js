@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark, faCamera } from '@fortawesome/free-solid-svg-icons';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames/bind';
 import styles from './Header.module.scss';
 import ListChat from '../ListChat/ListChat';
 import ItemChat from '../ListChat/ItemChat';
 import axios from 'axios';
+import socketIOClient from 'socket.io-client';
 
 const cx = classNames.bind(styles);
 
@@ -17,7 +18,15 @@ const CreateGroup = ({ onHide }) => {
     const [avatar, setAvatar] = useState(null);
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
+    const socketRef = useRef();
+    const host = 'http://localhost:4000';
+    useEffect(() => {
+        socketRef.current = socketIOClient.connect(host);
 
+        return () => {
+            socketRef.current.disconnect();
+        };
+    }, []);
     useEffect(() => {
         const fetchFriendList = async () => {
             try {
@@ -100,6 +109,9 @@ const CreateGroup = ({ onHide }) => {
                 creatorId: userId,
                 avatar: avatarToSend,
                 members: [...selectedFriendIds, userId],
+            });
+            await socketRef.current.emit('addGroup', {
+                responseData: response.data,
             });
             console.log('Group created successfully:', response.data);
             alert('Tạo nhóm thành công');

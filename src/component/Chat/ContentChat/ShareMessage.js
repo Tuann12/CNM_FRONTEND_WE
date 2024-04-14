@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import socketIOClient from 'socket.io-client';
 import classNames from 'classnames/bind';
 import styles from './ContentChat.module.scss';
 import ListChat from '../../BoxChat/ListChat/ListChat';
@@ -16,7 +17,15 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
 
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
+    const socketRef = useRef();
+    const host = 'http://localhost:4000';
+    useEffect(() => {
+        socketRef.current = socketIOClient.connect(host);
 
+        return () => {
+            socketRef.current.disconnect();
+        };
+    }, []);
     useEffect(() => {
         console.log(`ShareMessage component is called with action: ${action}`, groupId);
         switch (action) {
@@ -99,6 +108,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             const response = await axios.put(`http://localhost:4000/group/addMemberToGroup/${groupId}`, {
                 memberIds: selectedFriendIds,
             });
+            await socketRef.current.emit('addGroup', {
+                responseData: response.data,
+            });
             console.log('Response from addMemberToGroup:', response.data);
             alert('Thêm thành viên vào nhóm thành công!');
             handleHide();
@@ -110,6 +122,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
         try {
             const response = await axios.put(`http://localhost:4000/group/removeMembersFromGroup/${groupId}`, {
                 memberIds: memberIdsToRemove,
+            });
+            await socketRef.current.emit('addGroup', {
+                responseData: response.data,
             });
             console.log('Response from removeMembersFromGroup:', response.data);
             alert('Xóa thành viên khỏi nhóm thành công!');
@@ -143,6 +158,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     const setTransferLeader = async (groupId, userId) => {
         try {
             const response = await axios.put(`http://localhost:4000/group/transferOwnership/${groupId}/${userId}`);
+            await socketRef.current.emit('addGroup', {
+                responseData: response.data,
+            });
             console.log('Response from setTransferLeader:', response.data);
             alert('Chuyển nhượng quyền quản lý nhóm thành công!');
             handleHide();
