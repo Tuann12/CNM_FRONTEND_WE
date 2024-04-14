@@ -38,8 +38,8 @@ function HeaderChat() {
         };
     }, []);
     useEffect(() => {
-        console.log('Reloading component');
-    }, [reloadComponent]);
+        setIsPopupOpen(false);
+    }, [itemData]);
     const togglePopup = async () => {
         setIsPopupOpen(!isPopupOpen);
         const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${itemData.id}`);
@@ -73,17 +73,21 @@ function HeaderChat() {
     };
     const handleAddMember = () => {
         setShowShareMessage({ action: 'addMember', groupId: itemData.id });
+        setIsPopupOpen(false);
     };
 
     const handleDeleteMember = () => {
         setShowShareMessage({ action: 'deleteMember', groupId: itemData.id });
+        setIsPopupOpen(false);
     };
 
     const handleAssignRole = () => {
         setShowShareMessage({ action: 'assignRole', groupId: itemData.id });
+        setIsPopupOpen(false);
     };
     const handleTranferLeader = () => {
         setShowShareMessage({ action: 'transferLeader', groupId: itemData.id });
+        setIsPopupOpen(false);
     };
     const handleLeaveGroup = async () => {
         try {
@@ -94,6 +98,8 @@ function HeaderChat() {
             await socketRef.current.emit('addGroup', {
                 responseData: 'deleteGroup',
             });
+            setIsPopupOpen(false);
+            setItemData({});
             return response.data; // Trả về dữ liệu phản hồi từ API
         } catch (error) {
             if (error.response && error.response.data && error.response.data.message) {

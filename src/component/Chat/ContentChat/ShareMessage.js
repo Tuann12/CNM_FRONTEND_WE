@@ -126,6 +126,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             await socketRef.current.emit('addGroup', {
                 responseData: response.data,
             });
+            await socketRef.current.emit('transferLeader', {
+                responseData: response.data,
+            });
             console.log('Response from removeMembersFromGroup:', response.data);
             alert('Xóa thành viên khỏi nhóm thành công!');
             handleHide();
