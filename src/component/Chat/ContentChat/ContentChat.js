@@ -191,8 +191,6 @@ function ContentChat(to) {
             <div className={cx('containerMessage')}>
                 {messages.map((message, index) => (
                     <div className={cx('boxMessage')} key={index}>
-                        <span className={cx('senderName', { fromSelf: message.fromSelf })}>{message.name}</span>
-
                         {!message.fromSelf && <img className={cx('avatarImg')} src={message.avatar} alt="avatar" />}
 
                         <Tippy
@@ -252,6 +250,8 @@ function ContentChat(to) {
                                 })}
                                 onContextMenu={handleContextMenu}
                             >
+                                {!message.fromSelf && <span className={cx('senderName')}>{message.name}</span>}
+
                                 {isFileExtensionSupported(message.message) ? (
                                     <div className="file-wrapper">
                                         <a className={cx('editFile')} href={message.message} download>
