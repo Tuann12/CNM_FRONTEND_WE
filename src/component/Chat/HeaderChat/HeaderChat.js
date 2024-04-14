@@ -8,6 +8,7 @@ import styles from './HeaderChat.module.scss';
 import { emitter } from '../../BoxChat/ListChat/ItemChat';
 import ShareMessage from '../../Chat/ContentChat/ShareMessage';
 import axios from 'axios';
+import { faUserMinus, faUserTimes, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
@@ -135,6 +136,26 @@ function HeaderChat() {
     const clostList = () => {
         setShowMembersList(false);
     };
+    const handleUnfriend = async () => {
+        try {
+            const response = await axios.post('http://localhost:4000/user/cancelFriendship', {
+                userId: userId,
+                friendId: itemData.id,
+            });
+            alert('Hủy kết bạn thành công');
+            await socketRef.current.emit('addGroup', {
+                responseData: 'deleteGroup',
+            });
+            return response.data;
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message);
+            } else {
+                // Otherwise, log the error
+                console.error('Error removing members from group:', error);
+            }
+        }
+    };
     console.log('showMembersList:', showMembersList);
     console.log('membersList:', membersList);
     console.log('isShowPopup:', isPopupOpen);
@@ -184,9 +205,11 @@ function HeaderChat() {
                 <h3 className={cx('title')}>{itemData.title}</h3>
             </div>
             <div className={cx('wrapIcon')}>
-                <div className={cx('icon')}>
-                    <FontAwesomeIcon icon={faUserGroup} />
-                </div>
+                {itemData.type === 'friend' && (
+                    <div className={cx('icon')} onClick={handleUnfriend}>
+                        <FontAwesomeIcon icon={faUserSlash} />
+                    </div>
+                )}
                 <div className={cx('icon')}>
                     <FontAwesomeIcon icon={faMagnifyingGlass} />
                 </div>
