@@ -34,6 +34,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                 fetchMembersForCoLeader();
                 console.log('Assign role action');
                 break;
+            case 'transferLeader':
+                fetchMembersList();
+                break;
             default:
                 fetchFriendList();
                 break;
@@ -139,6 +142,22 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
         }
     };
 
+    const setTransferLeader = async (groupId, userId) => {
+        try {
+            const response = await axios.put(`http://localhost:4000/group/transferOwnership/${groupId}/${userId}`);
+            console.log('Response from setTransferLeader:', response.data);
+            alert('Chuyển nhượng quyền quản lý nhóm thành công!');
+            handleHide();
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message);
+            } else {
+                // Otherwise, log the error
+                console.error('Error removing members from group:', error);
+            }
+        }
+    };
+
     const handleHide = () => {
         onHide();
     };
@@ -154,6 +173,8 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             case 'assignRole':
                 setCoLeader(groupId, selectedFriendIds, handleHide);
                 break;
+            case 'transferLeader':
+                setTransferLeader(groupId, selectedFriendIds, handleHide);
             default:
                 sendForwardMessageRequest();
         }

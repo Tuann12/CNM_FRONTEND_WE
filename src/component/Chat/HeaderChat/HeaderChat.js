@@ -62,7 +62,9 @@ function HeaderChat() {
     const handleAssignRole = () => {
         setShowShareMessage({ action: 'assignRole', groupId: itemData.id });
     };
-
+    const handleTranferLeader = () => {
+        setShowShareMessage({ action: 'transferLeader', groupId: itemData.id });
+    };
     const handleDeleteGroup = async () => {
         try {
             await axios.delete(`http://localhost:4000/group/deleteGroup/${itemData.id}`);
@@ -102,7 +104,7 @@ function HeaderChat() {
                 <li onClick={handleAddMember}>Thêm thành viên</li>
                 <li onClick={handleDeleteMember}>Xóa thành viên</li>
                 <li onClick={handleAssignRole}>Gán nhóm phó</li>
-                <li>Nhường nhóm trưởng</li>
+                <li onClick={handleTranferLeader}>Nhường nhóm trưởng</li>
                 <li onClick={handleDeleteGroup}>Giải tán</li>
                 <li>Rời nhóm</li>
             </>
