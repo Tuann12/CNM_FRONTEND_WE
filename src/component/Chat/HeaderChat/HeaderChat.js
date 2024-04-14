@@ -9,15 +9,24 @@ import axios from 'axios';
 
 const cx = classNames.bind(styles);
 
-function HeaderChat(parsedData) {
+function HeaderChat() {
     const [itemData, setItemData] = useState({});
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [showShareMessage, setShowShareMessage] = useState({ action: '', groupId: '' });
     const [membersList, setMembersList] = useState([]);
     const [showMembersList, setShowMembersList] = useState(false); // State to control member list visibility
+    const [role, setRole] = useState(''); // State to store role of current user in group
+    const storedData = localStorage.getItem('loginData');
+    const parsedData = JSON.parse(storedData);
+    let userId = JSON.parse(storedData).foundUser._id;
 
-    const togglePopup = () => {
+    const togglePopup = async () => {
         setIsPopupOpen(!isPopupOpen);
+        const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${itemData.id}`);
+        console.log('role:', response.data.groupMembers);
+        const role = response.data.groupMembers.find((member) => member._id === userId).role;
+        console.log('role of user:', role);
+        setRole(role);
         setShowMembersList(false);
     };
 
@@ -85,6 +94,38 @@ function HeaderChat(parsedData) {
     console.log('showMembersList:', showMembersList);
     console.log('membersList:', membersList);
     console.log('isShowPopup:', isPopupOpen);
+    let renderMenuItems;
+    if (role === 'leader') {
+        renderMenuItems = (
+            <>
+                <li onClick={handleViewMembers}>Xem Danh sách thành viên</li>
+                <li onClick={handleAddMember}>Thêm thành viên</li>
+                <li onClick={handleDeleteMember}>Xóa thành viên</li>
+                <li onClick={handleAssignRole}>Gán nhóm phó</li>
+                <li>Nhường nhóm trưởng</li>
+                <li onClick={handleDeleteGroup}>Giải tán</li>
+                <li>Rời nhóm</li>
+            </>
+        );
+    } else if (role === 'coLeader') {
+        renderMenuItems = (
+            <>
+                <li onClick={handleViewMembers}>Xem Danh sách thành viên</li>
+                <li onClick={handleAddMember}>Thêm thành viên</li>
+                <li onClick={handleDeleteMember}>Xóa thành viên</li>
+                <li>Rời nhóm</li>
+            </>
+        );
+    } else if (role === 'member') {
+        renderMenuItems = (
+            <>
+                <li onClick={handleViewMembers}>Xem Danh sách thành viên</li>
+                <li>Rời nhóm</li>
+            </>
+        );
+    } else {
+        renderMenuItems = null; // Optionally, handle other roles or no role
+    }
     return (
         <div className={cx('wrapper')}>
             <div className={cx('Info')}>
@@ -118,13 +159,7 @@ function HeaderChat(parsedData) {
 
             {isPopupOpen && (
                 <div className={cx('popup')}>
-                    <ul>
-                        <li onClick={handleViewMembers}>Xem Danh sách thành viên</li>
-                        <li onClick={handleAddMember}>Thêm thành viên</li>
-                        <li onClick={handleDeleteMember}>Xóa thành viên</li>
-                        <li onClick={handleAssignRole}>Gán quyền</li>
-                        <li onClick={handleDeleteGroup}>Giải tán</li>
-                    </ul>
+                    <ul>{renderMenuItems}</ul>
                 </div>
             )}
 
