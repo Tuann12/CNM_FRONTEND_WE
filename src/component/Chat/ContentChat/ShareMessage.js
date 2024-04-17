@@ -237,6 +237,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             case 'assignRole':
                 toggleFriendSelection1(value);
                 break;
+            case 'transferLeader':
+                toggleFriendSelection1(value);
+                break;
             default:
                 toggleFriendSelection(value);
                 break;
@@ -270,6 +273,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                                                 case 'assignRole':
                                                     toggleFriendSelection1(friend._id);
                                                     break;
+                                                case 'transferLeader':
+                                                    toggleFriendSelection1(friend._id);
+                                                    break;
                                                 default:
                                                     toggleFriendSelection(friend._id);
                                                     break;
@@ -301,6 +307,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                                         onItemClick={() => {
                                             switch (action) {
                                                 case 'assignRole':
+                                                    toggleFriendSelection1(group._id);
+                                                    break;
+                                                case 'transferLeader':
                                                     toggleFriendSelection1(group._id);
                                                     break;
                                                 default:
