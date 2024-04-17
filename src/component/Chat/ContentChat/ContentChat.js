@@ -121,7 +121,9 @@ function ContentChat(to) {
         try {
             // Gọi API để xóa tin nhắn với ID cụ thể
             await axios.delete(`http://localhost:4000/deletemsg/${messageId}`);
-
+            await socketRef.current.emit('sendDataClient', {
+                responseData: 'sendDataClient',
+            });
             // Xóa tin nhắn khỏi mảng messages
             const updatedMessages = messages.filter((message) => message.id !== messageId);
             updatedMessages.splice(index, 1);
@@ -136,8 +138,6 @@ function ContentChat(to) {
     const handleRecallMessage = async (messageId) => {
         try {
             await axios.put(`http://localhost:4000/retrievemsg/${messageId}/${userId}`);
-
-            // Update the messages array without changing the order or index of the recalled message
             setMessage(
                 messages.map((message) => {
                     if (message.id === messageId) {
