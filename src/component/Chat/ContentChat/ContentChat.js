@@ -24,6 +24,8 @@ function ContentChat(to) {
     const storedData = localStorage.getItem('loginData');
     const [messages, setMessage] = useState([]);
     const [sharedMessage, setSharedMessage] = useState(''); // Tin nhắn được chia sẻ
+    const [, forceUpdate] = React.useState();
+
     let userId = null;
     if (storedData) {
         try {
@@ -102,7 +104,9 @@ function ContentChat(to) {
         socketRef.current.on('sendDataServer', () => {
             fetchDataFromServer(); // Gọi hàm để lấy dữ liệu từ server
         });
-
+        socketRef.current.on('leaveGroup', () => {
+            fetchDataFromServer(); // Gọi hàm để lấy dữ liệu từ server
+        });
         // Ngắt kết nối khi component unmount
         return () => {
             socketRef.current.disconnect();

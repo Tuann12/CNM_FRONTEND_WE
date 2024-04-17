@@ -93,13 +93,15 @@ function HeaderChat() {
     };
     const handleLeaveGroup = async () => {
         try {
+            console.log('itemData:', itemData);
             const response = await axios.put(`http://localhost:4000/group/leaveGroup/${itemData.id}/${userId}`);
             console.log('Response from setCoLeader:', response.data);
 
             alert('Rời khỏi nhóm thành công!');
-            await socketRef.current.emit('addGroup', {
-                responseData: 'deleteGroup',
+            await socketRef.current.emit('leaveGroup', {
+                responseData: 'leaveGroup',
             });
+            setItemData({});
             console.log('Response from leaveGroup:', response.data);
             if (response.data.message === 'Nhóm đã được giải tán vì ít hơn 3 thành viên') {
                 alert('Nhóm đã được giải tán vì ít hơn 3 thành viên');

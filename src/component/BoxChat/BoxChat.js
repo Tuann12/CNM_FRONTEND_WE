@@ -33,6 +33,9 @@ function BoxChat() {
         socketRef.current.on('addGroup', () => {
             fetchData();
         });
+        socketRef.current.on('leaveGroup', () => {
+            fetchData();
+        });
         return () => {
             socketRef.current.disconnect();
         };
