@@ -14,7 +14,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     console.log('sharedMessage', sharedMessage);
     const [friendList, setFriendList] = useState([]);
     const [selectedFriendIds, setSelectedFriendIds] = useState([]);
-
+    const [groupList, setGroupList] = useState([]);
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
     const socketRef = useRef();
@@ -75,8 +75,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
 
     const fetchFriendList = async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
-            setFriendList(response.data.friendList);
+            const response = await axios.get(`http://localhost:4000/group/getGroupList/${userId}`);
+            setFriendList(response.data.userData.friendList);
+            setGroupList(response.data.userData.groupList);
         } catch (error) {
             console.error('Error fetching friend list:', error);
         }
@@ -284,6 +285,39 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
                                     value={friend._id}
                                     onChange={onCheckboxChange}
                                     checked={isSelected(friend._id)}
+                                />
+                            </div>
+                        ))}
+                    </ListChat>
+                    <ListChat>
+                        {groupList.map((group) => (
+                            <div className={cx('wrapListFriends')}>
+                                <div className={cx('boxFriends')}>
+                                    <ItemChat
+                                        key={group._id}
+                                        id={group._id}
+                                        avatar={<img className={cx('avatarImg')} src={group.avatar} alt="avatar" />}
+                                        title={group.name}
+                                        onItemClick={() => {
+                                            switch (action) {
+                                                case 'assignRole':
+                                                    toggleFriendSelection1(group._id);
+                                                    break;
+                                                default:
+                                                    toggleFriendSelection(group._id);
+                                                    break;
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <input
+                                    type="checkbox"
+                                    className={cx('btnCheck')}
+                                    id={`content-group-${group._id}`}
+                                    name={`content-group-${group._id}`}
+                                    value={group._id}
+                                    onChange={onCheckboxChange}
+                                    checked={isSelected(group._id)}
                                 />
                             </div>
                         ))}
