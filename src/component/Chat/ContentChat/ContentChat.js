@@ -104,7 +104,7 @@ function ContentChat(to) {
         socketRef.current.on('sendDataServer', () => {
             fetchDataFromServer(); // Gọi hàm để lấy dữ liệu từ server
         });
-        socketRef.current.on('leaveGroup', () => {
+        socketRef.current.on('sendDataServer', () => {
             fetchDataFromServer(); // Gọi hàm để lấy dữ liệu từ server
         });
         // Ngắt kết nối khi component unmount

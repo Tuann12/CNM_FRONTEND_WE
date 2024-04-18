@@ -30,10 +30,10 @@ function BoxChat() {
         socketRef.current = socketIOClient.connect(host);
         socketRef.current.on('getId', (data) => {});
 
-        socketRef.current.on('addGroup', () => {
+        socketRef.current.on('sendDataServer', () => {
             fetchData();
         });
-        socketRef.current.on('leaveGroup', () => {
+        socketRef.current.on('sendDataServer', () => {
             fetchData();
         });
         return () => {

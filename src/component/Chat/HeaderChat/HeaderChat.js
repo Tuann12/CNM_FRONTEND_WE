@@ -28,10 +28,10 @@ function HeaderChat() {
     useEffect(() => {
         socketRef.current = socketIOClient.connect(host);
         socketRef.current.on('getId', (data) => {});
-        socketRef.current.on('deleteGroupWhenMem', () => {
+        socketRef.current.on('sendDataServer', () => {
             setItemData({});
         });
-        socketRef.current.on('transferLeader', () => {});
+        socketRef.current.on('sendDataServer', () => {});
         setReloadComponent((prevState) => !prevState);
         setIsPopupOpen(false);
         return () => {
@@ -98,8 +98,8 @@ function HeaderChat() {
             console.log('Response from setCoLeader:', response.data);
 
             alert('Rời khỏi nhóm thành công!');
-            await socketRef.current.emit('leaveGroup', {
-                responseData: 'leaveGroup',
+            await socketRef.current.emit('sendDataClient', {
+                responseData: 'sendDataClient',
             });
             setItemData({});
             console.log('Response from leaveGroup:', response.data);
@@ -107,8 +107,8 @@ function HeaderChat() {
                 alert('Nhóm đã được giải tán vì ít hơn 3 thành viên');
                 setIsPopupOpen(false);
                 setItemData({});
-                await socketRef.current.emit('deleteGroupWhenMem', {
-                    responseData: 'deleteGroupWhenMem',
+                await socketRef.current.emit('sendDataClient', {
+                    responseData: 'sendDataClient',
                 });
             }
             setIsPopupOpen(false);
@@ -126,8 +126,8 @@ function HeaderChat() {
     const handleDeleteGroup = async () => {
         try {
             await axios.delete(`http://localhost:4000/group/deleteGroup/${itemData.id}`);
-            await socketRef.current.emit('addGroup', {
-                responseData: 'deleteGroup',
+            await socketRef.current.emit('sendDataClient', {
+                responseData: 'sendDataClient',
             });
             setItemData({});
             setIsPopupOpen(false);
@@ -162,8 +162,8 @@ function HeaderChat() {
                 friendId: itemData.id,
             });
             alert('Hủy kết bạn thành công');
-            await socketRef.current.emit('addGroup', {
-                responseData: 'deleteGroup',
+            await socketRef.current.emit('sendDataClient', {
+                responseData: 'sendDataClient',
             });
             return response.data;
         } catch (error) {

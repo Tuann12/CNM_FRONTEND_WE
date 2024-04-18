@@ -112,7 +112,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             const response = await axios.put(`http://localhost:4000/group/addMemberToGroup/${groupId}`, {
                 memberIds: selectedFriendIds,
             });
-            await socketRef.current.emit('addGroup', {
+            await socketRef.current.emit('sendDataClient', {
                 responseData: response.data,
             });
             console.log('Response from addMemberToGroup:', response.data);
@@ -127,12 +127,12 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             const response = await axios.put(`http://localhost:4000/group/removeMembersFromGroup/${groupId}`, {
                 memberIds: memberIdsToRemove,
             });
-            await socketRef.current.emit('addGroup', {
+            await socketRef.current.emit('sendDataClient', {
                 responseData: response.data,
             });
-            await socketRef.current.emit('transferLeader', {
-                responseData: response.data,
-            });
+            // await socketRef.current.emit('sendDataClient', {
+            //     responseData: response.data,
+            // });
             console.log('Response from removeMembersFromGroup:', response.data);
             alert('Xóa thành viên khỏi nhóm thành công!');
             handleHide();
@@ -165,7 +165,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     const setTransferLeader = async (groupId, userId) => {
         try {
             const response = await axios.put(`http://localhost:4000/group/transferOwnership/${groupId}/${userId}`);
-            await socketRef.current.emit('addGroup', {
+            await socketRef.current.emit('sendDataClient', {
                 responseData: response.data,
             });
             console.log('Response from setTransferLeader:', response.data);
