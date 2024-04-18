@@ -28,9 +28,6 @@ function HeaderChat() {
     useEffect(() => {
         socketRef.current = socketIOClient.connect(host);
         socketRef.current.on('getId', (data) => {});
-        socketRef.current.on('sendDataServer', () => {
-            setItemData({});
-        });
         socketRef.current.on('sendDataServer', () => {});
         setReloadComponent((prevState) => !prevState);
         setIsPopupOpen(false);
