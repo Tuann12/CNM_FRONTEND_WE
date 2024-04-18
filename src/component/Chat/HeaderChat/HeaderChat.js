@@ -203,6 +203,7 @@ function HeaderChat() {
         renderMenuItems = (
             <>
                 <li onClick={handleViewMembers}>Xem Danh sách thành viên</li>
+                <li onClick={handleAddMember}>Thêm thành viên</li>
                 <li onClick={handleLeaveGroup}>Rời nhóm</li>
             </>
         );
