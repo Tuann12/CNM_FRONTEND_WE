@@ -53,7 +53,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
             const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${groupId}`);
             const filteredMembers = response.data.groupMembers.filter((member) => {
                 // Kiểm tra xem thành viên không phải là nhóm trưởng và không phải là người dùng hiện tại
-                return member.role !== 'leader' && member._id !== userId;
+                return member.role !== 'leader' && member.role !== 'coLeader' && member._id !== userId;
             });
             setFriendList(filteredMembers);
         } catch (error) {
