@@ -57,7 +57,20 @@
     }
 }
 
+.listGroup {
+    width: 343px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    &:hover {
+        background-color: var(--background-box);
+        cursor: pointer;
+    }
+}
+
 .listFriends.active,
-.listAcceptFriends.active {
+.listAcceptFriends.active,
+.listGroup.active {
     background-color: #0091ff22;
 }

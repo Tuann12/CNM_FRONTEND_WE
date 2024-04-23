@@ -12,14 +12,17 @@ const cx = classNames.bind(styles);
 
 function Contact() {
     const [friendList, setFriendList] = useState([]);
+    const [groupList, setGroupList] = useState([]);
     const [friendRequestsSent, setFriendRequestsSent] = useState([]);
     const [showFriendRequests, setShowFriendRequests] = useState(false);
+    const [activeTab, setActiveTab] = useState('listFriends'); // State để theo dõi tab nào đang được chọn
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
 
     useEffect(() => {
         fetchFriendList();
         fetchFriendRequestsSent();
+        fetchGroupList();
     }, []);
 
     const fetchFriendRequestsSent = async () => {
@@ -37,6 +40,15 @@ function Contact() {
             setFriendList(response.data.friendList);
         } catch (error) {
             console.error('Error fetching friend list:', error);
+        }
+    };
+
+    const fetchGroupList = async () => {
+        try {
+            const response = await axios.get(`http://localhost:4000/group/getGroupList/${userId}`);
+            setGroupList(response.data.userData.groupList);
+        } catch (error) {
+            console.error('Error fetching user data:', error);
         }
     };
 
@@ -78,11 +90,17 @@ function Contact() {
             : 'https://inkythuatso.com/uploads/thumbnails/800/2023/03/6-anh-dai-dien-trang-inkythuatso-03-15-26-36.jpg';
     };
 
-    const handleNavClick = (isFriendRequests) => {
-        setShowFriendRequests(isFriendRequests);
-        if (isFriendRequests) {
+    const handleNavClick = (tabName) => {
+        setActiveTab(tabName); // Đặt tab được chọn thành active
+        if (tabName === 'listAcceptFriends') {
+            setShowFriendRequests(true);
             fetchFriendRequestsSent();
+        } else if (tabName === 'listGroup') {
+            // Thêm điều kiện để xử lý tab "Danh sách nhóm"
+            setShowFriendRequests(false);
+            fetchGroupList(); // Gọi hàm fetchGroupList khi tab "Danh sách nhóm" được chọn
         } else {
+            setShowFriendRequests(false);
             fetchFriendList();
         }
     };
@@ -126,27 +144,58 @@ function Contact() {
         );
     };
 
+    const renderGroupList = () => {
+        return (
+            <ListChat>
+                {groupList.map((group) => (
+                    <div className={cx('itemChat')}>
+                        <ItemChat
+                            key={group._id}
+                            id={group._id}
+                            avatar={<img className={cx('avatarImg')} src={group.avatar} alt="avatar" />}
+                            title={group.name}
+                            onItemClick={() => onItemClick(group, 'group')}
+                            type="group"
+                            groupID={group._id}
+                        />
+                    </div>
+                ))}
+            </ListChat>
+        );
+    };
+
     return (
         <div className={cx('wrapper')}>
             <Navbar />
             <div className={cx('container')}>
                 <div className={cx('nav')}>
                     <div
-                        className={cx('listFriends', { active: !showFriendRequests })}
-                        onClick={() => handleNavClick(false)}
+                        className={cx('listFriends', { active: activeTab === 'listFriends' })}
+                        onClick={() => handleNavClick('listFriends')}
                     >
                         <FontAwesomeIcon icon={faUserGroup} className={cx('icon')} />
                         <span className={cx('title')}>Danh sách bạn bè</span>
                     </div>
                     <div
-                        className={cx('listAcceptFriends', { active: showFriendRequests })}
-                        onClick={() => handleNavClick(true)}
+                        className={cx('listGroup', { active: activeTab === 'listGroup' })}
+                        onClick={() => handleNavClick('listGroup')}
+                    >
+                        <FontAwesomeIcon icon={faUserPlus} className={cx('icon')} />
+                        <span className={cx('title')}>Danh sách nhóm</span>
+                    </div>
+                    <div
+                        className={cx('listAcceptFriends', { active: activeTab === 'listAcceptFriends' })}
+                        onClick={() => handleNavClick('listAcceptFriends')}
                     >
                         <FontAwesomeIcon icon={faUserPlus} className={cx('icon')} />
                         <span className={cx('title')}>Danh sách chờ kết bạn</span>
                     </div>
                 </div>
-                {showFriendRequests ? renderFriendRequestsList() : renderFriendList()}
+                {showFriendRequests
+                    ? renderFriendRequestsList()
+                    : activeTab === 'listGroup'
+                    ? renderGroupList()
+                    : renderFriendList()}
             </div>
         </div>
     );
