@@ -18,30 +18,27 @@ function Contact() {
     const userId = JSON.parse(storedData).foundUser._id;
 
     useEffect(() => {
-        const fetchFriendRequestsSent = async () => {
-            try {
-                const response = await axios.get(`http://localhost:4000/user/getFriendRequestsSentToUser/${userId}`);
-                setFriendRequestsSent(response.data.friendRequestsSent);
-            } catch (error) {
-                console.error('Error fetching friend requests sent:', error);
-            }
-        };
-
-        fetchFriendRequestsSent();
-    }, [userId]);
-
-    useEffect(() => {
-        const fetchFriendList = async () => {
-            try {
-                const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
-                setFriendList(response.data.friendList);
-            } catch (error) {
-                console.error('Error fetching friend list:', error);
-            }
-        };
-
         fetchFriendList();
-    }, [userId]);
+        fetchFriendRequestsSent();
+    }, []);
+
+    const fetchFriendRequestsSent = async () => {
+        try {
+            const response = await axios.get(`http://localhost:4000/user/getFriendRequestsSentToUser/${userId}`);
+            setFriendRequestsSent(response.data.friendRequestsSent);
+        } catch (error) {
+            console.error('Error fetching friend requests sent:', error);
+        }
+    };
+
+    const fetchFriendList = async () => {
+        try {
+            const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
+            setFriendList(response.data.friendList);
+        } catch (error) {
+            console.error('Error fetching friend list:', error);
+        }
+    };
 
     const handleAccept = async (user) => {
         try {
@@ -83,6 +80,11 @@ function Contact() {
 
     const handleNavClick = (isFriendRequests) => {
         setShowFriendRequests(isFriendRequests);
+        if (isFriendRequests) {
+            fetchFriendRequestsSent();
+        } else {
+            fetchFriendList();
+        }
     };
 
     const renderFriendList = () => {
