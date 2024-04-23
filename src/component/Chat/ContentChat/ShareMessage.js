@@ -148,6 +148,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     const setCoLeader = async (groupId, userId) => {
         try {
             const response = await axios.put(`http://localhost:4000/group/setCoLeader/${groupId}/${userId}`);
+            await socketRef.current.emit('sendDataClient', {
+                responseData: response.data,
+            });
             console.log('Response from setCoLeader:', response.data);
             alert('Đặt thành viên làm nhóm phó thành công!');
             handleHide();
