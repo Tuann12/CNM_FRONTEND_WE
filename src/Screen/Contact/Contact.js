@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGroup, faUserPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faUserGroup, faUserPlus, faCheck, faTimes, faPeopleGroup } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames/bind';
 import ListChat from '../../component/BoxChat/ListChat/ListChat';
 import ItemChat from '../../component/BoxChat/ListChat/ItemChat';
@@ -186,7 +186,7 @@ function Contact() {
                         className={cx('listGroup', { active: activeTab === 'listGroup' })}
                         onClick={() => handleNavClick('listGroup')}
                     >
-                        <FontAwesomeIcon icon={faUserPlus} className={cx('icon')} />
+                        <FontAwesomeIcon icon={faPeopleGroup} className={cx('icon')} />
                         <span className={cx('title')}>Danh sách nhóm</span>
                     </div>
                     <div
