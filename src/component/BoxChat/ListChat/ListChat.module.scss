@@ -1,9 +1,3 @@
-.wrapper {
-    overflow-y: auto;
-    &::-webkit-scrollbar {
-        width: 0px;
-    }
-}
 .ItemChatWrap {
     cursor: pointer;
     height: 74px;

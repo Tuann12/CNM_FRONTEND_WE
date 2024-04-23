@@ -7,4 +7,12 @@
 
 .boxChat {
     height: calc(100vh - 100px);
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 10px;
+    }
 }

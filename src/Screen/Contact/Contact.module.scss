@@ -4,9 +4,42 @@
 
 .itemChat {
     width: 450px;
-    border: 1px solid var(--border);
-    margin-top: 20px;
-    margin-left: 20px;
+    border-bottom: 1px solid var(--border);
+}
+.wrapListFriends {
+    height: 100vh;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 10px;
+    }
+}
+
+.wrapListGroup {
+    height: 100vh;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 10px;
+    }
+}
+
+.wrapFriendRequestList {
+    height: 100vh;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 10px;
+    }
 }
 
 .container {

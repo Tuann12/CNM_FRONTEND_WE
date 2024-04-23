@@ -189,6 +189,15 @@
 .listFriends {
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
+    height: 380px;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 10px;
+    }
 }
 .boxFriends {
     margin-left: 20px;

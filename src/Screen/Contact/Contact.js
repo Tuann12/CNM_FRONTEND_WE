@@ -107,60 +107,66 @@ function Contact() {
 
     const renderFriendList = () => {
         return (
-            <ListChat>
-                {friendList.map((friend) => (
-                    <div className={cx('itemChat')}>
-                        <ItemChat
-                            key={friend._id}
-                            id={friend._id}
-                            avatar={<img className={cx('avatarImg')} src={getAvatarUrl(friend)} alt="avatar" />}
-                            title={friend.name}
-                            onItemClick={() => onItemClick(friend, 'friend')}
-                            type="friend"
-                        />
-                    </div>
-                ))}
-            </ListChat>
+            <div className={cx('wrapListFriends')}>
+                <ListChat>
+                    {friendList.map((friend) => (
+                        <div className={cx('itemChat')}>
+                            <ItemChat
+                                key={friend._id}
+                                id={friend._id}
+                                avatar={<img className={cx('avatarImg')} src={getAvatarUrl(friend)} alt="avatar" />}
+                                title={friend.name}
+                                onItemClick={() => onItemClick(friend, 'friend')}
+                                type="friend"
+                            />
+                        </div>
+                    ))}
+                </ListChat>
+            </div>
         );
     };
 
     const renderFriendRequestsList = () => {
         return (
-            <ListChat>
-                {friendRequestsSent.map((user, index) => (
-                    <div key={index} className={cx('itemChat')}>
-                        <ItemChat
-                            avatar={<img className={cx('avatarImg')} src={getAvatarUrl(user)} alt="avatar" />}
-                            title={user.name}
-                            email={user.email}
-                            iconAccept={faCheck}
-                            iconDecline={faTimes}
-                            onAdd={() => handleAccept(user)}
-                            onDec={() => handleDecline(user)}
-                        />
-                    </div>
-                ))}
-            </ListChat>
+            <div className={cx('wrapFriendRequestList')}>
+                <ListChat>
+                    {friendRequestsSent.map((user, index) => (
+                        <div key={index} className={cx('itemChat')}>
+                            <ItemChat
+                                avatar={<img className={cx('avatarImg')} src={getAvatarUrl(user)} alt="avatar" />}
+                                title={user.name}
+                                email={user.email}
+                                iconAccept={faCheck}
+                                iconDecline={faTimes}
+                                onAdd={() => handleAccept(user)}
+                                onDec={() => handleDecline(user)}
+                            />
+                        </div>
+                    ))}
+                </ListChat>
+            </div>
         );
     };
 
     const renderGroupList = () => {
         return (
-            <ListChat>
-                {groupList.map((group) => (
-                    <div className={cx('itemChat')}>
-                        <ItemChat
-                            key={group._id}
-                            id={group._id}
-                            avatar={<img className={cx('avatarImg')} src={group.avatar} alt="avatar" />}
-                            title={group.name}
-                            onItemClick={() => onItemClick(group, 'group')}
-                            type="group"
-                            groupID={group._id}
-                        />
-                    </div>
-                ))}
-            </ListChat>
+            <div className={cx('wrapListGroup')}>
+                <ListChat>
+                    {groupList.map((group) => (
+                        <div className={cx('itemChat')}>
+                            <ItemChat
+                                key={group._id}
+                                id={group._id}
+                                avatar={<img className={cx('avatarImg')} src={group.avatar} alt="avatar" />}
+                                title={group.name}
+                                onItemClick={() => onItemClick(group, 'group')}
+                                type="group"
+                                groupID={group._id}
+                            />
+                        </div>
+                    ))}
+                </ListChat>
+            </div>
         );
     };
 
