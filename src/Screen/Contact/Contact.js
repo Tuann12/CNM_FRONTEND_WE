@@ -14,7 +14,6 @@ function Contact() {
     const [friendList, setFriendList] = useState([]);
     const [friendRequestsSent, setFriendRequestsSent] = useState([]);
     const [showFriendRequests, setShowFriendRequests] = useState(false);
-    const [rerenderCount, setRerenderCount] = useState(0);
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
 
@@ -23,28 +22,26 @@ function Contact() {
             try {
                 const response = await axios.get(`http://localhost:4000/user/getFriendRequestsSentToUser/${userId}`);
                 setFriendRequestsSent(response.data.friendRequestsSent);
-                setRerenderCount((prevCount) => prevCount + 1);
             } catch (error) {
                 console.error('Error fetching friend requests sent:', error);
             }
         };
 
         fetchFriendRequestsSent();
-    }, [userId, rerenderCount]);
+    }, [userId]);
 
     useEffect(() => {
         const fetchFriendList = async () => {
             try {
                 const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
                 setFriendList(response.data.friendList);
-                setRerenderCount((prevCount) => prevCount + 1);
             } catch (error) {
                 console.error('Error fetching friend list:', error);
             }
         };
 
         fetchFriendList();
-    }, [userId, rerenderCount]);
+    }, [userId]);
 
     const handleAccept = async (user) => {
         try {
