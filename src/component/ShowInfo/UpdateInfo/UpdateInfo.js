@@ -40,7 +40,7 @@ function UpdateInfo({ onCancel, onClose, onUpdateInfo }) {
 
                 // Gửi file avatar lên API
                 const avatarResponse = await fetch(
-                    `https://backend-chatapp-rdj6.onrender.com/user/uploadAvatarS3/${userData.foundUser._id}`,
+                    `http://localhost:4000/user/uploadAvatarS3/${userData.foundUser._id}`,
                     {
                         method: 'POST',
                         body: formData,
@@ -58,16 +58,13 @@ function UpdateInfo({ onCancel, onClose, onUpdateInfo }) {
                 avatar: updatedAvatarUrl || (userData.foundUser.avatar ? userData.foundUser.avatar : null),
             };
 
-            const response = await fetch(
-                `https://backend-chatapp-rdj6.onrender.com/user/updateUser/${userData.foundUser._id}`,
-                {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(updatedUserData),
+            const response = await fetch(`http://localhost:4000/user/updateUser/${userData.foundUser._id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
                 },
-            );
+                body: JSON.stringify(updatedUserData),
+            });
 
             const updatedUser = await response.json();
             if (!response.ok) {

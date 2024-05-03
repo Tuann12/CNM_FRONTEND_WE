@@ -18,7 +18,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
     const socketRef = useRef();
-    const host = 'https://backend-chatapp-rdj6.onrender.com';
+    const host = 'http://localhost:4000';
     useEffect(() => {
         socketRef.current = socketIOClient.connect(host);
 
@@ -50,9 +50,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     }, [action]);
     const fetchMembersList = async () => {
         try {
-            const response = await axios.get(
-                `https://backend-chatapp-rdj6.onrender.com/group/getGroupMembers/${groupId}`,
-            );
+            const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${groupId}`);
             const filteredMembers = response.data.groupMembers.filter((member) => {
                 // Kiểm tra xem thành viên không phải là nhóm trưởng và không phải là người dùng hiện tại
                 return member.role !== 'leader' && member.role !== 'coLeader' && member._id !== userId;
@@ -64,9 +62,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     };
     const fetchMembersForCoLeader = async () => {
         try {
-            const response = await axios.get(
-                `https://backend-chatapp-rdj6.onrender.com/group/getGroupMembers/${groupId}`,
-            );
+            const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${groupId}`);
             const filteredMembers = response.data.groupMembers.filter(
                 (member) => member.role !== 'leader' && member.role !== 'coLeader',
             );
@@ -79,7 +75,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
 
     const fetchFriendList = async () => {
         try {
-            const response = await axios.get(`https://backend-chatapp-rdj6.onrender.com/group/getGroupList/${userId}`);
+            const response = await axios.get(`http://localhost:4000/group/getGroupList/${userId}`);
             setFriendList(response.data.userData.friendList);
             setGroupList(response.data.userData.groupList);
         } catch (error) {
@@ -89,9 +85,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
 
     const fetchNonGroupFriends = async () => {
         try {
-            const response = await axios.get(
-                `https://backend-chatapp-rdj6.onrender.com/group/getNonGroupFriends/${userId}/${groupId}`,
-            );
+            const response = await axios.get(`http://localhost:4000/group/getNonGroupFriends/${userId}/${groupId}`);
             const { friendList } = response.data;
             setFriendList(friendList);
         } catch (error) {
@@ -100,7 +94,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     };
     const sendForwardMessageRequest = async () => {
         try {
-            const response = await axios.post('https://backend-chatapp-rdj6.onrender.com/forwardMessage', {
+            const response = await axios.post('http://localhost:4000/forwardMessage', {
                 from: userId,
                 to: selectedFriendIds,
                 message: sharedMessage.message,
@@ -115,12 +109,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
 
     const addMemberToGroup = async (groupId, selectedFriendIds, handleHide) => {
         try {
-            const response = await axios.put(
-                `https://backend-chatapp-rdj6.onrender.com/group/addMemberToGroup/${groupId}`,
-                {
-                    memberIds: selectedFriendIds,
-                },
-            );
+            const response = await axios.put(`http://localhost:4000/group/addMemberToGroup/${groupId}`, {
+                memberIds: selectedFriendIds,
+            });
             await socketRef.current.emit('sendDataClient', {
                 responseData: response.data,
             });
@@ -133,12 +124,9 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     };
     const removeMembersFromGroup = async (groupId, memberIdsToRemove, handleHide) => {
         try {
-            const response = await axios.put(
-                `https://backend-chatapp-rdj6.onrender.com/group/removeMembersFromGroup/${groupId}`,
-                {
-                    memberIds: memberIdsToRemove,
-                },
-            );
+            const response = await axios.put(`http://localhost:4000/group/removeMembersFromGroup/${groupId}`, {
+                memberIds: memberIdsToRemove,
+            });
             await socketRef.current.emit('sendDataClient', {
                 responseData: response.data,
             });
@@ -159,9 +147,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
     };
     const setCoLeader = async (groupId, userId) => {
         try {
-            const response = await axios.put(
-                `https://backend-chatapp-rdj6.onrender.com/group/setCoLeader/${groupId}/${userId}`,
-            );
+            const response = await axios.put(`http://localhost:4000/group/setCoLeader/${groupId}/${userId}`);
             await socketRef.current.emit('sendDataClient', {
                 responseData: response.data,
             });
@@ -181,9 +167,7 @@ function ShareMessage({ sharedMessage, onHide, action, groupId }) {
 
     const setTransferLeader = async (groupId, userId) => {
         try {
-            const response = await axios.put(
-                `https://backend-chatapp-rdj6.onrender.com/group/transferOwnership/${groupId}/${userId}`,
-            );
+            const response = await axios.put(`http://localhost:4000/group/transferOwnership/${groupId}/${userId}`);
             await socketRef.current.emit('sendDataClient', {
                 responseData: response.data,
             });

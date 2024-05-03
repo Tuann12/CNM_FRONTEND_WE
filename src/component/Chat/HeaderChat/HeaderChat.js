@@ -24,7 +24,7 @@ function HeaderChat() {
     const [reloadComponent, setReloadComponent] = useState(false); // State để reload component
 
     const socketRef = useRef();
-    const host = 'https://backend-chatapp-rdj6.onrender.com';
+    const host = 'http://localhost:4000';
     useEffect(() => {
         socketRef.current = socketIOClient.connect(host);
         socketRef.current.on('getId', (data) => {});
@@ -41,9 +41,7 @@ function HeaderChat() {
 
     const togglePopup = async () => {
         setIsPopupOpen(!isPopupOpen);
-        const response = await axios.get(
-            `https://backend-chatapp-rdj6.onrender.com/group/getGroupMembers/${itemData.id}`,
-        );
+        const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${itemData.id}`);
         console.log('role:', response.data.groupMembers);
         const role = response.data.groupMembers.find((member) => member._id === userId).role;
         console.log('role of user:', role);
@@ -53,9 +51,7 @@ function HeaderChat() {
 
     const fetchMembersList = async () => {
         try {
-            const response = await axios.get(
-                `https://backend-chatapp-rdj6.onrender.com/group/getGroupMembers/${itemData.id}`,
-            );
+            const response = await axios.get(`http://localhost:4000/group/getGroupMembers/${itemData.id}`);
             setMembersList(response.data.groupMembers);
             setShowMembersList(true);
         } catch (error) {
@@ -95,9 +91,7 @@ function HeaderChat() {
     const handleLeaveGroup = async () => {
         try {
             console.log('itemData:', itemData);
-            const response = await axios.put(
-                `https://backend-chatapp-rdj6.onrender.com/group/leaveGroup/${itemData.id}/${userId}`,
-            );
+            const response = await axios.put(`http://localhost:4000/group/leaveGroup/${itemData.id}/${userId}`);
             console.log('Response from setCoLeader:', response.data);
 
             alert('Rời khỏi nhóm thành công!');
@@ -128,7 +122,7 @@ function HeaderChat() {
     };
     const handleDeleteGroup = async () => {
         try {
-            await axios.delete(`https://backend-chatapp-rdj6.onrender.com/group/deleteGroup/${itemData.id}`);
+            await axios.delete(`http://localhost:4000/group/deleteGroup/${itemData.id}`);
             await socketRef.current.emit('sendDataClient', {
                 responseData: 'sendDataClient',
             });
@@ -160,7 +154,7 @@ function HeaderChat() {
     };
     const handleUnfriend = async () => {
         try {
-            const response = await axios.post('https://backend-chatapp-rdj6.onrender.com/user/cancelFriendship', {
+            const response = await axios.post('http://localhost:4000/user/cancelFriendship', {
                 userId: userId,
                 friendId: itemData.id,
             });

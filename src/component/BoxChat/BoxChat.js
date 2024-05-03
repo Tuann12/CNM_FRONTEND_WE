@@ -15,10 +15,10 @@ function BoxChat() {
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
     const socketRef = useRef();
-    const host = 'https://backend-chatapp-rdj6.onrender.com';
+    const host = 'http://localhost:4000';
     const fetchData = async () => {
         try {
-            const response = await axios.get(`https://backend-chatapp-rdj6.onrender.com/group/getGroupList/${userId}`);
+            const response = await axios.get(`http://localhost:4000/group/getGroupList/${userId}`);
             setFriendList(response.data.userData.friendList);
             setGroupList(response.data.userData.groupList);
         } catch (error) {

@@ -19,10 +19,9 @@ const CreateGroup = ({ onHide }) => {
     const storedData = localStorage.getItem('loginData');
     const userId = JSON.parse(storedData).foundUser._id;
     const socketRef = useRef();
-    const host = 'https://backend-chatapp-rdj6.onrender.com';
+    const host = 'http://localhost:4000';
     useEffect(() => {
         socketRef.current = socketIOClient.connect(host);
-
         return () => {
             socketRef.current.disconnect();
         };
@@ -30,9 +29,7 @@ const CreateGroup = ({ onHide }) => {
     useEffect(() => {
         const fetchFriendList = async () => {
             try {
-                const response = await axios.get(
-                    `https://backend-chatapp-rdj6.onrender.com/user/getFriendList/${userId}`,
-                );
+                const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
                 setFriendList(response.data.friendList);
             } catch (error) {
                 console.error('Error fetching friend list:', error);
@@ -81,13 +78,10 @@ const CreateGroup = ({ onHide }) => {
                 formData.append('avatar', imageUrl);
 
                 // Send the avatar file to the API
-                const avatarResponse = await fetch(
-                    `https://backend-chatapp-rdj6.onrender.com/user/uploadAvatarS3/${userId}`,
-                    {
-                        method: 'POST',
-                        body: formData,
-                    },
-                );
+                const avatarResponse = await fetch(`http://localhost:4000/user/uploadAvatarS3/${userId}`, {
+                    method: 'POST',
+                    body: formData,
+                });
 
                 // Check if the avatar was uploaded successfully
                 if (!avatarResponse.ok) {
@@ -109,7 +103,7 @@ const CreateGroup = ({ onHide }) => {
     };
     const createGroup = async () => {
         try {
-            const response = await axios.post(`https://backend-chatapp-rdj6.onrender.com/group/newGroups`, {
+            const response = await axios.post(`http://localhost:4000/group/newGroups`, {
                 name: groupName,
                 creatorId: userId,
                 avatar: avatarToSend,

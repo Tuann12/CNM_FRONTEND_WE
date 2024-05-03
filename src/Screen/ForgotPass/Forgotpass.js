@@ -35,7 +35,7 @@ const ForgotPass = () => {
     const handleSendOTP = async (data) => {
         try {
             const checkGetPassEmail = true;
-            const response = await fetch('https://backend-chatapp-rdj6.onrender.com/user/sendotp', {
+            const response = await fetch('http://localhost:4000/user/sendotp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

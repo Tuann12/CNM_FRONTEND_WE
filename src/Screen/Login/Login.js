@@ -29,7 +29,7 @@ const Login = () => {
     const onSubmit = async (formData) => {
         const { email, password } = formData;
         try {
-            const response = await fetch('https://backend-chatapp-rdj6.onrender.com/user/login', {
+            const response = await fetch('http://localhost:4000/user/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
