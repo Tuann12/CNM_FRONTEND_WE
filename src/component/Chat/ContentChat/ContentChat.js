@@ -14,7 +14,7 @@ const cx = classNames.bind(styles);
 function ContentChat(to) {
     console.log('click 11111');
     console.log('to:', to.to);
-    const host = 'http://localhost:4000';
+    const host = 'https://backend-chatapp-rdj6.onrender.com';
 
     const selectedID = localStorage.getItem('selectedID');
     const [receivedMessage, setReceivedMessage] = useState(false); // Biến để kiểm tra đã nhận tin nhắn từ server hay chưa
@@ -51,7 +51,7 @@ function ContentChat(to) {
         if (itemData.type === 'group') {
             try {
                 // Gửi yêu cầu POST để lấy tin nhắn mới từ server
-                const response = await axios.post('http://localhost:4000/getGroupMessages', {
+                const response = await axios.post('https://backend-chatapp-rdj6.onrender.com/getGroupMessages', {
                     from: userId,
                     groupId: to.to,
                 });
@@ -72,7 +72,7 @@ function ContentChat(to) {
         } else {
             try {
                 // Gửi yêu cầu POST để lấy tin nhắn mới từ server
-                const response = await axios.post('http://localhost:4000/getmsg', {
+                const response = await axios.post('https://backend-chatapp-rdj6.onrender.com/getmsg', {
                     from: userId,
                     to: to.to,
                 });
@@ -120,7 +120,7 @@ function ContentChat(to) {
     const handleDeleteMessage = async (index, messageId) => {
         try {
             // Gọi API để xóa tin nhắn với ID cụ thể
-            await axios.delete(`http://localhost:4000/deletemsg/${messageId}`);
+            await axios.delete(`https://backend-chatapp-rdj6.onrender.com/deletemsg/${messageId}`);
             await socketRef.current.emit('sendDataClient', {
                 responseData: 'sendDataClient',
             });
@@ -137,7 +137,7 @@ function ContentChat(to) {
     console.log('messagesContentChat:', messages);
     const handleRecallMessage = async (messageId) => {
         try {
-            await axios.put(`http://localhost:4000/retrievemsg/${messageId}/${userId}`);
+            await axios.put(`https://backend-chatapp-rdj6.onrender.com/retrievemsg/${messageId}/${userId}`);
             setMessage(
                 messages.map((message) => {
                     if (message.id === messageId) {

@@ -23,7 +23,7 @@ const GetPass = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:4000/user/updatePassword/${email}`, {
+            const response = await fetch(`https://backend-chatapp-rdj6.onrender.com/user/updatePassword/${email}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

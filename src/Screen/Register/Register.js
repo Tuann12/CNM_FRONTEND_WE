@@ -23,7 +23,7 @@ const Register = () => {
         updateFormData(data);
 
         try {
-            const response = await fetch('http://localhost:4000/user/sendotp', {
+            const response = await fetch('https://backend-chatapp-rdj6.onrender.com/user/sendotp', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -45,7 +45,7 @@ const Register = () => {
 
     const onSubmit = async (data) => {
         try {
-            const response = await fetch('http://localhost:4000/user/signup', {
+            const response = await fetch('https://backend-chatapp-rdj6.onrender.com/user/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

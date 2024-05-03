@@ -26,7 +26,7 @@ function Chat({ isOpenInfo }) {
     const [id, setId] = useState();
     const [mess, setMess] = useState([]);
     const messagesEnd = useRef();
-    const host = 'http://localhost:4000';
+    const host = 'https://backend-chatapp-rdj6.onrender.com';
     const scrollToBottom = () => {};
     useEffect(() => {
         socketRef.current = socketIOClient.connect(host);
@@ -52,7 +52,7 @@ function Chat({ isOpenInfo }) {
             console.error('Error parsing loginData:', error);
         }
     }
-    const socket = useRef(io('http://localhost:4000'));
+    const socket = useRef(io('https://backend-chatapp-rdj6.onrender.com'));
     const [itemData, setItemData] = useState({ id: '' });
 
     useEffect(() => {
@@ -89,10 +89,13 @@ function Chat({ isOpenInfo }) {
                 formData.append('avatar', imageUrl);
 
                 // Send the avatar file to the API
-                const avatarResponse = await fetch(`http://localhost:4000/user/uploadAvatarS3/${userId}`, {
-                    method: 'POST',
-                    body: formData,
-                });
+                const avatarResponse = await fetch(
+                    `https://backend-chatapp-rdj6.onrender.com/user/uploadAvatarS3/${userId}`,
+                    {
+                        method: 'POST',
+                        body: formData,
+                    },
+                );
 
                 // Check if the avatar was uploaded successfully
                 if (!avatarResponse.ok) {
@@ -135,7 +138,7 @@ function Chat({ isOpenInfo }) {
                     group: itemData.type,
                 });
                 console.log('image in chat ', parsedData.foundUser);
-                await axios.post('http://localhost:4000/sendMessageToGroup', {
+                await axios.post('https://backend-chatapp-rdj6.onrender.com/sendMessageToGroup', {
                     _id: itemData.id,
                     from: userId,
                     to: itemData.id,
@@ -168,7 +171,7 @@ function Chat({ isOpenInfo }) {
                     from: userId,
                     ...messageToSend,
                 });
-                await axios.post('http://localhost:4000/addmsg', {
+                await axios.post('https://backend-chatapp-rdj6.onrender.com/addmsg', {
                     _id: itemData.id,
                     from: userId,
                     to: itemData.id,

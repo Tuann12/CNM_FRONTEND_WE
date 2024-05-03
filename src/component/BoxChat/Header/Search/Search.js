@@ -22,7 +22,9 @@ function Search() {
     useEffect(() => {
         const fetchFriendList = async () => {
             try {
-                const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
+                const response = await axios.get(
+                    `https://backend-chatapp-rdj6.onrender.com/user/getFriendList/${userId}`,
+                );
                 setFriendList(response.data.friendList);
             } catch (error) {
                 console.error('Error fetching friend list:', error);
@@ -34,7 +36,9 @@ function Search() {
 
     async function handleSearch() {
         try {
-            const response = await axios.get(`http://localhost:4000/user/findUserByEmail/${searchEmail}`);
+            const response = await axios.get(
+                `https://backend-chatapp-rdj6.onrender.com/user/findUserByEmail/${searchEmail}`,
+            );
             if (response.data.success) {
                 const foundUser = response.data.user;
                 if (foundUser.email === JSON.parse(storedData).foundUser.email) {
@@ -58,7 +62,7 @@ function Search() {
         const storedData = localStorage.getItem('loginData');
         console.log(JSON.parse(storedData));
         try {
-            const response = await axios.post('http://localhost:4000/user/sendFriendRequest', {
+            const response = await axios.post('https://backend-chatapp-rdj6.onrender.com/user/sendFriendRequest', {
                 senderId: JSON.parse(storedData).foundUser._id, // Lấy ID của người gửi từ localStorage
                 receiverId: item._id, // Lấy ID của người nhận từ item được nhấp
             });

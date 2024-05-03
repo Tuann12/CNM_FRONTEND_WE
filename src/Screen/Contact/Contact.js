@@ -27,7 +27,9 @@ function Contact() {
 
     const fetchFriendRequestsSent = async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/user/getFriendRequestsSentToUser/${userId}`);
+            const response = await axios.get(
+                `https://backend-chatapp-rdj6.onrender.com/user/getFriendRequestsSentToUser/${userId}`,
+            );
             setFriendRequestsSent(response.data.friendRequestsSent);
         } catch (error) {
             console.error('Error fetching friend requests sent:', error);
@@ -36,7 +38,7 @@ function Contact() {
 
     const fetchFriendList = async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/user/getFriendList/${userId}`);
+            const response = await axios.get(`https://backend-chatapp-rdj6.onrender.com/user/getFriendList/${userId}`);
             setFriendList(response.data.friendList);
         } catch (error) {
             console.error('Error fetching friend list:', error);
@@ -45,7 +47,7 @@ function Contact() {
 
     const fetchGroupList = async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/group/getGroupList/${userId}`);
+            const response = await axios.get(`https://backend-chatapp-rdj6.onrender.com/group/getGroupList/${userId}`);
             setGroupList(response.data.userData.groupList);
         } catch (error) {
             console.error('Error fetching user data:', error);
@@ -54,10 +56,13 @@ function Contact() {
 
     const handleAccept = async (user) => {
         try {
-            const response = await axios.post('http://localhost:4000/user/acceptFriendRequestAndSendMessage', {
-                userId: JSON.parse(storedData).foundUser._id,
-                friendId: user._id,
-            });
+            const response = await axios.post(
+                'https://backend-chatapp-rdj6.onrender.com/user/acceptFriendRequestAndSendMessage',
+                {
+                    userId: JSON.parse(storedData).foundUser._id,
+                    friendId: user._id,
+                },
+            );
             console.log(response.data.message);
             setFriendRequestsSent((prevRequests) => prevRequests.filter((request) => request._id !== user._id));
             alert('Đã chấp nhận lời mời kết bạn');
@@ -68,7 +73,7 @@ function Contact() {
 
     const handleDecline = async (user) => {
         try {
-            const response = await axios.post('http://localhost:4000/user/rejectFriendRequest', {
+            const response = await axios.post('https://backend-chatapp-rdj6.onrender.com/user/rejectFriendRequest', {
                 userId: JSON.parse(storedData).foundUser._id,
                 friendId: user._id,
             });
