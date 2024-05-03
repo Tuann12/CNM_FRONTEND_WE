@@ -24,7 +24,6 @@ function ContentChat(to) {
     const storedData = localStorage.getItem('loginData');
     const [messages, setMessage] = useState([]);
     const [sharedMessage, setSharedMessage] = useState(''); // Tin nhắn được chia sẻ
-    const [, forceUpdate] = React.useState();
 
     let userId = null;
     if (storedData) {
@@ -34,7 +33,6 @@ function ContentChat(to) {
             console.error('Error parsing loginData:', error);
         }
     }
-
     useEffect(() => {
         const handler = (data) => {
             setItemData(data);

@@ -25,7 +25,6 @@ function Chat({ isOpenInfo }) {
     const socketRef = useRef();
     const [id, setId] = useState();
     const [mess, setMess] = useState([]);
-    const messagesEnd = useRef();
     const host = 'http://localhost:4000';
     const scrollToBottom = () => {};
     useEffect(() => {
@@ -39,7 +38,9 @@ function Chat({ isOpenInfo }) {
             setMess((oldMsgs) => [...oldMsgs, dataGot.data]);
             scrollToBottom();
         });
-
+        socketRef.current.on('leaveGroup', () => {
+            window.location.reload();
+        });
         return () => {
             socketRef.current.disconnect();
         };

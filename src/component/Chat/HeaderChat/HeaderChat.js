@@ -98,6 +98,9 @@ function HeaderChat() {
             await socketRef.current.emit('sendDataClient', {
                 responseData: 'sendDataClient',
             });
+            await socketRef.current.emit('leaveGroup', {
+                responseData: 'leaveGroup',
+            });
             setItemData({});
             console.log('Response from leaveGroup:', response.data);
             if (response.data.message === 'Nhóm đã được giải tán vì ít hơn 3 thành viên') {
@@ -123,8 +126,8 @@ function HeaderChat() {
     const handleDeleteGroup = async () => {
         try {
             await axios.delete(`http://localhost:4000/group/deleteGroup/${itemData.id}`);
-            await socketRef.current.emit('sendDataClient', {
-                responseData: 'sendDataClient',
+            await socketRef.current.emit('leaveGroup', {
+                responseData: 'leaveGroup',
             });
             setItemData({});
             setIsPopupOpen(false);
